@@ -8,17 +8,22 @@ export default function TimeLine () {
     {eventDate: '2022-12-06', eventName: 'Kura Sushi', id:3}
   ]);
 
+  const renderItem = ({ item }) => {
+    const date = new Date(item.eventDate).toDateString();
+    return (
+      <>
+        <Text style={styles.date}>{date}</Text>
+        <Text style={styles.dayEvent}>{item.eventName}</Text>
+      </>
+    )
+  }
+
   return (
     <View style={styles.container}>
       <FlatList
         keyExtractor={(item) => item.id}
         data={data}
-        renderItem={({item}) => (
-          <>
-            <Text style={styles.date}>{item.eventDate}</Text>
-            <Text style={styles.dayEvent}>{item.eventName}</Text>
-          </>
-        )}
+        renderItem={renderItem}
       />
     </View>
   )
@@ -39,5 +44,6 @@ const styles = StyleSheet.create({
 
   dayEvent:{
     fontSize: 24,
+    padding: 20
   }
 })
