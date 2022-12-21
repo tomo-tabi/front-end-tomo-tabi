@@ -27,7 +27,7 @@ import {
     ExtraText,
     TextLink,
     TextLinkContent
-} from './../components/styles';
+} from '../styles/styles';
 
 import {View} from 'react-native';
 
