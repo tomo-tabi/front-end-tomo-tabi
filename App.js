@@ -2,7 +2,7 @@ import { StatusBar } from 'expo-status-bar';
 // import { StyleSheet, Text, View } from 'react-native';
 import React, { useState } from 'react'
 import { StyleSheet, Text, FlatList, View } from 'react-native'
-import TimeLine from './components/timeLine'
+import TimeLine from './screens/TimeLine'
 
 //screens
 import Login from './screens/Login';
