@@ -33,8 +33,9 @@ import {View} from 'react-native';
 
 const {brand, darkLight} = Colors;
 
-const Login = () => {
-    const [ hidePassword, setHidePassword ] =useState(true);
+const Login = ( { loginState } ) => {
+    const [ hidePassword, setHidePassword ] = useState(true);
+    // function handeling token and async storage and update loginState
     return (
         <StyledContainer>
             <StatusBar style={"dark"} />
@@ -75,7 +76,7 @@ const Login = () => {
                               hidePassword={hidePassword}
                               setHidePassword={setHidePassword}
                           />
-                          <MsgBox>...</MsgBox>
+                          <MsgBox></MsgBox>
                           <StyledButton onPress={handleSubmit}>
                               <ButtonText>
                                   Login
