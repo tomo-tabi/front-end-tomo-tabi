@@ -4,12 +4,16 @@ import React, { useState } from 'react'
 import { StyleSheet, Text, FlatList, View } from 'react-native'
 import TimeLine from './components/timeLine'
 
+//screens
+import Login from './screens/Login';
+
 export default function App() {
 
   return (
+   
     <View style={styles.container}>
         <TimeLine />
-
+        {/* <Login /> */}
       {/* <Text>Open up App.js to start working on your app!</Text> */}
       {/* <StatusBar style="auto" /> */}
     </View>
