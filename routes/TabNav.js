@@ -27,7 +27,7 @@ export default function TabNav({ navigation }) {
             // You can return any component that you like here!
             return <Octicons name={'mail'} size={30} />
           },
-      tabBarActiveTintColor: '#A020F0',
+      tabBarActiveTintColor:'#A020F0',
     })}
     >
       <Tab.Screen name="TimeLine" component={TimeLine} />
