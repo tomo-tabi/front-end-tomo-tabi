@@ -8,9 +8,10 @@ import { AuthProvider } from './context/AuthContext';
 import AppNav from './routes/AppNav';
 
 export default function App() {
+  //AuthProvider -> passes global variables down
 
   return (
-    <AuthProvider> {/* passes global variables down */}
+    <AuthProvider> 
       <View style={styles.container}>
         <AppNav/>
       </View>
