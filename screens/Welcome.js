@@ -14,7 +14,12 @@ import {
     Avater
 } from '../styles/styles';
 
-const Welcome = () => {
+
+
+const Welcome = ({ navigation }) => {
+    const logOut = () => {
+        navigation.navigate('Login')
+    }
 
     return (
         <>
@@ -28,7 +33,7 @@ const Welcome = () => {
                   <StyleFormArea>
                     <Avater resezieMode="cover" source={require('./../assets/travel.png')} />
                     <Line />
-                    <StyledButton onPress={() => {}}>
+                    <StyledButton onPress={logOut}>
                         <ButtonText>
                             Logout
                         </ButtonText>
