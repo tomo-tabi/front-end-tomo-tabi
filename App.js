@@ -11,10 +11,12 @@ import Signup from './screens/Signup';
 import Welcome from './screens/Welcome';
 import TimeLine from './screens/TimeLine'
 import Trips from './screens/Trips'
+import TabNav from './routes/TabNav';
 
 const Stack = createNativeStackNavigator();
 
 export default function App() {
+  //assuming lonin is true
   const [loginState, setLoginState] = useState(true)
 
   return (
@@ -24,9 +26,8 @@ export default function App() {
        <NavigationContainer>
         <Stack.Navigator initialRouteName='Trips'>
           <Stack.Screen name='Trips' component={Trips} />
-          <Stack.Screen name='TimeLine' component={TimeLine}/>
+          <Stack.Screen name='TabNav' component={TabNav}/>
         </Stack.Navigator>
-         
        </NavigationContainer> 
       : <Login loginState = {loginState} /> 
       } */}

@@ -8,15 +8,13 @@ export default function Trips({ navigation }) {
     {tripName: 'Boston', id:3}
   ]);
 
-  //for Tokyo
-  const [tripDetail, setTripDetail] = useState([
-    {eventDate: '2022-12-04', eventName: 'Sky Tree', id:1},
-    {eventDate: '2022-12-05', eventName: 'Tokyo Tower', id:2},
-    {eventDate: '2022-12-06', eventName: 'Kura Sushi', id:3}
-  ]);
-
   const pressHandler = (tripId) => {
-    navigation.navigate('TimeLine', {id: tripId})
+    // navigation.navigate('Timeline', {id: tripId})
+    // navigation.navigate('TabNav', {id: tripId})
+    navigation.navigate('TabNav', {
+      screen: 'TimeLine',
+      params: {id: tripId}
+    })
   }
   return (
     <>
