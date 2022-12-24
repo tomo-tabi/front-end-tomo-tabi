@@ -1,11 +1,5 @@
 import React, { useState, useEffect } from 'react';
 import { StyleSheet, Text, FlatList, View } from 'react-native';
-import { NavigationContainer } from '@react-navigation/native';
-import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
-import Calendar from './Calendar';
-// import idk from './idk';
-
-const Tab = createBottomTabNavigator();
 
 export default function TimeLine ({ route, navigation }) {
   const { id } = route.params;
@@ -54,15 +48,6 @@ export default function TimeLine ({ route, navigation }) {
           renderItem={renderItem}
           />
       </View>
-      {/* maybe this is not the place to place tab nav??? */}
-        <Tab.Navigator initialRouteName='Calendar'
-          screenOptions={({ route }) => ({
-            tabBarActiveTintColor: 'blue',
-          })}
-        >
-          <Tab.Screen name="Calendar" component={Calendar} />
-          {/* <Tab.Screen name="idk" component={idk} /> */}
-        </Tab.Navigator>
     </>
   )
 }
