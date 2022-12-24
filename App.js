@@ -1,41 +1,51 @@
-import { StatusBar } from 'expo-status-bar';
+// import { StatusBar } from 'expo-status-bar';
 // import { StyleSheet, Text, View } from 'react-native';
-import React, { useState } from 'react';
-import { StyleSheet, Text, FlatList, View } from 'react-native';
-import { NavigationContainer } from '@react-navigation/native';
-import { createNativeStackNavigator } from '@react-navigation/native-stack';
+import React from 'react';
+import { StyleSheet, View } from 'react-native';
 
-//screens
-import Login from './screens/Login';
-import Signup from './screens/Signup';
-import Welcome from './screens/Welcome';
-import TimeLine from './screens/TimeLine'
-import Trips from './screens/Trips'
-import TabNav from './routes/TabNav';
-
-const Stack = createNativeStackNavigator();
+//context and Navigation
+import { AuthProvider } from './context/AuthContext';
+import AppNav from './routes/AppNav';
 
 export default function App() {
-  //assuming lonin is true
-  const [loginState, setLoginState] = useState(true)
+  //AuthProvider -> passes global variables down
 
   return (
-   
-    <View style={styles.container}>
-      {/* {loginState ? 
-       <NavigationContainer>
-        <Stack.Navigator initialRouteName='Trips'>
-          <Stack.Screen name='Trips' component={Trips} />
-          <Stack.Screen name='TabNav' component={TabNav}/>
-        </Stack.Navigator>
-       </NavigationContainer> 
-      : <Login loginState = {loginState} /> 
-      } */}
-      <Signup />
-    </View>
-    
+    <AuthProvider> 
+      <View style={styles.container}>
+        <AppNav/>
+      </View>
+    </AuthProvider>
   );
 }
+/* <NavigationContainer>
+<Stack.Navigator initialRouteName='Login'>
+ <Stack.Screen name='Login' component={Login}/>
+ <Stack.Screen name='Signup' component={Signup}/>
+ <Stack.Screen name='Welcome' component={Welcome}/>
+ <Stack.Screen name='Trips' component={Trips} />
+ <Stack.Screen name='TripTabNav' component={TripTabNav} 
+   options= {({route}) => ({
+     headerTitle: getHeaderTitle(route)
+   })}
+ />
+</Stack.Navigator>
+</NavigationContainer>  */
+// <View style={styles.container}>
+//   {loginState ? 
+//    <NavigationContainer>
+//     <Stack.Navigator initialRouteName='Trips'>
+//       <Stack.Screen name='Trips' component={Trips} />
+//       <Stack.Screen name='Trips' component={Trips} />
+//       <Stack.Screen name='TripTabNav' component={TripTabNav}/>
+//     </Stack.Navigator>
+//    </NavigationContainer> 
+//   : //<Login loginState = {loginState} 
+//     <SignupLoginNav
+//   /> 
+//   }
+//   <Signup />
+// </View>
 
 const styles = StyleSheet.create({
   container: {
@@ -43,3 +53,4 @@ const styles = StyleSheet.create({
     backgroundColor: '#fff',
   },
 });
+

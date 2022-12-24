@@ -1,8 +1,9 @@
-import React, {useState} from 'react';
+import React, { useState } from 'react';
 import { StatusBar } from 'expo-status-bar';
+import { Alert } from "react-native";
 
 //formik
-import {Formik} from 'formik';
+import { Formik } from 'formik';
 
 //icons
 import { Octicons, Ionicons } from '@expo/vector-icons';
@@ -21,12 +22,7 @@ import {
     StyledButton,
     ButtonText,
     Colors,
-    MsgBox,
-    Line,
-    ExtraView,
-    ExtraText,
-    TextLink,
-    TextLinkContent
+    MsgBox
 } from '../styles/styles';
 
 import {View} from 'react-native';
@@ -36,9 +32,23 @@ const {brand, darkLight} = Colors;
 //keyboard avoiding view
 import KeyboardAvoidingWrapper from '../styles/KeyboardAvoidingWrapper';
 
-const Signup = ( ) => {
+const Signup = ({ navigation }) => {
     const [ hidePassword, setHidePassword ] = useState(true);
     // function handeling token and async storage and update loginState
+    const pressHandler = (userInputObj) => {
+        if(userInputObj.password !== userInputObj.confirmpassword) {
+            return Alert.alert(
+                "Wrong Password",
+                "comfirmation Password is wrong",
+                [
+                  { text: "OK", onPress: () => console.log("OK Pressed") }
+                ]
+              );
+        }
+        // do fetch to post user info
+        console.log(userInputObj);
+        navigation.navigate('Welcome')
+    }
     return (
       <KeyboardAvoidingWrapper>
         <StyledContainer>
@@ -49,9 +59,7 @@ const Signup = ( ) => {
 
                 <Formik
                     initialValues={{ username: '', email: '', password: '', confirmpassword: '' }}
-                    onSubmit={(values) => {
-                        console.log(values);
-                    }}
+                    onSubmit={(userInputObj) => pressHandler(userInputObj)}
                 >
                     {({ handleChange, handleBlur, handleSubmit, values }) => (
                         <StyleFormArea>
@@ -110,13 +118,6 @@ const Signup = ( ) => {
                                   Signup
                               </ButtonText>
                           </StyledButton>
-                          <Line />
-                          <ExtraView>
-                            <ExtraText>Already have a account?</ExtraText>
-                            <TextLink>
-                                <TextLinkContent>Login</TextLinkContent>
-                            </TextLink>
-                          </ExtraView>
                         </StyleFormArea>
                     )}
                 </Formik>

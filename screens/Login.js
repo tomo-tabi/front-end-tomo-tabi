@@ -1,5 +1,6 @@
-import React, {useState} from 'react';
+import React, { useState, useContext } from 'react';
 import { StatusBar } from 'expo-status-bar';
+import { Alert, View } from "react-native";
 
 //formik
 import {Formik} from 'formik';
@@ -29,16 +30,25 @@ import {
     TextLinkContent
 } from '../styles/styles';
 
-import {View} from 'react-native';
-
 const {brand, darkLight} = Colors;
 
 // keyboard avoiding view
 import KeyboardAvoidingWrapper from '../styles/KeyboardAvoidingWrapper';
+import { AuthContext } from '../context/AuthContext';
 
-const Login = ( { loginState } ) => {
+
+const Login = ( { navigation } ) => {
     const [ hidePassword, setHidePassword ] = useState(true);
     // function handeling token and async storage and update loginState
+    
+    const { login } = useContext(AuthContext);    
+    // console.log("🍉",userData);
+
+
+    const pressSignupHandler = () => {
+        navigation.navigate('Signup')
+    }
+
     return (
         <KeyboardAvoidingWrapper>
           <StyledContainer>
@@ -49,8 +59,8 @@ const Login = ( { loginState } ) => {
                   <SubTitle>Account Login</SubTitle>
                   <Formik
                       initialValues={{ email: '', password: ''}}
-                      onSubmit={(values) => {
-                          console.log(values);
+                      onSubmit={(userInputObj) => {
+                        login(userInputObj)
                       }}
                   >
                       {({ handleChange, handleBlur, handleSubmit, values }) => (
@@ -84,10 +94,10 @@ const Login = ( { loginState } ) => {
                                     Login
                                 </ButtonText>
                             </StyledButton>
-                            <Line />
+                            <Line/>
                             <ExtraView>
                               <ExtraText>Don't have an account already?</ExtraText>
-                              <TextLink>
+                              <TextLink onPress={pressSignupHandler}>
                                   <TextLinkContent>Sign up</TextLinkContent>
                               </TextLink>
                             </ExtraView>

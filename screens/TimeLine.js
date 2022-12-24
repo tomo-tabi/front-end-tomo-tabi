@@ -1,32 +1,17 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useContext } from 'react';
 import { StyleSheet, Text, FlatList, View } from 'react-native';
+import { InfoContext } from '../context/InfoContext';
 
 export default function TimeLine ({ route, navigation }) {
   const { id } = route.params;
+  const { tripDb, tripDetails, setTripDetails } = useContext(InfoContext)
   //fetch trip detail with id 
-  const dataBase = {
-    1: [
-      {eventDate: '2022-12-04', eventName: 'Sky Tree', id:1},
-      {eventDate: '2022-12-05', eventName: 'Tokyo Tower', id:2},
-      {eventDate: '2022-12-06', eventName: 'Kura Sushi', id:3}
-    ],
-    2:[
-      {eventDate: '2022-12-04', eventName: 'Universal Studios Japan', id:1},
-      {eventDate: '2022-12-05', eventName: 'Osaka Castle (Osakajo)', id:2},
-      {eventDate: '2022-12-06', eventName: 'Osaka Okonomiyaki', id:3}
-    ],
-    3:[
-      {eventDate: '2022-12-04', eventName: 'Museum of Fine Arts', id:1},
-      {eventDate: '2022-12-05', eventName: 'Fenway Parks', id:2},
-      {eventDate: '2022-12-06', eventName: 'Freedom Trail', id:3}
-    ]
-  }
 
-  const [data, setData] = useState(null);
-  
   useEffect(() => {
-    setData(dataBase[id]);
-  }, [])
+    setTripDetails(tripDb[id]);
+  }, [id])
+
+  // console.log(id)
   
 
   const renderItem = ({ item }) => {
@@ -44,7 +29,7 @@ export default function TimeLine ({ route, navigation }) {
       <View style={styles.container}>
         <FlatList
           keyExtractor={(item) => item.id}
-          data={data}
+          data={tripDetails}
           renderItem={renderItem}
           />
       </View>
