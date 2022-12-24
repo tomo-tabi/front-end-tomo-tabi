@@ -7,7 +7,9 @@ import { createNativeStackNavigator } from '@react-navigation/native-stack';
 
 //screens
 import Login from './screens/Login';
-// import TimeLine from './screens/TimeLine'
+import Signup from './screens/Signup';
+import Welcome from './screens/Welcome';
+import TimeLine from './screens/TimeLine'
 import Trips from './screens/Trips'
 import TabNav from './routes/TabNav';
 
@@ -20,7 +22,7 @@ export default function App() {
   return (
    
     <View style={styles.container}>
-      {loginState ? 
+      {/* {loginState ? 
        <NavigationContainer>
         <Stack.Navigator initialRouteName='Trips'>
           <Stack.Screen name='Trips' component={Trips} />
@@ -28,9 +30,10 @@ export default function App() {
         </Stack.Navigator>
        </NavigationContainer> 
       : <Login loginState = {loginState} /> 
-      }
-     
+      } */}
+      <Signup />
     </View>
+    
   );
 }
 
