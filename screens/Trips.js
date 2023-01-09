@@ -11,6 +11,7 @@ export default function Trips({ navigation }) {
   const pressHandler = (item) => {
     navigation.navigate('TripTabNav', {
       screen: 'TimeLine',
+      // need to wrap it in obj to pass to nested nav
       params: {id: item.id, name:item.tripName},
     })
   }

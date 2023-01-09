@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useContext, useState } from 'react';
 import { StatusBar } from 'expo-status-bar';
 import { Alert } from "react-native";
 
@@ -31,9 +31,12 @@ const {brand, darkLight} = Colors;
 
 //keyboard avoiding view
 import KeyboardAvoidingWrapper from '../styles/KeyboardAvoidingWrapper';
+import { AuthContext } from '../context/AuthContext';
 
 const Signup = ({ navigation }) => {
     const [ hidePassword, setHidePassword ] = useState(true);
+    const { signup } = useContext(AuthContext);
+    
     // function handeling token and async storage and update loginState
     const pressHandler = (userInputObj) => {
         if(userInputObj.password !== userInputObj.confirmpassword) {
@@ -45,9 +48,7 @@ const Signup = ({ navigation }) => {
                 ]
               );
         }
-        // do fetch to post user info
-        console.log(userInputObj);
-        navigation.navigate('Welcome')
+        signup(userInputObj);
     }
     return (
       <KeyboardAvoidingWrapper>

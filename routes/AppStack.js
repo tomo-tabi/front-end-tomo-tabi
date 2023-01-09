@@ -4,7 +4,7 @@ import { InfoProvider } from '../context/InfoContext';
 import Trips from '../screens/Trips';
 import TripTabNav from './TripTabNav';
 
-import getHeaderTitle from '../utils/getHeaderTitle';
+// import getHeaderTitle from '../utils/getHeaderTitle';
 const Stack = createNativeStackNavigator();
 
 export default function AppStack() {
@@ -14,7 +14,8 @@ export default function AppStack() {
         <Stack.Screen name='Trips' component={Trips} />
         <Stack.Screen name='TripTabNav' component={TripTabNav} 
           options= {({route}) => ({
-            headerTitle: getHeaderTitle(route)
+            // headerTitle: getHeaderTitle(route)
+            headerTitle: route.params.params.name
           })}
         />
       </Stack.Navigator>
