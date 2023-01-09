@@ -1,5 +1,6 @@
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import React, { createContext, useEffect, useState } from "react";
+import API_URL from "../config";
 
 export const AuthContext = createContext();
 
@@ -7,30 +8,59 @@ export function AuthProvider({children}) {
   const [isLoading, setIsLoading] = useState(false);
   const [userToken, setUserToken] = useState(null);
   const [userData, setUserData] = useState(null);
-  
 
-  const login = (userInput) => {
-    //use axios or fetch to check user data base?
-    
-    // case1: email doesn't exists/ is wrong
+  const fetchOptions = (input) => {
+    return {
+      method:"POST",
+      //need headers?
+      headers: {
+        'Accept': 'application/json, text/plain, */*', 
+        'Content-Type': 'application/json'
+      },
+      body:JSON.stringify(input)
+    }
+  };
 
-    // case2: password is wrong 
-
-    // case3: user exists 
-    const userData = {
-      email: "123@123.com",
-      password: "123",
-      userId: 1
-    };
-    const userInData = true;
-
-    if(userInData){
+  const setData = (userInfo) => {
+    if (userInfo) {
       setIsLoading(true);
-      AsyncStorage.setItem('userToken', "sdkfjalsd");
-      setUserData(userData);
+      AsyncStorage.setItem('userToken', userInfo.token);
+      setUserData(userInfo);
       setIsLoading(false);
     }
   }
+
+  const signup = async (userInput) => {
+    try {
+      //don't use localhost use wifi if address
+      const signupReq = await fetch(`http://${API_URL}:8080/user/signup`,
+        fetchOptions(userInput)
+      )
+      const signupRes = await signupReq.json();
+
+      // console.log("🍌",signupRes.token);
+
+      setData(signupRes);
+
+    } catch (error) {
+      console.error(error)
+    }
+  }
+
+  const login = async (userInput) => {
+    try {
+      // use axios?
+      const loginReq = await fetch(`http://${API_URL}:8080/user/login`,
+        fetchOptions(userInput)
+      )
+      const loginRes = await loginReq.json();
+      setData(loginRes);
+    } catch (error) {
+      console.error(error)
+    }
+    
+  }
+
   const logout = () => {
     setIsLoading(true);
     setUserData(null);
@@ -73,7 +103,7 @@ export function AuthProvider({children}) {
 //     }
 // }
   return (
-    <AuthContext.Provider value={{login, logout, userToken, userData, isLoading}}>
+    <AuthContext.Provider value={{login, logout, signup, userToken, userData, isLoading}}>
       {children}
     </AuthContext.Provider>
   )

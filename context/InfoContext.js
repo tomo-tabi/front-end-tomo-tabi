@@ -1,5 +1,6 @@
 import React, { createContext, useContext, useState, useEffect } from "react";
 import { AuthContext } from "./AuthContext";
+import API_URL from "../config";
 
 export const InfoContext = createContext();
 
@@ -8,11 +9,26 @@ export function InfoProvider({children}) {
   const [tripDb, setTripDb] = useState(null);
   const [tripDetails, setTripDetails] = useState(null);
 
-  const { userData } = useContext(AuthContext)
+  const { userData, userToken } = useContext(AuthContext)
   // console.log("🍏",userData)
+  // to fetch trip data we only need current user token 
+
+  const test = async () => {
+    const jwt = await fetch(`http://${API_URL}:8080/user/`,{
+      method:"GET",
+      headers: {
+        'Accept': 'application/json, text/plain, */*', 
+        'Content-Type': 'application/json',
+        'Authorization': 'Bearer '+ userToken
+      }
+    })
+    const res = await jwt.json()
+    console.log("🍏",res);
+    return res
+  }
 
   const tripData = { //using userData.id
-    1:[
+    2:[
       {tripName: 'Tokyo', id:1},
       {tripName: 'Osaka', id:2},
       {tripName: 'Boston', id:3},
@@ -38,8 +54,10 @@ export function InfoProvider({children}) {
   }
 
   useEffect(() => {
+    test();
+
     if(userData){
-      setTrips(tripData[userData.userId])
+      setTrips(tripData[2])
       setTripDb(dataBase)
     }
   }, [])
