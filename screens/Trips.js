@@ -24,7 +24,8 @@ export default function Trips({ navigation }) {
         data = {trips}
         renderItem = {({ item }) => (
           <TouchableOpacity onPress={() => pressHandler(item)}>
-            <Text style={styles.date}>{item.tripName}</Text>
+            <Text style={styles.date}>{item.startDate}</Text>
+            <Text style={styles.name}>{item.tripName}</Text>
           </TouchableOpacity>
         )}
       />
@@ -43,12 +44,15 @@ const styles = StyleSheet.create({
     flex: 1,
     backgroundColor: '#fff',
   },
-
   date:{
+    fontSize: 20,
+    marginTop: 10,
+    marginHorizontal: 10,
+  },
+  name:{
     fontWeight: "bold",
     fontSize: 24,
     padding: 20,
-    marginTop: 10,
     marginHorizontal: 10,
     borderRadius: 6,
     backgroundColor:'#A020F0'

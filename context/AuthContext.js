@@ -71,7 +71,6 @@ export function AuthProvider({children}) {
 
   const isLoggedIn = async () => {
     try{
-
       setIsLoading(true)
       let userToken = await AsyncStorage.getItem('userToken')
       // console.log("🍇",userToken);
