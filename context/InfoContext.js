@@ -81,7 +81,6 @@ export function InfoProvider({children}) {
 
 
   useEffect(() => {
-    test();
 
     if(userData){
       setTrips(tripData[2])

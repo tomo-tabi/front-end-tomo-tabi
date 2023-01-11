@@ -10,22 +10,31 @@ export const ExpenseTable = () => {
     ["Pol", "Hotel Fee", 6000],
   ]);
 
-  const supportedURL =
-    "https://play.google.com/store/apps/details?id=jp.ne.paypay.android.app&hl=en&gl=US&pli=1";
+  const supportedURL = "paypay://";
 
-  const unsupportedURL = "slack://open?team=123456";
+  const unsupportedURL = "linepay://";
 
   const OpenURLButton = ({ url, children }) => {
     const handlePress = useCallback(async () => {
       // Checking if the link is supported for links with custom URL scheme.
       const supported = await Linking.canOpenURL(url);
+      const supported2 = await Linking.canOpenURL(url);
 
       if (supported) {
         // Opening the link with some app, if the URL scheme is "http" the web link should be opened
         // by some browser in the mobile
         await Linking.openURL(url);
       } else {
-        Alert.alert(`Don't know how to open this URL: ${url}`);
+        await Linking.openURL("https://play.google.com/store/apps/details?id=com.paypay.android%22")
+
+      }
+      if (supported2) {
+        // Opening the link with some app, if the URL scheme is "http" the web link should be opened
+        // by some browser in the mobile
+        await Linking.openURL(url);
+      } else {
+        await Linking.openURL("https://play.google.com/store/apps/details?id=com.linecorp.linepay")
+
       }
     }, [url]);
 
@@ -50,8 +59,8 @@ export const ExpenseTable = () => {
           />
         </TableWrapper>
       </Table>
-      <OpenURLButton url={supportedURL}>Open Supported URL</OpenURLButton>
-      <OpenURLButton url={unsupportedURL}>Open Unsupported URL</OpenURLButton>
+      <OpenURLButton url={supportedURL}>Open PayPay</OpenURLButton>
+      <OpenURLButton url={unsupportedURL}>Open Line Pay</OpenURLButton>
     </View>
   );
 };
