@@ -72,10 +72,20 @@ export function AuthProvider({children}) {
   const isLoggedIn = async () => {
     try{
       setIsLoading(true)
-      let userToken = await AsyncStorage.getItem('userToken')
-      console.log("🍇",userToken);
-      setUserToken(userToken)
-      setIsLoading(false)
+      let userTokenStored = await AsyncStorage.getItem('userToken');
+      console.log("🍇",userTokenStored);
+      setUserToken(userTokenStored);
+      const isLoggedIn = await fetch(`http://${API_URL}:8080/user/`, {
+        method:"GET",
+        headers: {
+          'Accept': 'application/json, text/plain, */*', 
+          'Content-Type': 'application/json',
+          'Authorization': `Bearer ${userTokenStored}`
+        }
+      });
+      const isLoggedInRes = await isLoggedInReq.json();
+      setUserData(isLoggedInRes);
+      setIsLoading(false);
     } catch (e) {
       console.log(`Login Error: ${e}`)
     }
@@ -85,22 +95,6 @@ export function AuthProvider({children}) {
     isLoggedIn()
   }, [])
   
-
-//   const pressHandler = (userInputObj) => {
-//     //fetch user info from database
-//     if(userData.email === userInputObj.email && userData.password === userInputObj.password){
-//       console.log(userInputObj.email)
-//       navigation.navigate('Trips')
-//     } else {
-//       Alert.alert(
-//         "Wron Password",
-//         "please write correct Password",
-//         [
-//           { text: "OK", onPress: () => console.log("OK Pressed") }
-//         ]
-//       );
-//     }
-// }
   return (
     <AuthContext.Provider value={{login, logout, signup, userToken, userData, isLoading}}>
       {children}
