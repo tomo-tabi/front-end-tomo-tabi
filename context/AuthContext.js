@@ -1,6 +1,7 @@
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import React, { createContext, useEffect, useState } from "react";
-import API_URL from "../config";
+import { API_URL } from "../config";
+
 
 export const AuthContext = createContext();
 
@@ -71,22 +72,11 @@ export function AuthProvider({children}) {
 
   const isLoggedIn = async () => {
     try{
-      setIsLoading(true);
-      let userTokenStored = await AsyncStorage.getItem('userToken');
-      // console.log("🍇",userTokenStored);
-      setUserToken(userTokenStored);
-      const isLoggedInReq = await fetch(`http://${API_URL}:8080/user/`, {
-        method:"GET",
-        headers: {
-          'Accept': 'application/json, text/plain, */*', 
-          'Content-Type': 'application/json',
-          'Authorization': 'Bearer '+ userTokenStored
-        }
-      });
-      const isLoggedInRes = await isLoggedInReq.json();
-      // console.log("🍇",isLoggedInRes);
-      setUserData(isLoggedInRes);
-      setIsLoading(false);
+      setIsLoading(true)
+      let userToken = await AsyncStorage.getItem('userToken')
+      console.log("🍇",userToken);
+      setUserToken(userToken)
+      setIsLoading(false)
     } catch (e) {
       console.log(`Login Error: ${e}`)
     }
