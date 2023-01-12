@@ -71,11 +71,22 @@ export function AuthProvider({children}) {
 
   const isLoggedIn = async () => {
     try{
-      setIsLoading(true)
-      let userToken = await AsyncStorage.getItem('userToken')
-      // console.log("🍇",userToken);
-      setUserToken(userToken)
-      setIsLoading(false)
+      setIsLoading(true);
+      let userTokenStored = await AsyncStorage.getItem('userToken');
+      // console.log("🍇",userTokenStored);
+      setUserToken(userTokenStored);
+      const isLoggedInReq = await fetch(`http://${API_URL}:8080/user/`, {
+        method:"GET",
+        headers: {
+          'Accept': 'application/json, text/plain, */*', 
+          'Content-Type': 'application/json',
+          'Authorization': 'Bearer '+ userTokenStored
+        }
+      });
+      const isLoggedInRes = await isLoggedInReq.json();
+      // console.log("🍇",isLoggedInRes);
+      setUserData(isLoggedInRes);
+      setIsLoading(false);
     } catch (e) {
       console.log(`Login Error: ${e}`)
     }
@@ -83,7 +94,7 @@ export function AuthProvider({children}) {
 
   useEffect(() => {
     isLoggedIn()
-  }, [userData])
+  }, [])
   
 
 //   const pressHandler = (userInputObj) => {
