@@ -75,8 +75,10 @@ export function InfoProvider({children}) {
       },
       body:JSON.stringify(tripEventInput)
     })
-    const res = await postTripEvents.json()
-    console.log(res);
+    const res = await postTripEvents.json();
+    //return updated list of trips?
+    getTripEvents(tripid)
+    // console.log(res);
   }
 
 
