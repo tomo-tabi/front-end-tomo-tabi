@@ -65,7 +65,7 @@ export function InfoProvider({children}) {
 
   const postTripEvents = async (tripEventInput) => {
     tripEventInput.tripid = tripid
-    // console.log("🍋",tripEventInput);
+     
     const postTripEvents = await fetch(`http://${API_URL}:8080/timeline/create`, {
       method:"POST",
       headers: {
@@ -76,9 +76,8 @@ export function InfoProvider({children}) {
       body:JSON.stringify(tripEventInput)
     })
     const res = await postTripEvents.json();
-    //return updated list of trips?
-    getTripEvents(tripid)
-    // console.log(res);
+    
+    getTripEvents(tripid);
   }
 
 
@@ -92,7 +91,7 @@ export function InfoProvider({children}) {
   
 
   return (
-    <InfoContext.Provider value={{trips, tripEvents, getTripEvents, postTripEvents}}>
+    <InfoContext.Provider value={{trips, tripEvents, tripid, getTripEvents, postTripEvents}}>
       {children}
     </InfoContext.Provider>
   )
