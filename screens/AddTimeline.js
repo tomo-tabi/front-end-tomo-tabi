@@ -48,7 +48,7 @@ export default function AddTimeline({ setModalOpen }) {
   return(
     <View style={styles.container}>
       <Formik
-        initialValues={{ eventName: '', eventDate: '', eventTime: '' }}
+        initialValues={{ eventName: '', eventDate: '' }}
         onSubmit={(values) => {
           postTripEvents(values);
           setModalOpen(false);
@@ -86,7 +86,7 @@ export default function AddTimeline({ setModalOpen }) {
                 display="default"
                 onChange={(event, selectedDate)=> {
                   onChange(undefined,selectedDate)
-                  props.setFieldValue('eventDate',moment(selectedDate).format('YYYY-MM-DD'))
+                  props.setFieldValue('eventDate',selectedDate)
                 }}
               />
             )}

@@ -21,7 +21,7 @@ export default function TimeLine ({ route, navigation }) {
 
   useEffect(() => {
     if(tripEvents !== null){
-      // console.log("🍏",tripEvents, id);
+      // console.log("🍏", tripEvents);
     
     tripEvents.map((item) => {
         let date = moment(item.event_date).format("dddd, MMM DD, YYYY");
@@ -70,7 +70,7 @@ export default function TimeLine ({ route, navigation }) {
     }
     
   }, [tripEvents])
-  // console.log("🍋",JSON.stringify(dateSortEvents));
+  // console.log("🍋",(tripEvents));
   
   const renderItem = ({ item }) => {
     let eventArr = item.info;
