@@ -2,63 +2,89 @@ import React, { useState, useEffect, useContext } from 'react';
 import { StyleSheet, Text, FlatList, View, Modal, TouchableOpacity, Button } from 'react-native';
 import { InfoContext } from '../context/InfoContext';
 import { MaterialCommunityIcons } from '@expo/vector-icons';
+import moment from 'moment';
 
 import AddTimeline from './AddTimeline';
 
 
 export default function TimeLine ({ route, navigation }) {
   const [modalOpen, setModalOpen] = useState(false);
-  // const [dateSortEvents, setDateSortEvents] = useState({}) 
+  const [dateSortEvents, setDateSortEvents] = useState({}) 
   const { id } = route.params;
   const { tripEvents, getTripEvents } = useContext(InfoContext)
   //fetch one trip detail with trip id 
 
   useEffect(() => {
-    // setTripEvents(tripEventDBData[id])
+    setDateSortEvents({});// don't know if I need it, will look into later
     getTripEvents(id);
   }, [id])
 
-  // useEffect(() => {
-  //   // console.log("🍏",tripEvents);
-  //   if(tripEvents !== null){
-  //   // item = {
-  //   //   id: 1,
-  //   //   event_name: 'Tokyo Tower',
-  //   //   event_date: 2023-01-01T15:00:00.000Z,
-  //   //   trip_id: 1
-  //   // }
-
-  //     tripEvents.map((item) => {
-        
-  //       if(dateSortEvents[item.event_date]){
-  //         dateSortEvents[item.event_date] = (dateSortEvents[item.event_date].push({trip_id: item.trip_id, event_name: item.event_name, id:item.id}))
-  //       } else {
-  //         console.log("🍒");
-  //         dateSortEvents[item.event_date] = [{trip_id: item.trip_id, event_name: item.event_name, id:item.id}]
-  //       }
-  //       console.log(dateSortEvents);
-  //     })
-      
-  //     // return groupByDate
-  //   }
+  useEffect(() => {
+    if(tripEvents !== null){
+      // console.log("🍏",tripEvents, id);
     
-  //   setDateSortEvents(dateSortEvents)
-  // }, [tripEvents])
-  
+    tripEvents.map((item) => {
+        let date = moment(item.event_date).format("dddd, MMM DD, YYYY");
+        let time = moment(item.event_date).format("HH:mm A");
 
+        if(item.trip_id !== id) {
+          return
+        }
+
+        const dateObj = {
+          trip_id: item.trip_id, 
+          event_name: item.event_name, 
+          time: time, 
+          id:item.id
+        }
+        
+        if(dateSortEvents[date]){
+          let exists = dateSortEvents[date].find((eventItem) => {
+            return eventItem.id === item.id
+          })
+
+          if(exists){
+            return
+          } else {
+            dateSortEvents[date].push(dateObj)
+          }
+          
+        } else {
+          dateSortEvents[date] = [dateObj]
+        }
+      })
+      
+      //convert into array
+      if(Array.isArray(dateSortEvents)){
+        return
+      }
+
+      if(Object.keys(dateSortEvents).length !== 0){
+        const res = Object.keys(dateSortEvents).map((key) => ({
+          date: key, 
+          info: dateSortEvents[key]
+        }));
+
+        setDateSortEvents(res)
+      }
+    }
+    
+  }, [tripEvents])
+  // console.log("🍋",JSON.stringify(dateSortEvents));
+  
   const renderItem = ({ item }) => {
- 
-    const date = new Date(item.event_date).toDateString();
+    let eventArr = item.info;
     return (
       <>
-        <Text style={styles.date}>{date}</Text>
-        <Text style={styles.dayEvent}>{item.event_name}</Text>
-        {/* {Object.keys(dateSortEvents).length !== 0 ? dateSortEvents[item.event_date].map((eventName)=>(
-          <Text style={styles.dayEvent}>{eventName}</Text>
-          ))
-          :""
-          } */}
-        
+        <Text style={styles.date}>{item.date}</Text>
+        {eventArr.map((eventObj) => {
+          return(
+            <View key={eventObj.id} style={styles.dayContainer}>
+              <Text style={styles.dayTime}>{eventObj.time}</Text>
+              <Text style={styles.dayEvent}>{eventObj.event_name}</Text>
+            </View>
+          )
+        })}
       </>
     )
   }
@@ -68,11 +94,13 @@ export default function TimeLine ({ route, navigation }) {
     <>
       <View style={styles.container}>
         <View style={styles.innerContainer}>
-        <FlatList
-          keyExtractor={(item) => item.id}
-          data={tripEvents}
-          renderItem={renderItem}
-        />
+        {Array.isArray(dateSortEvents) && 
+          <FlatList
+            keyExtractor={(item) => item.id}
+            data={dateSortEvents}
+            renderItem={renderItem}
+          />
+        }
 
         <Modal visible={modalOpen} animationType="slide">
           <View style={styles.modalContent}>
@@ -139,10 +167,19 @@ const styles = StyleSheet.create({
     shadowRadius: 5,
     elevation: 7,
   },
+  dayContainer:{
+    marginTop:7,
+    marginLeft:7
+  },
+
+  dayTime:{
+    fontSize: 15,
+  },
 
   dayEvent:{
     fontSize: 24,
-    padding: 20
+    paddingLeft:20,
+    paddingBottom: 10,
   },
 
   modalContent:{
