@@ -1,6 +1,7 @@
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import React, { createContext, useEffect, useState } from "react";
-import API_URL from "../config";
+import { API_URL } from "../config";
+
 
 export const AuthContext = createContext();
 
@@ -73,7 +74,7 @@ export function AuthProvider({children}) {
     try{
       setIsLoading(true)
       let userToken = await AsyncStorage.getItem('userToken')
-      // console.log("🍇",userToken);
+      console.log("🍇",userToken);
       setUserToken(userToken)
       setIsLoading(false)
     } catch (e) {
