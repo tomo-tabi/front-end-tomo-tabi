@@ -16,12 +16,13 @@ import {
 
 import { InfoContext } from '../context/InfoContext';
 
-export default function AddTimeline() {
+export default function AddTimeline({ setModalOpen }) {
+  const { postTripEvents } = useContext(InfoContext);
+  
+  // for time date picker
   const [date, setDate] = useState(new Date())
   const [mode, setMode] = useState('date');
   const [show, setShow] = useState(false);
-
-  const { postTripEvents } = useContext(InfoContext);
 
   const onChange = (event, selectedDate) => {
     const currentDate = selectedDate;
@@ -47,9 +48,11 @@ export default function AddTimeline() {
   return(
     <View style={styles.container}>
       <Formik
-        initialValues={{ eventName: '', eventDate: '', eventTime: '' }}
+        initialValues={{ eventName: '', eventDate: '' }}
         onSubmit={(values) => {
-          postTripEvents(values)
+          postTripEvents(values);
+          setModalOpen(false);
+          
         }}
       >
         {(props) => (
@@ -83,7 +86,7 @@ export default function AddTimeline() {
                 display="default"
                 onChange={(event, selectedDate)=> {
                   onChange(undefined,selectedDate)
-                  props.setFieldValue('eventDate',moment(selectedDate).format('YYYY-MM-DD'))
+                  props.setFieldValue('eventDate',selectedDate)
                 }}
               />
             )}

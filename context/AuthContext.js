@@ -1,7 +1,6 @@
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import React, { createContext, useEffect, useState } from "react";
-import { API_URL } from "../config";
-
+import API_URL from "../config";
 
 export const AuthContext = createContext();
 
@@ -34,7 +33,7 @@ export function AuthProvider({children}) {
   const signup = async (userInput) => {
     try {
       //don't use localhost use wifi if address
-      const signupReq = await fetch(`http://${API_URL}:8080/user/signup`,
+      const signupReq = await fetch(`https://${API_URL}:8080/user/signup`,
         fetchOptions(userInput)
       )
       const signupRes = await signupReq.json();
@@ -51,6 +50,7 @@ export function AuthProvider({children}) {
   const login = async (userInput) => {
     try {
       // use axios?
+      console.log(`http://${API_URL}:8080/user/login`);
       const loginReq = await fetch(`http://${API_URL}:8080/user/login`,
         fetchOptions(userInput)
       )
@@ -73,10 +73,23 @@ export function AuthProvider({children}) {
   const isLoggedIn = async () => {
     try{
       setIsLoading(true)
-      let userToken = await AsyncStorage.getItem('userToken')
-      console.log("🍇",userToken);
-      setUserToken(userToken)
-      setIsLoading(false)
+      let userTokenStored = await AsyncStorage.getItem('userToken');
+      // console.log("🍇",userTokenStored);
+      setUserToken(userTokenStored);
+
+      const isLoggedInReq = await fetch(`http://${API_URL}:8080/user/`, {
+        method:"GET",
+        headers: {
+          'Accept': 'application/json, text/plain, */*', 
+          'Content-Type': 'application/json',
+          'Authorization': `Bearer ${userTokenStored}`
+        }
+      });
+
+      const isLoggedInRes = await isLoggedInReq.json();
+      // console.log(isLoggedInRes);
+      setUserData(isLoggedInRes);
+      setIsLoading(false);
     } catch (e) {
       console.log(`Login Error: ${e}`)
     }
@@ -84,24 +97,8 @@ export function AuthProvider({children}) {
 
   useEffect(() => {
     isLoggedIn()
-  }, [userData])
+  }, [])
   
-
-//   const pressHandler = (userInputObj) => {
-//     //fetch user info from database
-//     if(userData.email === userInputObj.email && userData.password === userInputObj.password){
-//       console.log(userInputObj.email)
-//       navigation.navigate('Trips')
-//     } else {
-//       Alert.alert(
-//         "Wron Password",
-//         "please write correct Password",
-//         [
-//           { text: "OK", onPress: () => console.log("OK Pressed") }
-//         ]
-//       );
-//     }
-// }
   return (
     <AuthContext.Provider value={{login, logout, signup, userToken, userData, isLoading}}>
       {children}
