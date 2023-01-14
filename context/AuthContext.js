@@ -33,7 +33,7 @@ export function AuthProvider({children}) {
   const signup = async (userInput) => {
     try {
       //don't use localhost use wifi if address
-      const signupReq = await fetch(`https://${API_URL}:8080/user/signup`,
+      const signupReq = await fetch(`http://${API_URL}:8080/user/signup`,
         fetchOptions(userInput)
       )
       const signupRes = await signupReq.json();
