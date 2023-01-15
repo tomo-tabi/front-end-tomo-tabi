@@ -6,7 +6,6 @@ import { StyleSheet, Button, TextInput, View, TouchableOpacity } from 'react-nat
 import { Octicons, Ionicons, Entypo } from '@expo/vector-icons';
 import DateTimePicker from '@react-native-community/datetimepicker';
 import moment from 'moment';
-import jwt_decode from "jwt-decode";
 import {
     StyledContainer,
     StyledTextInput,
@@ -16,18 +15,13 @@ import {
 } from '../styles/styles';
 
 
-const {brand, darkLight} = Colors;
+const {brand} = Colors;
 
 export default function AddTrip({setModalOpen}) {
   const [show, setShow] = useState(false);
-  const [date, setDate] = useState(new Date(2023, 0, 1));
-  const [startDate, setStartDate] = useState();
-  const [endDate, setEndDate] = useState();
-
-  const { userToken } = useContext(AuthContext);
-  // console.log("🍶",userToken);
-  const getId = jwt_decode(userToken).userid;
-  // console.log(getId);
+  const [date, setDate] = useState(new Date());
+  const [startDate, setStartDate] = useState(null);
+  const [endDate, setEndDate] = useState(null);
   const { postNewTrip, getTrips } = useContext(InfoContext);
 
   const onChange = (event, selectedDate) => {
@@ -45,7 +39,6 @@ export default function AddTrip({setModalOpen}) {
       setStartDate(currentDate);
       setEndDate(null);
     }
-    
   }
 
   const showDatePicker = () => {
@@ -66,11 +59,10 @@ export default function AddTrip({setModalOpen}) {
       )}
 
       <Formik
-        initialValues={{ startDate: '', endDate: '', userid: '', name: '' }}
+        initialValues={{ startDate: '', endDate: '', name: '' }}//remove userid
         onSubmit={(values) =>{
-          values = {...values, userid: getId, startDate: moment(startDate).format("YYYY-MM-DD"), endDate: moment(endDate).format("YYYY-MM-DD")}
+          values = {...values, startDate: moment(startDate).format("YYYY-MM-DD"), endDate: moment(endDate).format("YYYY-MM-DD")}
           postNewTrip(values);
-          // console.log(values);
           getTrips();
           setModalOpen(false);
         }}
