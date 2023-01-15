@@ -1,5 +1,5 @@
-import React, { useState, useEffect, useContext } from 'react';
-import { StyleSheet, Text, View, Modal, TouchableOpacity } from 'react-native';
+import React, { useState, useContext } from 'react';
+import { StyleSheet, Text, View, TouchableOpacity } from 'react-native';
 import DateTimePicker from '@react-native-community/datetimepicker';
 import moment from 'moment';
 import {Formik} from 'formik';
@@ -25,7 +25,7 @@ export default function AddTimeline({ setModalOpen }) {
   const [show, setShow] = useState(false);
 
   const onChange = (event, selectedDate) => {
-    const currentDate = selectedDate;
+    const currentDate = selectedDate || date;
     setShow(false);
     setDate(currentDate);
   };
@@ -45,6 +45,7 @@ export default function AddTimeline({ setModalOpen }) {
   const showTimepicker = () => {
     showMode('time');
   };
+
   return(
     <View style={styles.container}>
       <Formik
