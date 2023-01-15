@@ -27,6 +27,7 @@ export function AuthProvider({children}) {
       setIsLoading(true);
       AsyncStorage.setItem('userToken', userInfo.token);
       setUserData(userInfo);
+      setUserToken(userInfo.token)
       console.log(userData)
       setIsLoading(false);
     }
@@ -43,7 +44,7 @@ export function AuthProvider({children}) {
       // console.log("🍌",signupRes.token);
 
       setData(signupRes);
-      setUserToken(signupRes.token);//New line
+      // setUserToken(signupRes.token);//New line
 
     } catch (error) {
       console.error(error)
@@ -59,7 +60,7 @@ export function AuthProvider({children}) {
       )
       const loginRes = await loginReq.json();
       setData(loginRes);
-      setUserToken(loginRes.token);//New line
+      // setUserToken(loginRes.token);//New line
     } catch (error) {
       console.error(error)
     }
@@ -76,9 +77,9 @@ export function AuthProvider({children}) {
 
   const isLoggedIn = async () => {
     try{
-      if (!userToken) {//new line
-        setIsLoading(false)// new line
-      }else // new line
+      // if (!userToken) {//new line
+      //   setIsLoading(false)// new line
+      // }else // new line
       setIsLoading(true)
       let userTokenStored = await AsyncStorage.getItem('userToken');
       console.log("🍇",userTokenStored);
@@ -103,7 +104,10 @@ export function AuthProvider({children}) {
   }
 
   useEffect(() => {
-    isLoggedIn()
+    if (userToken) {
+      isLoggedIn();
+    }
+    
   }, [])
   
   return (
