@@ -1,4 +1,4 @@
-import React, { useState, useContext } from 'react'
+import React, { useState, useContext, useEffect } from 'react'
 import { StyleSheet, Text, FlatList, View, TouchableOpacity, Button, Modal } from 'react-native';
 import { AuthContext } from '../context/AuthContext';
 import { InfoContext } from '../context/InfoContext';
@@ -9,7 +9,7 @@ import AddTrip from './AddTrip';
 export default function Trips({ navigation }) {
   const { logout } = useContext(AuthContext); 
   const { trips } = useContext(InfoContext); 
-  const [modalOpen, setModalOpen] =useState(false);
+  const [modalOpen, setModalOpen] = useState(false);
 
   const pressHandler = (item) => {
     navigation.navigate('TripTabNav', {
@@ -31,7 +31,7 @@ export default function Trips({ navigation }) {
             style={{ ...styles.modalToggle, ...styles.modalClose }}
             onPress={() => setModalOpen(false)}
           />
-          <AddTrip />
+          <AddTrip setModalOpen={setModalOpen} />
         </View>
       </Modal>
   
@@ -46,12 +46,12 @@ export default function Trips({ navigation }) {
       </View>
 
       <FlatList
-        keyExtractor={( item ) => item.id}
+        keyExtractor={( item ) => item.userid}
         data = {trips}
         renderItem = {({ item }) => (
           <TouchableOpacity onPress={() => pressHandler(item)}>
-            <Text style={styles.date}>{item.startDate}</Text>
-            <Text style={styles.name}>{item.tripName}</Text>
+            <Text style={styles.date}>{item.start_date}➡️➡️{item.end_date}</Text>
+            <Text style={styles.name}>{item.name}</Text>
           </TouchableOpacity>
         )}
       />

@@ -2,11 +2,12 @@ import AsyncStorage from "@react-native-async-storage/async-storage";
 import React, { createContext, useEffect, useState } from "react";
 import API_URL from "../config";
 
+
 export const AuthContext = createContext();
 
 export function AuthProvider({children}) {
   const [isLoading, setIsLoading] = useState(false);
-  const [userToken, setUserToken] = useState(null);
+  const [userToken, setUserToken] = useState();
   const [userData, setUserData] = useState(null);
 
   const fetchOptions = (input) => {
@@ -26,14 +27,15 @@ export function AuthProvider({children}) {
       setIsLoading(true);
       AsyncStorage.setItem('userToken', userInfo.token);
       setUserData(userInfo);
+      console.log(userData)
       setIsLoading(false);
     }
   }
 
   const signup = async (userInput) => {
     try {
-      //don't use localhost use wifi if address
-      const signupReq = await fetch(`https://${API_URL}:8080/user/signup`,
+      //don't use localhost use wifi if addres
+      const signupReq = await fetch(`http://${API_URL}:8080/user/signup`,
         fetchOptions(userInput)
       )
       const signupRes = await signupReq.json();
@@ -41,6 +43,7 @@ export function AuthProvider({children}) {
       // console.log("🍌",signupRes.token);
 
       setData(signupRes);
+      setUserToken(signupRes.token);//New line
 
     } catch (error) {
       console.error(error)
@@ -56,6 +59,7 @@ export function AuthProvider({children}) {
       )
       const loginRes = await loginReq.json();
       setData(loginRes);
+      setUserToken(loginRes.token);//New line
     } catch (error) {
       console.error(error)
     }
@@ -72,9 +76,12 @@ export function AuthProvider({children}) {
 
   const isLoggedIn = async () => {
     try{
+      if (!userToken) {//new line
+        setIsLoading(false)// new line
+      }else // new line
       setIsLoading(true)
       let userTokenStored = await AsyncStorage.getItem('userToken');
-      // console.log("🍇",userTokenStored);
+      console.log("🍇",userTokenStored);
       setUserToken(userTokenStored);
 
       const isLoggedInReq = await fetch(`http://${API_URL}:8080/user/`, {
@@ -86,9 +93,9 @@ export function AuthProvider({children}) {
         }
       });
 
-      const isLoggedInRes = await isLoggedInReq.json();
-      // console.log(isLoggedInRes);
+      let isLoggedInRes = await isLoggedInReq.json();
       setUserData(isLoggedInRes);
+      console.log(userData);
       setIsLoading(false);
     } catch (e) {
       console.log(`Login Error: ${e}`)
