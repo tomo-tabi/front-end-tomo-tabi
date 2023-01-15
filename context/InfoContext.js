@@ -17,7 +17,7 @@ export function InfoProvider({children}) {
   // Trips
   const tripData = { //using userData.id
     2:[
-      {tripName: 'Tokyo', id:1, startDate: '2022-12-20', endDate: '2022-12-22', userid: 2},
+      {tripName: 'Tokyo', id:1, startDate: '2023-01-02', endDate: '2023-01-19', userid: 2},
       {tripName: 'Osaka', id:2, startDate: '2022-12-04', endDate: '2022-12-06', userid: 2},
       {tripName: 'Boston', id:3, startDate: '2023-01-04', endDate: '2023-01-06', userid: 2},
     ]
