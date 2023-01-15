@@ -45,10 +45,11 @@ export default function AddTimeline({ setModalOpen }) {
   const showTimepicker = () => {
     showMode('time');
   };
+
   return(
     <View style={styles.container}>
       <Formik
-        initialValues={{ eventName: '', eventDate: '' }}
+        initialValues={{ eventName: '', eventDate: date }}
         onSubmit={(values) => {
           postTripEvents(values);
           setModalOpen(false);
