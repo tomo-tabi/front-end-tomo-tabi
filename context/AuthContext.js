@@ -35,7 +35,7 @@ export function AuthProvider({children}) {
 
   const signup = async (userInput) => {
     try {
-      //don't use localhost use wifi if addres
+
       const signupReq = await fetch(`http://${API_URL}:8080/user/signup`,
         fetchOptions(userInput)
       )
