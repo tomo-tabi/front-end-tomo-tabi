@@ -21,8 +21,8 @@ export default function TimeLine ({ route, navigation }) {
 
   useEffect(() => {
     if(tripEvents !== null){
-      // console.log("🍏", tripEvents);
-    
+      // setDateSortEvents({});
+    const Obj = {}
     tripEvents.map((item) => {
         let date = moment(item.event_date).format("dddd, MMM DD, YYYY");
         let time = moment(item.event_date).format("HH:mm A");
@@ -38,39 +38,38 @@ export default function TimeLine ({ route, navigation }) {
           id:item.id
         }
         
-        if(dateSortEvents[date]){
-          let exists = dateSortEvents[date].find((eventItem) => {
+        if(Obj[date]){
+          let exists = Obj[date].find((eventItem) => {
             return eventItem.id === item.id
           })
 
           if(exists){
             return
           } else {
-            dateSortEvents[date].push(dateObj)
+            Obj[date].push(dateObj)
           }
           
         } else {
-          dateSortEvents[date] = [dateObj]
+          Obj[date] = [dateObj]
         }
       })
       
+      // console.log("🦴", JSON.stringify(Obj));
       //convert into array
-      if(Array.isArray(dateSortEvents)){
-        return
-      }
 
-      if(Object.keys(dateSortEvents).length !== 0){
-        const res = Object.keys(dateSortEvents).map((key) => ({
+      if(Object.keys(Obj).length !== 0){
+        const res = Object.keys(Obj).map((key) => ({
           date: key, 
-          info: dateSortEvents[key]
+          info: Obj[key]
         }));
+        // console.log("🍏", JSON.stringify(res));
 
         setDateSortEvents(res)
       }
     }
     
   }, [tripEvents])
-  // console.log("🍋",(tripEvents));
+  
   
   const renderItem = ({ item }) => {
     let eventArr = item.info;
