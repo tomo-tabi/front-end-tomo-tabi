@@ -1,8 +1,11 @@
 import { Formik } from 'formik';
-import React, { useState } from 'react';
+import React, { useState, useContext } from 'react';
+import { AuthContext } from "../context/AuthContext";
+import { InfoContext } from '../context/InfoContext';
 import { StyleSheet, Button, TextInput, View, TouchableOpacity } from 'react-native';
 import { Octicons, Ionicons, Entypo } from '@expo/vector-icons';
 import DateTimePicker from '@react-native-community/datetimepicker';
+import moment from 'moment';
 import {
     StyledContainer,
     StyledTextInput,
@@ -11,20 +14,31 @@ import {
     Colors, 
 } from '../styles/styles';
 
-const {brand, darkLight} = Colors;
 
-export default function AddTrip(params) {
+const {brand} = Colors;
+
+export default function AddTrip({setModalOpen}) {
   const [show, setShow] = useState(false);
-  const [date, setDate] = useState(new Date(2023, 0, 1));
-  const [startDate, setStartDate] = useState();
-  const [endDate, setEndDate] = useState();
+  const [date, setDate] = useState(new Date());
+  const [startDate, setStartDate] = useState(null);
+  const [endDate, setEndDate] = useState(null);
+  const { postNewTrip, getTrips } = useContext(InfoContext);
 
   const onChange = (event, selectedDate) => {
     const currentDate = selectedDate || date;
     setShow(false);
     setDate(currentDate);
-    setStartDate(currentDate);
-    setEndDate(currentDate);
+    if (!startDate && !endDate) {
+      setStartDate(currentDate);
+    }else if (startDate && !endDate) {
+      setEndDate(currentDate);
+    }
+     // user is choosing another range => set the start date
+    // and set the endDate back to null
+    if (startDate && endDate) {
+      setStartDate(currentDate);
+      setEndDate(null);
+    }
   }
 
   const showDatePicker = () => {
@@ -45,10 +59,12 @@ export default function AddTrip(params) {
       )}
 
       <Formik
-        initialValues={{ startDate: '', endDate: '', userid: '', name: '' }}
+        initialValues={{ startDate: '', endDate: '', name: '' }}//remove userid
         onSubmit={(values) =>{
-          values = {...values, startDate: startDate, endDate: endDate}
-          console.log(values);
+          values = {...values, startDate: moment(startDate).format("YYYY-MM-DD"), endDate: moment(endDate).format("YYYY-MM-DD")}
+          postNewTrip(values);
+          getTrips();
+          setModalOpen(false);
         }}
       >
         {(props) => (

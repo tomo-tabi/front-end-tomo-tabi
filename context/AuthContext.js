@@ -21,11 +21,12 @@ export function AuthProvider({children}) {
     }
   };
 
-  const setData = (userInfo) => {
+  const setData = async (userInfo) => {
     if (userInfo) {
       setIsLoading(true);
       AsyncStorage.setItem('userToken', userInfo.token);
       setUserData(userInfo);
+      setUserToken(userInfo.token);
       setIsLoading(false);
     }
   }
@@ -72,6 +73,10 @@ export function AuthProvider({children}) {
 
   const isLoggedIn = async () => {
     try{
+      // if(userTokenStored === null){
+      //   setIsLoading(false);
+      //   return
+      // }else
       setIsLoading(true)
       let userTokenStored = await AsyncStorage.getItem('userToken');
       // console.log("🍇",userTokenStored);
@@ -96,8 +101,10 @@ export function AuthProvider({children}) {
   }
 
   useEffect(() => {
-    isLoggedIn()
-  }, [])
+    if(userToken){
+      isLoggedIn();
+    }
+  }, []);
   
   return (
     <AuthContext.Provider value={{login, logout, signup, userToken, userData, isLoading}}>
