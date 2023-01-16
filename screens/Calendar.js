@@ -1,4 +1,6 @@
-import React from 'react';
+import React, { useState, useEffect, useContext, useRef } from 'react';
+import { Calendar, CalendarList, Agenda } from 'react-native-calendars';
+import { InfoContext } from '../context/InfoContext';
 
 
 
@@ -228,3 +230,74 @@ export default function CalendarView(params) {
         </>
     )
 };
+
+
+const styles = StyleSheet.create({
+    container: {
+        flex: 1,
+        backgroundColor: '#fff',
+    },
+    innerContainer: {
+        flex: 1,
+        backgroundColor: '#fff',
+        marginHorizontal: 10,
+    },
+
+    date: {
+        fontWeight: "bold",
+        fontSize: 24,
+        padding: 20,
+        marginTop: 10,
+        borderRadius: 6,
+        backgroundColor: '#9CCAEC'
+    },
+
+    iconContainer: {
+        alignItems: "center",
+        alignSelf: "flex-end",
+        backgroundColor: '#F187A4',
+        borderRadius: 40,
+        justiftyContent: "center",
+        margin: 5,
+
+        height: 70,
+        width: 70,
+
+        position: "absolute",
+        right: 0,
+        bottom: 10,
+
+        shadowColor: "#000",
+        shadowOpacity: 0.9,
+        shadowRadius: 5,
+        elevation: 7,
+    },
+    dayContainer: {
+        marginTop: 7,
+        marginLeft: 7
+    },
+
+    dayTime: {
+        fontSize: 7,
+    },
+
+    dayEvent: {
+        fontSize: 24,
+        paddingLeft: 24,
+        paddingBottom: 10,
+    },
+
+    modalContent: {
+        flex: 1,
+        margin: 10,
+    },
+    modalToggle: {
+        margin: 10,
+        alignSelf: "flex-end",
+        color: '#fff',
+    },
+    modalClose: {
+        margin: 0,
+        color: 'black'
+    }
+})
