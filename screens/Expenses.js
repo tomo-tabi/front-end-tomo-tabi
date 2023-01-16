@@ -1,14 +1,50 @@
-import React, { useState, useCallback } from "react";
-import { Alert, Button, Linking, StyleSheet, View } from "react-native";
-import { Table, TableWrapper, Row, Rows } from "react-native-table-component";
+import React, { useState, useCallback, useContext, useEffect } from "react";
+import { Alert, Button, Linking, StyleSheet, View, TouchableOpacity, Modal } from "react-native";
+import { Table, TableWrapper, Row, Rows, Cell } from "react-native-table-component";
+import { MaterialCommunityIcons } from '@expo/vector-icons';
+import { AuthContext } from "../context/AuthContext";
+import { ExpContext } from "../context/ExpContext";
+import AddExpenses from "./AddExpenses";
 
 export const ExpenseTable = () => {
-  const [tableHead, setTableHead] = useState(["Name", "Item", "Money"]);
-  const [tableData, setTableData] = useState([
-    ["Matthew", "tickets", 5000],
-    ["Eric", "drinks", 1500],
-    ["Pol", "Hotel Fee", 6000],
-  ]);
+  const [ modalOpen, setModalOpen ] = useState(false);
+
+  const { userData } = useContext(AuthContext);//to extract username?
+  const { getExp, postExp, expData } = useContext(ExpContext);
+
+  const [tableHead, setTableHead] = useState(["Name", "Item", "Cost"]);
+  // const [tableData, setTableData] = useState([
+  //   ["Matthew", "tickets", 5000],
+  //   ["Eric", "drinks", 1500],
+  //   ["Pol", "Hotel Fee", 6000],
+  // ]);
+  const [tableData, setTableData] = useState([]);
+
+  useEffect(() => {
+    getExp()
+  }, [])
+
+  //format data for table
+  useEffect(() => {
+    let expArr = [];
+
+    if(expData){
+      expData.forEach((obj) => {
+        expArr.push([
+          obj.user_id,
+          obj.item_name,
+          obj.money
+        ])
+      })
+      setTableData(expArr)
+    }
+  },[expData])
+
+  const editData = (data, index) => {
+    // if (index !== 3) return;
+    console.log(data, index);
+  }
+
 
   const supportedURL = "paypay://";
 
@@ -41,15 +77,18 @@ export const ExpenseTable = () => {
     return <Button title={children} onPress={handlePress} />;
   };
 
+  // post exp needs: itemName, money, optional purchaserid (if blank defaults to userid)
+
   return (
     <View style={styles.container}>
-      <Table borderStyle={{ borderWidth: 1 }}>
+      {/* <Table borderStyle={{ borderWidth: 1 }}>
         <Row
           data={tableHead}
           flexArr={[2, 2, 1]}
           style={styles.head}
           textStyle={styles.text}
         />
+  
         <TableWrapper style={styles.wrapper}>
           <Rows
             data={tableData}
@@ -58,9 +97,48 @@ export const ExpenseTable = () => {
             textStyle={styles.text}
           />
         </TableWrapper>
+      </Table> */}
+      <Table borderStyle={{ borderWidth: 1 }}>
+        <TableWrapper >
+          <Row data={tableHead} style={styles.head} textStyle={styles.text}/>
+          {
+            tableData.map((data, i) => (
+              <TableWrapper >
+                <TouchableOpacity key={i} style={styles.wrapper} onPress={() => editData(data, i)}>
+                  {
+                    data.map((cell, j) => (
+                      <Cell key={j} data={cell} textStyle={styles.text} borderStyle={{ borderWidth: 1 }}/>
+                    ))
+                  }
+                </TouchableOpacity>
+              </TableWrapper>
+            ))                          
+          }
+        </TableWrapper>
       </Table>
+      
       <OpenURLButton url={supportedURL}>Open PayPay</OpenURLButton>
       <OpenURLButton url={unsupportedURL}>Open Line Pay</OpenURLButton>
+
+      <Modal visible={modalOpen} animationType="slide">
+          <View style={styles.modalContent}>
+            <MaterialCommunityIcons
+              name='window-close'
+              size={24}
+              style={{...styles.modalToggle, ...styles.modalClose}}
+              onPress={() => setModalOpen(false)}
+            />
+            <AddExpenses setModalOpen={setModalOpen}/>
+          </View>
+        </Modal>
+        
+          <TouchableOpacity onPress={() => setModalOpen(true)} style={styles.iconContainer}>
+              <MaterialCommunityIcons
+                name='plus'
+                size={50}
+                style={styles.modalToggle}
+              />
+          </TouchableOpacity>
     </View>
   );
 };
@@ -77,15 +155,49 @@ const styles = StyleSheet.create({
   },
   wrapper: {
     flexDirection: "row",
+    height: 40,
   },
-  title: {
-    flex: 1,
-    backgroundColor: "#f6f8fa",
-  },
+  // title: {
+  //   flex: 1,
+  //   backgroundColor: "#f6f8fa",
+  // },
   row: {
     height: 28,
   },
   text: {
     textAlign: "center",
   },
+  iconContainer:{
+    alignItems:"center",
+    alignSelf:"flex-end",
+    backgroundColor:'#F187A4',
+    borderRadius: 40,
+    justiftyContent:"center",
+    margin:5,
+    
+    height:70,
+    width:70,
+    
+    position:"absolute",
+    right:0,
+    bottom:10,
+
+    shadowColor: "#000",
+    shadowOpacity: 0.9,
+    shadowRadius: 5,
+    elevation: 7,
+  },
+  modalContent:{
+    flex:1,
+    margin:10,
+  },
+  modalToggle:{
+    margin:10,
+    alignSelf:"flex-end",
+    color:'#fff',
+  },
+  modalClose:{
+    margin:0,
+    color:'black'
+  }
 });

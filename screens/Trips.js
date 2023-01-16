@@ -1,21 +1,21 @@
-import React, { useState, useContext, useEffect } from 'react'
-import { StyleSheet, Text, FlatList, View, TouchableOpacity, Button, Modal } from 'react-native';
+import React, { useState, useContext } from 'react'
+import { StyleSheet, Text, FlatList, View, TouchableOpacity, Modal } from 'react-native';
 import { AuthContext } from '../context/AuthContext';
 import { InfoContext } from '../context/InfoContext';
-import { StyledButton, ButtonText, SubTitle } from '../styles/styles';
+import { StyledButton, ButtonText } from '../styles/styles';
 import { MaterialIcons } from '@expo/vector-icons';
 import AddTrip from './AddTrip';
 
 export default function Trips({ navigation }) {
   const { logout } = useContext(AuthContext); 
   const { trips } = useContext(InfoContext); 
-  const [modalOpen, setModalOpen] = useState(false);
+  const [ modalOpen, setModalOpen ] = useState(false);
 
   const pressHandler = (item) => {
     navigation.navigate('TripTabNav', {
       screen: 'TimeLine',
       // need to wrap it in obj to pass to nested nav
-      params: {id: item.id, name:item.tripName},
+      params: {id: item.id, name:item.name},
     })
   }
   

@@ -1,4 +1,5 @@
 import React, { createContext, useContext, useState, useEffect } from "react";
+import { Alert } from "react-native";
 import { AuthContext } from "./AuthContext";
 import API_URL from "../config";
 import moment from 'moment';
@@ -10,75 +11,75 @@ export function InfoProvider({children}) {
   const [tripEvents, setTripEvents] = useState(null);//trip events for one trip
   const [tripid, setTripid] = useState(null);//trip id
 
-  const { userData, userToken } = useContext(AuthContext)
+  const { userData, userToken } = useContext(AuthContext);
+
+  const authHeader = {
+    'Accept': 'application/json, text/plain, */*', 
+    'Content-Type': 'application/json',
+    'Authorization': `Bearer ${userToken}`
+  }
+
+  // should I import this from Auth context?
+  const checkStatus = (res, req, setFunc) => {
+    // console.log(req.status);
+    if (req.status === 404) {
+      return
+    }
+    if (req.status === 200) {
+      setFunc(res);
+    } else {
+      Alert.alert(res.message);
+    }
+  };
   
   const getTripEvents = async (tripid) => {
-    // console.log("🍎",tripid);
     // console.log("🍎",userToken);
-    
-    const tripEvents = await fetch(`http://${API_URL}:8080/timeline/${tripid}`,{
-      method:"GET",
-      headers: {
-        'Accept': 'application/json, text/plain, */*', 
-        'Content-Type': 'application/json',
-        'Authorization': `Bearer ${userToken}`
-      }
-    })
-    const res = await tripEvents.json();
-    setTripEvents(res);
     setTripid(tripid);
     
-    // return res
-  }
+    const tripEventsReq = await fetch(`http://${API_URL}:8080/timeline/${tripid}`,{
+      method:"GET",
+      headers: authHeader
+    })
+    // console.log("🍎",tripEventsReq);
+    if(tripEventsReq.status === 204) {
+      return
+    }
+    const tripEventsRes = await tripEventsReq.json();
+    // console.log("🍎",tripEventsRes.message);
+
+    checkStatus(tripEventsRes, tripEventsReq, setTripEvents)
+    // return tripEventsRes
+    
+  };
 
   const postTripEvents = async (tripEventInput) => {
     tripEventInput.tripid = tripid
      
-    const postTripEvents = await fetch(`http://${API_URL}:8080/timeline/create`, {
+    const postTripEventsReq = await fetch(`http://${API_URL}:8080/timeline/create`, {
       method:"POST",
-      headers: {
-        'Accept': 'application/json, text/plain, */*', 
-        'Content-Type': 'application/json',
-        'Authorization': `Bearer ${userToken}`
-      },
+      headers: authHeader,
       body:JSON.stringify(tripEventInput)
     })
-    const res = await postTripEvents.json();
-    
-    getTripEvents(tripid);
-  }
 
-  const postNewTrip = async (newTripInput) => {
-    try{
-      console.log(newTripInput);
-      
-      const postNewTrip = await fetch(`http://${API_URL}:8080/trip`, {
-        method:"POST",
-        headers: {
-          'Accept': 'application/json, text/plain, */*', 
-          'Content-Type': 'application/json',
-          'Authorization': `Bearer ${userToken}`
-        },
-        body:JSON.stringify(newTripInput)
-      })
-      const res = await postNewTrip.json();
-      console.log(res);
-    }catch(e) {
-      console.log(e);
-    }
+
+    const postTripEventsRes = await postTripEventsReq.json();
+
+    checkStatus(postTripEventsRes, postTripEventsReq, (res) => {
+      getTripEvents(tripid);
+      return console.log(res);
+    })
     
-  }
+  };
 
   const getTrips = async () => {
     try{
       const getTrips = await fetch(`http://${API_URL}:8080/trip`,{
         method:"GET",
-        headers: {
-          'Accept': 'application/json, text/plain, */*', 
-          'Content-Type': 'application/json',
-          'Authorization': `Bearer ${userToken}`
-        }
+        headers: authHeader
       })
+
+
+      // console.log("🤢", getTrips.status);
       const res = await getTrips.json();
       const obj = res;
       // console.log("🤢", obj.name);
@@ -95,23 +96,46 @@ export function InfoProvider({children}) {
             end_date: end_date
           };
         });
+
         setTrips(modified);
       }
 
-    }catch (e) {
+    } catch (e) {
       console.log(e);
     }
   }
+
+  const postNewTrip = async (newTripInput) => {
+    try{
+      console.log(newTripInput);
+      
+      const postNewTrip = await fetch(`http://${API_URL}:8080/trip`, {
+        method:"POST",
+        headers: authHeader,
+        body:JSON.stringify(newTripInput)
+      })
+
+      const res = await postNewTrip.json();
+
+      checkStatus(res, postNewTrip, (res) => {
+        getTrips();
+        return console.log(res);
+      })
+
+    }catch(e) {
+      console.log(e);
+    }
+    
+  }
+
 
 
   useEffect(() => {
 
     if(userData){
-      // setTrips(tripData[2])
-      // setTripEventDB(tripEventDBData)
       getTrips();
     }
-  }, [])
+  }, [userData])
   
 
   return (
