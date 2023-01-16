@@ -1,14 +1,28 @@
-import React, { useState, useCallback } from "react";
-import { Alert, Button, Linking, StyleSheet, View } from "react-native";
-import { Table, TableWrapper, Row, Rows } from "react-native-table-component";
+import React, { useState, useCallback, useContext } from "react";
+import { Alert, Button, Linking, StyleSheet, View, TouchableOpacity } from "react-native";
+import { Table, TableWrapper, Row, Rows, Cell } from "react-native-table-component";
+// import { AuthContext } from "./AuthContext";
+// import { ExpContext } from "./ExpContext.js";
 
 export const ExpenseTable = () => {
+  // const { userData } = useContext(AuthContext);//to extract username
+  // const { getExp, postExp } = useContext(ExpContext);
+
   const [tableHead, setTableHead] = useState(["Name", "Item", "Money"]);
   const [tableData, setTableData] = useState([
     ["Matthew", "tickets", 5000],
     ["Eric", "drinks", 1500],
     ["Pol", "Hotel Fee", 6000],
   ]);
+
+  const showData = (data, index) => {
+    // if (index !== 3) return;
+    console.log(data, index);
+  }
+
+  const editData = (data, i) => {
+    console.log(data);
+  }
 
   const supportedURL = "paypay://";
 
@@ -41,15 +55,18 @@ export const ExpenseTable = () => {
     return <Button title={children} onPress={handlePress} />;
   };
 
+  // post exp needs: itemName, money, optional purchaserid (if blank defaults to userid)
+
   return (
     <View style={styles.container}>
-      <Table borderStyle={{ borderWidth: 1 }}>
+      {/* <Table borderStyle={{ borderWidth: 1 }}>
         <Row
           data={tableHead}
           flexArr={[2, 2, 1]}
           style={styles.head}
           textStyle={styles.text}
         />
+  
         <TableWrapper style={styles.wrapper}>
           <Rows
             data={tableData}
@@ -58,7 +75,26 @@ export const ExpenseTable = () => {
             textStyle={styles.text}
           />
         </TableWrapper>
+      </Table> */}
+      <Table borderStyle={{ borderWidth: 1 }}>
+        <TableWrapper >
+          <Row data={tableHead} style={styles.head} textStyle={styles.text}/>
+          {
+            tableData.map((data, i) => (
+              <TableWrapper >
+                <TouchableOpacity key={i} style={styles.wrapper} onPress={() => showData(data, i)}>
+                  {
+                    data.map((cell, j) => (
+                      <Cell key={j} data={cell} textStyle={styles.text} borderStyle={{ borderWidth: 1 }}/>
+                    ))
+                  }
+                </TouchableOpacity>
+              </TableWrapper>
+            ))                          
+          }
+        </TableWrapper>
       </Table>
+      
       <OpenURLButton url={supportedURL}>Open PayPay</OpenURLButton>
       <OpenURLButton url={unsupportedURL}>Open Line Pay</OpenURLButton>
     </View>
@@ -77,11 +113,12 @@ const styles = StyleSheet.create({
   },
   wrapper: {
     flexDirection: "row",
+    height: 40,
   },
-  title: {
-    flex: 1,
-    backgroundColor: "#f6f8fa",
-  },
+  // title: {
+  //   flex: 1,
+  //   backgroundColor: "#f6f8fa",
+  // },
   row: {
     height: 28,
   },
