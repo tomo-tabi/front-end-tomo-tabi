@@ -107,8 +107,8 @@ export default function CalendarView(params) {
         })
         trips.forEach((trip) => {
             if (trip.id === tripid) {
-                startDateTrip = moment(trip.startDate)
-                lastDateTrip = moment(trip.endDate)
+                startDateTrip = moment(trip.start_date)
+                lastDateTrip = moment(trip.end_date)
             }
         })
         var getDaysArray = function (start, end) {
