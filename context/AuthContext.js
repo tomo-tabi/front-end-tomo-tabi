@@ -82,12 +82,11 @@ export function AuthProvider({children}) {
     try{
       setIsLoading(true)
       let userTokenStored = await AsyncStorage.getItem('userToken');
-      if(userTokenStored === null) {
+
+      if (userTokenStored === null) {
         setIsLoading(false);
         return
       } else {
-
-        console.log("🍇",userTokenStored);
         setUserToken(userTokenStored);
         
         const isLoggedInReq = await fetch(`http://${API_URL}:8080/user/`, {

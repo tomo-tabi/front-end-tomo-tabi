@@ -21,7 +21,10 @@ export function InfoProvider({children}) {
 
   // should I import this from Auth context?
   const checkStatus = (res, req, setFunc) => {
-    // console.log(req.status);
+    console.log(req.status);
+    if (req.status === 404) {
+      return
+    }
     if (req.status === 200) {
       setFunc(res);
     } else {
@@ -82,7 +85,7 @@ export function InfoProvider({children}) {
         return
       }
 
-      console.log("🤢", getTrips.status);
+      // console.log("🤢", getTrips.status);
       const res = await getTrips.json();
       const obj = res;
       // console.log("🤢", obj.name);
