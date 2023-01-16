@@ -21,7 +21,7 @@ export function InfoProvider({children}) {
 
   // should I import this from Auth context?
   const checkStatus = (res, req, setFunc) => {
-    console.log(req.status);
+    // console.log(req.status);
     if (req.status === 404) {
       return
     }

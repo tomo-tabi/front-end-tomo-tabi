@@ -8,8 +8,9 @@ import AddTimeline from './AddTimeline';
 
 
 export default function TimeLine ({ route, navigation }) {
-  const [modalOpen, setModalOpen] = useState(false);
-  const [dateSortEvents, setDateSortEvents] = useState({}) 
+  const [ modalOpen, setModalOpen ] = useState(false);
+  const [ dateSortEvents, setDateSortEvents ] = useState({}) 
+  
   const { id } = route.params;
   const { tripEvents, getTripEvents } = useContext(InfoContext)
   //fetch one trip detail with trip id 
@@ -166,6 +167,7 @@ const styles = StyleSheet.create({
     shadowRadius: 5,
     elevation: 7,
   },
+  
   dayContainer:{
     marginTop:7,
     marginLeft:7
