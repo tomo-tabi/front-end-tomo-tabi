@@ -9,13 +9,14 @@ import AddTrip from './AddTrip';
 export default function Trips({ navigation }) {
   const { logout } = useContext(AuthContext); 
   const { trips } = useContext(InfoContext); 
-  const [modalOpen, setModalOpen] = useState(false);
+  const [ modalOpen, setModalOpen ] = useState(false);
 
   const pressHandler = (item) => {
+    console.log("item",item);
     navigation.navigate('TripTabNav', {
       screen: 'TimeLine',
       // need to wrap it in obj to pass to nested nav
-      params: {id: item.id, name:item.tripName},
+      params: {id: item.id, name:item.name},
     })
   }
   
