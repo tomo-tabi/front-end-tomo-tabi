@@ -1,5 +1,6 @@
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import React, { createContext, useEffect, useState } from "react";
+import { Alert } from "react-native";
 import API_URL from "../config";
 
 export const AuthContext = createContext();
@@ -9,10 +10,9 @@ export function AuthProvider({children}) {
   const [userToken, setUserToken] = useState(null);
   const [userData, setUserData] = useState(null);
 
-  const fetchOptions = (input) => {
+  const postOptions = (input) => {
     return {
       method:"POST",
-      //need headers?
       headers: {
         'Accept': 'application/json, text/plain, */*', 
         'Content-Type': 'application/json'
@@ -31,17 +31,23 @@ export function AuthProvider({children}) {
     }
   }
 
+  const checkStatus = (res, req, setFunc) => {
+    if(req.status === 200) {
+      setFunc(res)
+    } else {
+      Alert.alert(res.message)
+    }
+  }
+
   const signup = async (userInput) => {
     try {
-      //don't use localhost use wifi if address
       const signupReq = await fetch(`http://${API_URL}:8080/user/signup`,
-        fetchOptions(userInput)
+        postOptions(userInput)
       )
+      
       const signupRes = await signupReq.json();
-
-      // console.log("🍌",signupRes.token);
-
-      setData(signupRes);
+      checkStatus(signupRes, signupReq, setData)
+      // setData(signupRes);
 
     } catch (error) {
       console.error(error)
@@ -50,13 +56,13 @@ export function AuthProvider({children}) {
 
   const login = async (userInput) => {
     try {
-      // use axios?
-      console.log(`http://${API_URL}:8080/user/login`);
       const loginReq = await fetch(`http://${API_URL}:8080/user/login`,
-        fetchOptions(userInput)
+        postOptions(userInput)
       )
+
       const loginRes = await loginReq.json();
-      setData(loginRes);
+      checkStatus(loginRes, loginReq, setData)
+
     } catch (error) {
       console.error(error)
     }
@@ -71,39 +77,43 @@ export function AuthProvider({children}) {
     setIsLoading(false);
   }
 
+ // only when user logged before and quite app
   const isLoggedIn = async () => {
     try{
-      // if(userTokenStored === null){
-      //   setIsLoading(false);
-      //   return
-      // }else
       setIsLoading(true)
       let userTokenStored = await AsyncStorage.getItem('userToken');
-      // console.log("🍇",userTokenStored);
-      setUserToken(userTokenStored);
+      if(userTokenStored === null) {
+        setIsLoading(false);
+        return
+      } else {
 
-      const isLoggedInReq = await fetch(`http://${API_URL}:8080/user/`, {
-        method:"GET",
-        headers: {
-          'Accept': 'application/json, text/plain, */*', 
-          'Content-Type': 'application/json',
-          'Authorization': `Bearer ${userTokenStored}`
-        }
-      });
-
-      const isLoggedInRes = await isLoggedInReq.json();
-      // console.log(isLoggedInRes);
-      setUserData(isLoggedInRes);
-      setIsLoading(false);
+        console.log("🍇",userTokenStored);
+        setUserToken(userTokenStored);
+        
+        const isLoggedInReq = await fetch(`http://${API_URL}:8080/user/`, {
+          method:"GET",
+          headers: {
+            'Accept': 'application/json, text/plain, */*', 
+            'Content-Type': 'application/json',
+            'Authorization': `Bearer ${userTokenStored}`
+          }
+        });
+        
+        const isLoggedInRes = await isLoggedInReq.json();
+        checkStatus(isLoggedInRes, isLoggedInReq, setUserData)
+        // console.log(isLoggedInRes);
+        // setUserData(isLoggedInRes);
+        setIsLoading(false);
+      }
     } catch (e) {
       console.log(`Login Error: ${e}`)
     }
   }
 
   useEffect(() => {
-    if(userToken){
-      isLoggedIn();
-    }
+    isLoggedIn();
+    // if(userToken){
+    // }
   }, []);
   
   return (
