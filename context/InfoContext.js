@@ -61,9 +61,6 @@ export function InfoProvider({children}) {
       body:JSON.stringify(tripEventInput)
     })
 
-    if(postTripEventsReq.status === 204) {
-      return
-    }
 
     const postTripEventsRes = await postTripEventsReq.json();
 
@@ -81,9 +78,6 @@ export function InfoProvider({children}) {
         headers: authHeader
       })
 
-      if(getTrips.status === 204) {
-        return
-      }
 
       // console.log("🤢", getTrips.status);
       const res = await getTrips.json();
@@ -139,8 +133,6 @@ export function InfoProvider({children}) {
   useEffect(() => {
 
     if(userData){
-      // setTrips(tripData[2])
-      // setTripEventDB(tripEventDBData)
       getTrips();
     }
   }, [userData])
