@@ -46,31 +46,26 @@ export const ExpenseTable = () => {
   }
 
 
-  const supportedURL = "paypay://";
+  const PayPayURL = "paypay://";
 
-  const unsupportedURL = "linepay://";
+  const LinePayURL = "linepay://";
 
   const OpenURLButton = ({ url, children }) => {
     const handlePress = useCallback(async () => {
       // Checking if the link is supported for links with custom URL scheme.
       const supported = await Linking.canOpenURL(url);
-      const supported2 = await Linking.canOpenURL(url);
 
       if (supported) {
         // Opening the link with some app, if the URL scheme is "http" the web link should be opened
         // by some browser in the mobile
         await Linking.openURL(url);
       } else {
-        await Linking.openURL("https://play.google.com/store/apps/details?id=com.paypay.android%22")
-
-      }
-      if (supported2) {
-        // Opening the link with some app, if the URL scheme is "http" the web link should be opened
-        // by some browser in the mobile
-        await Linking.openURL(url);
-      } else {
-        await Linking.openURL("https://play.google.com/store/apps/details?id=com.linecorp.linepay")
-
+        if (url == "paypay://") {
+          await Linking.openURL("https://play.google.com/store/apps/details?id=com.paypay.android%22")
+        }
+        else {
+          await Linking.openURL("https://play.google.com/store/apps/details?id=com.linecorp.linepay")
+        }
       }
     }, [url]);
 
@@ -117,8 +112,8 @@ export const ExpenseTable = () => {
         </TableWrapper>
       </Table>
       
-      <OpenURLButton url={supportedURL}>Open PayPay</OpenURLButton>
-      <OpenURLButton url={unsupportedURL}>Open Line Pay</OpenURLButton>
+      <OpenURLButton url={PayPayURL}>Open PayPay</OpenURLButton>
+      <OpenURLButton url={LinePayURL}>Open Line Pay</OpenURLButton>
 
       <Modal visible={modalOpen} animationType="slide">
           <View style={styles.modalContent}>
