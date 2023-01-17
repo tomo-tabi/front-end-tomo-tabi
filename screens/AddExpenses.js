@@ -23,7 +23,7 @@ export default function AddExpenses({ setModalOpen }) {
   return(
     <View style={styles.container}>
       <Formik
-        initialValues={{ userName: '', itemName: '', money: '' }}
+        initialValues={{ itemName: '', money: '' }}
         onSubmit={(values) => {
           postExp(values);
           setModalOpen(false);
@@ -32,13 +32,13 @@ export default function AddExpenses({ setModalOpen }) {
       >
         {(props) => (
           <View>
-            <MyTextInput
+            {/* <MyTextInput
               label="User Name"
               icon="account"
               placeholder="David"
               onChangeText={props.handleChange('userName')}
               value={props.values.userName}
-            />
+            /> */}
             <MyTextInput
               label="Item"
               icon="basket"
