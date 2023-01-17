@@ -53,7 +53,6 @@ export default function AddTimeline({ setModalOpen }) {
         onSubmit={(values) => {
           postTripEvents(values);
           setModalOpen(false);
-          
         }}
       >
         {(props) => (

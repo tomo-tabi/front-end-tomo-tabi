@@ -17,7 +17,7 @@ export function InfoProvider({children}) {
     'Accept': 'application/json, text/plain, */*', 
     'Content-Type': 'application/json',
     'Authorization': `Bearer ${userToken}`
-  }
+  };
 
   // should I import this from Auth context?
   const checkStatus = (res, req, setFunc) => {
@@ -103,7 +103,7 @@ export function InfoProvider({children}) {
     } catch (e) {
       console.log(e);
     }
-  }
+  };
 
   const postNewTrip = async (newTripInput) => {
     try{
@@ -125,13 +125,25 @@ export function InfoProvider({children}) {
     }catch(e) {
       console.log(e);
     }
-    
+  };
+
+  const postInvite = async (userEmail) => {
+    userEmail.tripid = tripid
+
+    const postInviteReq = await fetch(`http://${API_URL}:8080/invite/create`, {
+        method:"POST",
+        headers: authHeader,
+        body:JSON.stringify(userEmail)
+    });
+
+    const postInviteRes = await postInviteReq.json();
+
+    checkStatus(postInviteRes, postInviteReq, (res) => {
+      return Alert.alert(res.message)
+    })
   }
 
-
-
   useEffect(() => {
-
     if(userData){
       getTrips();
     }
@@ -139,7 +151,7 @@ export function InfoProvider({children}) {
   
 
   return (
-    <InfoContext.Provider value={{trips, tripEvents, tripid, getTripEvents, postTripEvents, postNewTrip, getTrips}}>
+    <InfoContext.Provider value={{trips, tripEvents, tripid, getTripEvents, postTripEvents, postNewTrip, getTrips, postInvite}}>
       {children}
     </InfoContext.Provider>
   )

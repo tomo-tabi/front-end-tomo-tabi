@@ -5,6 +5,7 @@ import { MaterialCommunityIcons } from '@expo/vector-icons';
 
 import Calendar from '../screens/Calendar';
 import TimeLine from '../screens/TimeLine';
+import Invite from '../screens/Invite';
 import { ExpenseTable } from '../screens/Expenses';
 import { ExpProvider } from '../context/ExpContext';
 
@@ -31,6 +32,10 @@ export default function TripTabNav() {
               iconName = focused 
               ? 'account-cash' 
               : 'account-cash-outline';
+            } else if (route.name === 'Invite'){
+              iconName = focused 
+              ? 'account-plus'
+              : 'account-plus-outline';
             }
 
             return <MaterialCommunityIcons name={iconName} size={30} />
@@ -41,6 +46,7 @@ export default function TripTabNav() {
         <Tab.Screen name="TimeLine" component={TimeLine} />
         <Tab.Screen name="Calendar" component={Calendar} />
         <Tab.Screen name="Expenses" component={ExpenseTable} />
+        <Tab.Screen name="Invite" component={Invite} />
       </Tab.Navigator>
     </ExpProvider>
   )

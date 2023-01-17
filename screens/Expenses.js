@@ -1,5 +1,5 @@
 import React, { useState, useCallback, useContext, useEffect } from "react";
-import { Alert, Button, Linking, StyleSheet, View, TouchableOpacity, Modal } from "react-native";
+import { Alert, Button, Linking, StyleSheet, View, TouchableOpacity, Modal, FlatList, Text } from "react-native";
 import { Table, TableWrapper, Row, Rows, Cell } from "react-native-table-component";
 import { MaterialCommunityIcons } from '@expo/vector-icons';
 import { AuthContext } from "../context/AuthContext";
@@ -10,8 +10,9 @@ export const ExpenseTable = () => {
   const [ modalOpen, setModalOpen ] = useState(false);
 
   const { userData } = useContext(AuthContext);//to extract username?
-  const { getExp, postExp, expData } = useContext(ExpContext);
+  const { getExp, expData } = useContext(ExpContext);
 
+  const [splitPaymentsData, setSplitPaymentData] = useState([]);
   const [tableHead, setTableHead] = useState(["Name", "Item", "Cost"]);
   // const [tableData, setTableData] = useState([
   //   ["Matthew", "tickets", 5000],
@@ -30,20 +31,82 @@ export const ExpenseTable = () => {
 
     if(expData){
       expData.forEach((obj) => {
+        //formate name, item name and money?
         expArr.push([
-          obj.user_id,
+          obj.username,
           obj.item_name,
           obj.money
         ])
       })
       setTableData(expArr)
     }
+
+    let expObj = {}
+
+    if (expData) {
+      expData.forEach((obj) => {
+        if(expObj[obj.username]){
+          expObj[obj.username] = Number(expObj[obj.username]) + Number(obj.money)
+        }
+        if(!expObj[obj.username]){
+          expObj[obj.username] =  Number(obj.money)
+        }
+      })
+      setSplitPaymentData(splitPayments(expObj))
+    }
+
   },[expData])
+  console.log();
 
   const editData = (data, index) => {
     // if (index !== 3) return;
     console.log(data, index);
+  };
+
+  const splitPayments = (payments) => {
+    const result = []
+    const people = Object.keys(payments);
+    const valuesPaid = Object.values(payments);
+  
+    const sum = valuesPaid.reduce((acc, curr) => curr + acc);
+    const mean = sum / people.length;
+  
+    const sortedPeople = people.sort((personA, personB) => payments[personA] - payments[personB]);
+    const sortedValuesPaid = sortedPeople.map((person) => payments[person] - mean);
+  
+    let i = 0;
+    let j = sortedPeople.length - 1;
+    let debt;
+  
+    while (i < j) {
+      debt = Math.min(-(sortedValuesPaid[i]), sortedValuesPaid[j]);
+      sortedValuesPaid[i] += debt;
+      sortedValuesPaid[j] -= debt;
+
+      if(sortedPeople[i] === userData.username){
+        result.push(`${sortedPeople[i]} owes ${sortedPeople[j]} ¥${debt.toFixed(2)}`);
+      }
+      
+
+  
+      if (sortedValuesPaid[i] === 0) {
+        i++;
+      }
+  
+      if (sortedValuesPaid[j] === 0) {
+        j--;
+      }
+    }
+    return result
   }
+
+  const renderItem = ({ item }) => {
+    return (
+      <Text style={styles.moneyCalc}>{item}</Text>
+    )
+  }
+
+// console.log(splitPaymentsData);
 
 
   const PayPayURL = "paypay://";
@@ -76,24 +139,7 @@ export const ExpenseTable = () => {
 
   return (
     <View style={styles.container}>
-      {/* <Table borderStyle={{ borderWidth: 1 }}>
-        <Row
-          data={tableHead}
-          flexArr={[2, 2, 1]}
-          style={styles.head}
-          textStyle={styles.text}
-        />
-  
-        <TableWrapper style={styles.wrapper}>
-          <Rows
-            data={tableData}
-            flexArr={[2, 2, 1]}
-            style={styles.row}
-            textStyle={styles.text}
-          />
-        </TableWrapper>
-      </Table> */}
-      <Table borderStyle={{ borderWidth: 1 }}>
+      <Table borderStyle={{ borderWidth: 1 }} style={styles.table}>
         <TableWrapper >
           <Row data={tableHead} style={styles.head} textStyle={styles.text}/>
           {
@@ -116,24 +162,29 @@ export const ExpenseTable = () => {
       <OpenURLButton url={LinePayURL}>Open Line Pay</OpenURLButton>
 
       <Modal visible={modalOpen} animationType="slide">
-          <View style={styles.modalContent}>
-            <MaterialCommunityIcons
-              name='window-close'
-              size={24}
-              style={{...styles.modalToggle, ...styles.modalClose}}
-              onPress={() => setModalOpen(false)}
-            />
-            <AddExpenses setModalOpen={setModalOpen}/>
-          </View>
-        </Modal>
+        <View style={styles.modalContent}>
+          <MaterialCommunityIcons
+            name='window-close'
+            size={24}
+            style={{...styles.modalToggle, ...styles.modalClose}}
+            onPress={() => setModalOpen(false)}
+          />
+          <AddExpenses setModalOpen={setModalOpen}/>
+        </View>
+      </Modal>
+
+      <FlatList
+        data={splitPaymentsData}
+        renderItem={renderItem}
+      />
         
-          <TouchableOpacity onPress={() => setModalOpen(true)} style={styles.iconContainer}>
-              <MaterialCommunityIcons
-                name='plus'
-                size={50}
-                style={styles.modalToggle}
-              />
-          </TouchableOpacity>
+      <TouchableOpacity onPress={() => setModalOpen(true)} style={styles.iconContainer}>
+        <MaterialCommunityIcons
+          name='plus'
+          size={50}
+          style={styles.modalToggle}
+        />
+      </TouchableOpacity>
     </View>
   );
 };
@@ -142,7 +193,7 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     padding: 16,
-    paddingTop: 250,
+    paddingTop: 2,
   },
   head: {
     height: 40,
@@ -151,6 +202,12 @@ const styles = StyleSheet.create({
   wrapper: {
     flexDirection: "row",
     height: 40,
+  },
+  table: {
+    marginBottom:10
+  },
+  moneyCalc:{
+    marginVertical:10
   },
   // title: {
   //   flex: 1,
@@ -196,3 +253,21 @@ const styles = StyleSheet.create({
     color:'black'
   }
 });
+
+{/* <Table borderStyle={{ borderWidth: 1 }}>
+  <Row
+    data={tableHead}
+    flexArr={[2, 2, 1]}
+    style={styles.head}
+    textStyle={styles.text}
+  />
+
+  <TableWrapper style={styles.wrapper}>
+    <Rows
+      data={tableData}
+      flexArr={[2, 2, 1]}
+      style={styles.row}
+      textStyle={styles.text}
+    />
+  </TableWrapper>
+</Table> */}
