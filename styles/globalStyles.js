@@ -2,8 +2,6 @@ import styled from 'styled-components';
 import { StyleSheet, TouchableOpacity, Text, View, TextInput, Modal } from "react-native";
 import { MaterialCommunityIcons } from '@expo/vector-icons';
 
-
-
 export const colors = {
   primary:"#ffffff",
   pink:"#F187A4",
@@ -162,7 +160,3 @@ export const StyledModal = (modalOpen, setModalOpen, AddComponent) => {
     </Modal>
   )
 }
-
-<TouchableOpacity onPress={() => setModalOpen(true)} style={globalStyles.addIconButton}>
-  <AddButton/>
-</TouchableOpacity>

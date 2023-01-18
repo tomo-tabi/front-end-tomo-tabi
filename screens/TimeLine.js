@@ -7,7 +7,6 @@ import moment from 'moment';
 
 import AddTimeline from './AddTimeline';
 
-
 export default function TimeLine ({ route }) {
   const [ modalOpen, setModalOpen ] = useState(false);
   const [ dateSortEvents, setDateSortEvents ] = useState({}) 
@@ -89,7 +88,6 @@ export default function TimeLine ({ route }) {
       </>
     )
   }
-  
 
   return (
     <>
