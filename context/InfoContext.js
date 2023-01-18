@@ -8,6 +8,7 @@ export const InfoContext = createContext();
 
 export function InfoProvider({children}) {
   const [trips, setTrips] = useState(null);//all trips for user
+  const [invites, setInvites] = useState(null);//all pending invites for user
   const [tripEvents, setTripEvents] = useState(null);//trip events for one trip
   const [tripid, setTripid] = useState(null);//trip id
 
@@ -62,6 +63,7 @@ export function InfoProvider({children}) {
     })
 
 
+
     const postTripEventsRes = await postTripEventsReq.json();
 
     checkStatus(postTripEventsRes, postTripEventsReq, (res) => {
@@ -70,6 +72,8 @@ export function InfoProvider({children}) {
     })
     
   };
+
+
 
   const getTrips = async () => {
     try{
@@ -103,7 +107,59 @@ export function InfoProvider({children}) {
     } catch (e) {
       console.log(e);
     }
-  };
+  }
+
+  const getInvites = async () => {
+    try{
+      const getInvites = await fetch(`http://${API_URL}:8080/invite/`,{
+        method:"GET",
+        headers: authHeader
+      })
+
+       const res = await getInvites.json();
+       if(res){
+        setInvites(res);
+       }
+      } catch (e) {
+        console.log(e);
+      } 
+  }
+  const acceptInvites = async (inviteID) => {
+    try{
+      const acceptInvites = await fetch(`http://${API_URL}:8080/invite/accept/${inviteID}`,{
+        method:"PUT",
+        headers: authHeader
+      })
+
+       const res = await acceptInvites.json();
+
+       checkStatus(res, acceptInvites, (res) => {
+        getInvites();
+        getTrips()
+        return console.log(res);
+      })
+      } catch (e) {
+        console.log(e);
+      } 
+  }
+  const rejectInvites = async (inviteID) => {
+    try{
+      const rejectInvites = await fetch(`http://${API_URL}:8080/invite/reject/${inviteID}`,{
+        method:"PUT",
+        headers: authHeader
+      })
+
+       const res = await rejectInvites.json();
+
+        checkStatus(res, rejectInvites, (res) => {
+        getInvites();
+        getTrips()
+        return console.log(res);
+      })
+      } catch (e) {
+        console.log(e);
+      } 
+  }
 
   const postNewTrip = async (newTripInput) => {
     try{
@@ -146,12 +202,13 @@ export function InfoProvider({children}) {
   useEffect(() => {
     if(userData){
       getTrips();
+      getInvites()
     }
   }, [userData])
   
 
   return (
-    <InfoContext.Provider value={{trips, tripEvents, tripid, getTripEvents, postTripEvents, postNewTrip, getTrips, postInvite}}>
+    <InfoContext.Provider value={{trips, tripEvents, tripid, invites, rejectInvites, acceptInvites, getInvites, getTripEvents, postTripEvents, postNewTrip, getTrips, postInvite}}>
       {children}
     </InfoContext.Provider>
   )
