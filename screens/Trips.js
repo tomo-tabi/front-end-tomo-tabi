@@ -44,7 +44,7 @@ export default function Trips({ navigation }) {
         </Modal>
 
         <FlatList
-          keyExtractor={( item ) => item.userid}
+          keyExtractor={( item ) => item.id}
           data = {trips}
           renderItem = {({ item }) => (
             <TouchableOpacity onPress={() => pressHandler(item)}>
@@ -87,7 +87,7 @@ const styles = StyleSheet.create({
     fontSize: 20,
     marginTop: 10,
   },
-  
+
   name:{
     fontWeight: "bold",
     fontSize: 24,
