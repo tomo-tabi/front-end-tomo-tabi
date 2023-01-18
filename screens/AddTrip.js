@@ -1,21 +1,13 @@
-import { Formik } from 'formik';
 import React, { useState, useContext } from 'react';
-import { AuthContext } from "../context/AuthContext";
-import { InfoContext } from '../context/InfoContext';
-import { StyleSheet, Button, TextInput, View, TouchableOpacity } from 'react-native';
-import { Octicons, Ionicons, Entypo } from '@expo/vector-icons';
+import { View, TouchableOpacity, Text } from 'react-native';
+import { Formik } from 'formik';
+import { MaterialCommunityIcons } from '@expo/vector-icons';
+import { globalStyles, StyledButton, StyledInputLabel, StyledTextInput } from "../styles/globalStyles";
 import DateTimePicker from '@react-native-community/datetimepicker';
+
+import { InfoContext } from '../context/InfoContext';
+
 import moment from 'moment';
-import {
-    StyledContainer,
-    StyledTextInput,
-    LeftIcon,
-    StyledInputLabel,
-    Colors, 
-} from '../styles/styles';
-
-
-const {brand} = Colors;
 
 export default function AddTrip({setModalOpen}) {
   const [show, setShow] = useState(false);
@@ -39,15 +31,14 @@ export default function AddTrip({setModalOpen}) {
       setStartDate(currentDate);
       setEndDate(null);
     }
-  }
+  };
 
   const showDatePicker = () => {
     setShow(true);
-  }
+  };
 
   return(
-    <View style={StyledContainer}>
-
+    <View style={{paddingHorizontal: 10,paddingTop:10,}}>
       {show && (
         <DateTimePicker
           testID="dateTimePicker"
@@ -71,7 +62,7 @@ export default function AddTrip({setModalOpen}) {
           <View>
             <MyTextInput 
               label="Trip Name"
-              icon="airplane-sharp"
+              icon="airplane"
               placeholder="Go to Japan"
               onChangeText={props.handleChange('name')}
               value={props.values.name}
@@ -79,7 +70,7 @@ export default function AddTrip({setModalOpen}) {
 
             <MyTextInput 
               label="Start Date"
-              icon="calendar"
+              icon="calendar-blank-outline"
               placeholder="YYYY-MM-DD"
               onChangeText={props.handleChange('startDate')}
               value={startDate ? startDate.toDateString() : ''}
@@ -90,17 +81,18 @@ export default function AddTrip({setModalOpen}) {
 
             <MyTextInput 
               label="End Date"
-              icon="calendar"
+              icon="calendar-blank-outline"
               placeholder="YYYY-MM-DD"
               onChangeText={props.handleChange('endDate')}
               value={endDate ? endDate.toDateString() : ''}
               isDate={true}
               editable={false}
               showDatePicker={showDatePicker}
-             
             />
 
-            <Button title='Add new trip' color= 'maroon' onPress={props.handleSubmit} />
+            <StyledButton onPress={props.handleSubmit}>
+              <Text style={globalStyles.buttonText}>Add New Trip</Text>
+            </StyledButton>
           </View>
         )}
       </Formik>
@@ -113,16 +105,16 @@ export default function AddTrip({setModalOpen}) {
 const MyTextInput = ( { label, icon, isDate, showDatePicker, ...props }) => {
     return (
         <View>
-            <LeftIcon>
-                <Ionicons name={icon} size={30} color={brand} />
-            </LeftIcon>
             <StyledInputLabel>{label}</StyledInputLabel>
-            {!isDate && <StyledTextInput {...props} />}
-            {isDate && (
-              <TouchableOpacity onPress={showDatePicker}>
-                <StyledTextInput {...props} />
-              </TouchableOpacity>
-            )}
+            <View style={globalStyles.textInput}>
+              <MaterialCommunityIcons name={icon} size={30}/>
+              {!isDate && <StyledTextInput {...props} />}
+              {isDate && (
+                <TouchableOpacity onPress={showDatePicker}>
+                  <StyledTextInput {...props} />
+                </TouchableOpacity>
+              )}
+            </View>
             
         </View>
     );

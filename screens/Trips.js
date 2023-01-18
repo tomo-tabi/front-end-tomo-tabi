@@ -1,13 +1,17 @@
-import React, { useState, useContext, useEffect } from 'react'
-import { StyleSheet, Text, FlatList, View, TouchableOpacity, Modal } from 'react-native';
+import React, { useState, useContext,  } from 'react'
+import { StyleSheet, Text, FlatList, View, TouchableOpacity } from 'react-native';
+import { MaterialCommunityIcons } from '@expo/vector-icons'
+import { globalStyles, colors, AddButton, StyledButton, StyledModal } from "../styles/globalStyles";
+const { blue, lightBlue, grey } = colors
+
 import { AuthContext } from '../context/AuthContext';
 import { InfoContext } from '../context/InfoContext';
-import { StyledButton, ButtonText } from '../styles/styles';
-import { MaterialIcons, MaterialCommunityIcons } from '@expo/vector-icons'
 
 import moment from 'moment';
 
 import AddTrip from './AddTrip';
+
+// import { enableExpoCliLogging } from 'expo/build/logs/Logs';
 
 export default function Trips({ navigation }) {
   const { logout } = useContext(AuthContext);
@@ -21,31 +25,39 @@ export default function Trips({ navigation }) {
       params: { id: item.id, name: item.name },
     })
   }
+  // console.log(trips);
 
   const dateFormat = (startDate, endDate) => {
-
     return `${moment(startDate).format("MMMM, Do")} ➡︎ ${moment(endDate).format("MMMM Do, YYYY")}` 
   }
 
 
   return (
-      <View style={styles.container}>
-      <View style={styles.innerContainer}>
+    <View style={globalStyles.container}>
+      {StyledModal(modalOpen, setModalOpen, AddTrip)}
 
-        <Modal visible={modalOpen} animationType='slide'>
-          <View style={StyleSheet.modalContent}>
-            <MaterialIcons
-              name="close"
-              size={24}
-              style={{ ...styles.modalToggle, ...styles.modalClose }}
-              onPress={() => setModalOpen(false)}
-            />
-            <AddTrip setModalOpen={setModalOpen} />
-          </View>
-        </Modal>
+      {/* <Modal visible={modalOpen} animationType='slide'>
+        <View style={StyleSheet.modalContent}>
+          <MaterialIcons
+            name="close"
+            size={24}
+            style={{ ...styles.modalToggle, ...styles.modalClose }}
+            onPress={() => setModalOpen(false)}
+          />
+          <AddTrip setModalOpen={setModalOpen} />
+        </View>
+      </Modal> */}
 
-        {invites !== "no invites found" ? <FlatList
-          keyExtractor={(item) => item.userid}
+      {invites !== "no invites found" ?
+        <>
+        <Text style={styles.text}>
+          Pending Invites
+        </Text> 
+        <FlatList
+          keyExtractor={(item) => {
+            console.log(item.id);
+            return item.id
+          }}
           data={invites}
           renderItem={({ item }) => (
             <TouchableOpacity >
@@ -54,109 +66,88 @@ export default function Trips({ navigation }) {
               <MaterialCommunityIcons
                 name='check-bold'
                 size={24}
-                style={{ ...styles.icon, }}
+                style={{ ...styles.icon}}
                 onPress={() => acceptInvites(item.id)}
               />
               <MaterialCommunityIcons
                 name='window-close'
                 size={24}
-                style={{ ...styles.icon, }}
+                style={{ ...styles.icon}}
                 onPress={() => rejectInvites(item.id)}
               />
             </TouchableOpacity>
           )}
-        /> : ""}
+        /> 
+        </>
+        : <Text style={styles.text}> No Invites </Text> 
+      }
 
-          <FlatList
-            keyExtractor={( item ) => item.id}
-            data={trips}
-            renderItem={({ item }) => (
-              <TouchableOpacity onPress={() => pressHandler(item)}>
-                <Text style={styles.date}>{dateFormat(item.start_date, item.end_date)}</Text>
-                <Text style={styles.name}>{item.name}</Text>
-              </TouchableOpacity>
-            )}
-          />
-
-          <StyledButton onPress={() => logout()}>
-            <ButtonText>
-              Logout
-            </ButtonText>
-          </StyledButton>
-
-        <TouchableOpacity onPress={() => setModalOpen(true)} style={styles.iconContainer}>
-          <MaterialCommunityIcons
-            name='plus'
-            size={50}
-            style={styles.modalToggle}
-          />
+    <FlatList
+      keyExtractor={( item ) => item.id}
+      data={trips}
+      numColumns={2}
+      columnWrapperStyle={styles.row}
+      renderItem={({ item }) => (
+        <TouchableOpacity onPress={() => pressHandler(item)} style={styles.item}>
+            <View style={styles.view}>
+              <Text style={styles.name}>{item.name}</Text>
+              <Text style={styles.date}>{dateFormat(item.start_date, item.end_date)}</Text>
+            </View>
         </TouchableOpacity>
-      </View>
-      </View>
+      )}
+    />
+
+    <StyledButton onPress={() => logout()}>
+      <Text style={globalStyles.buttonText}>Logout</Text>
+    </StyledButton>
+
+    <TouchableOpacity onPress={() => setModalOpen(true)} style={globalStyles.addIconButton}>
+      <AddButton/>
+    </TouchableOpacity>
+  </View>
   )
 };
 
 const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    backgroundColor: '#fff',
+  row:{
+    justifyContent:'space-between',
   },
-  innerContainer:{
-    flex: 1,
-    backgroundColor: '#fff',
-    marginHorizontal: 10,
-  },
-
-  date:{
-    fontSize: 20,
-    marginTop: 10,
-  },
-
-  name:{
-    fontWeight: "bold",
-    fontSize: 24,
-    padding: 20,
-    borderRadius: 6,
-    backgroundColor:'#9CCAEC'
-  },
-
-  iconContainer:{
-    alignItems:"center",
-    alignSelf:"flex-end",
-    backgroundColor:'#F187A4',
-    borderRadius: 40,
-    justiftyContent:"center",
-    margin:5,
+  item: {
+    backgroundColor: blue,
+    padding: 5,
+    marginBottom:10,
+    height: 100,
+    width:181,
+    borderRadius:6,
+    alignItems:'flex-start',
     
-    height:70,
-    width:70,
-    
-    position:"absolute",
-    right:0,
-    bottom:10,
-
-    shadowColor: "#000",
-    shadowOpacity: 0.9,
-    shadowRadius: 5,
+    shadowColor: grey,
+    shadowOpacity: 0.3,
     elevation: 7,
   },
+  view:{
+    flex:1,
+  },
+  name:{
+    alignItems:'center',
+    fontWeight: "bold",
+    fontSize: 24,
+    paddingHorizontal: 5,
+  },
+  date:{
+    fontSize: 16,
+    paddingHorizontal: 5,
+    paddingTop:5,
+  },
 
-  modalToggle: {
-    margin:10,
-    alignSelf:"flex-end",
-    color:'#fff',
-  },
-  modalClose: {
-    marginTop: 20,
-    marginBottom: 0,
-  },
-  modalContent: {
-    flex: 1,
-  },
   text: {
+    paddingHorizontal:135,
     marginBottom: 10,
+    borderRadius:6,
     padding: 10,
-    alignSelf: 'center'
+    fontSize:20,
+    backgroundColor:lightBlue,
+    alignSelf: 'center',
   },
   icon: {
     // alignSelf: 'left'

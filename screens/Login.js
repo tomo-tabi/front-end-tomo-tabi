@@ -1,12 +1,11 @@
 import React, { useState, useContext } from 'react';
-import { StatusBar } from 'expo-status-bar';
-import { Alert, View } from "react-native";
-
-//formik
+import { Alert, View, Text } from "react-native";
 import {Formik} from 'formik';
-
-//icons
+import { StatusBar } from 'expo-status-bar';
 import { Octicons, Ionicons } from '@expo/vector-icons';
+import { globalStyles, colors, StyledButton } from "../styles/globalStyles";
+
+import { AuthContext } from '../context/AuthContext';
 
 import {
     StyledContainer,
@@ -19,8 +18,6 @@ import {
     StyledInputLabel,
     StyledTextInput,
     RightIcon,
-    StyledButton,
-    ButtonText,
     Colors,
     MsgBox,
     Line,
@@ -29,13 +26,12 @@ import {
     TextLink,
     TextLinkContent
 } from '../styles/styles';
+const { primary, pink, blue, yellow, lightBlue, navy, grey } = colors
 
-const {brand, darkLight} = Colors;
+const { darkLight } = Colors;
 
 // keyboard avoiding view
 import KeyboardAvoidingWrapper from '../styles/KeyboardAvoidingWrapper';
-import { AuthContext } from '../context/AuthContext';
-
 
 const Login = ( { navigation } ) => {
     const [ hidePassword, setHidePassword ] = useState(true);
@@ -90,9 +86,7 @@ const Login = ( { navigation } ) => {
                             />
                             <MsgBox></MsgBox>
                             <StyledButton onPress={handleSubmit}>
-                                <ButtonText>
-                                    Login
-                                </ButtonText>
+                                <Text style={globalStyles.buttonText}>Logout</Text>
                             </StyledButton>
                             <Line/>
                             <ExtraView>
@@ -114,7 +108,7 @@ const MyTextInput = ( { label, icon, isPassword, hidePassword, setHidePassword, 
     return (
         <View>
             <LeftIcon>
-                <Octicons name={icon} size={30} color={brand} />
+                <Octicons name={icon} size={30} />
             </LeftIcon>
             <StyledInputLabel>{label}</StyledInputLabel>
             <StyledTextInput {...props} />

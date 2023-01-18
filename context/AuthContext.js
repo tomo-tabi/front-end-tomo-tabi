@@ -40,7 +40,6 @@ export function AuthProvider({children}) {
   }
 
   const signup = async (userInput) => {
-    console.log("authContext",userInput);
     try {
       const signupReq = await fetch(`http://${API_URL}:8080/user/signup`,
         postOptions(userInput)

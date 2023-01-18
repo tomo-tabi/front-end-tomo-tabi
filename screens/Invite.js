@@ -1,24 +1,16 @@
-import React, { useState, useEffect, useContext } from 'react';
-import { StyleSheet, Text, FlatList, View, Modal, TouchableOpacity, TextInput } from 'react-native';
-import { InfoContext } from '../context/InfoContext';
-import {Octicons, MaterialCommunityIcons } from '@expo/vector-icons';
+import React, { useContext } from 'react';
+import { View } from 'react-native';
+import { globalStyles, StyledButton, SubmitText, MyTextInput } from "../styles/globalStyles";
+
 import { Formik } from 'formik';
 
-import {
-  LeftIcon,
-  StyledInputLabel,
-  StyledTextInput,
-  StyledButton,
-  ButtonText,
-} from '../styles/styles';
+import { InfoContext } from '../context/InfoContext';
 
-
-
-export default function Invite(params) {
+export default function Invite() {
   const { postInvite } = useContext(InfoContext);
 
   return (
-    <View style={styles.container}>
+    <View style={globalStyles.container}>
       <Formik
         initialValues={{ email: ''}}
         onSubmit={(values, actions) => {
@@ -27,48 +19,21 @@ export default function Invite(params) {
         }}
       >
         {(props) => (
-          <View style={styles.innerContainer}>
+          <>
             <MyTextInput
               label="User Email"
-              icon="person"
+              icon="account-plus-outline"
               placeholder="abc@gmail.com"
               onChangeText={props.handleChange('email')}
               value={props.values.email}
             />
   
             <StyledButton onPress={props.handleSubmit}>
-                <ButtonText>
-                    Submit
-                </ButtonText>
+              <SubmitText />
             </StyledButton>
-          </View>
+          </>
         )}
-        
       </Formik>
-
     </View>
   )
-};
-const styles = StyleSheet.create({
-  container:{
-    flex: 1,
-    backgroundColor: '#fff',
-  },
-  innerContainer:{
-    marginTop:10,
-    marginHorizontal: 10
-  },
-
-})
-
-const MyTextInput = ( { label, icon, ...props }) => {
-  return (
-      <View>
-          <LeftIcon>
-              <Octicons name={icon} size={30} />
-          </LeftIcon>
-          <StyledInputLabel>{label}</StyledInputLabel>
-          <StyledTextInput {...props} />
-      </View>
-  );
 };
