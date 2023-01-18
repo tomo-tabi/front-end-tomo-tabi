@@ -3,7 +3,7 @@ import { StyleSheet, Text, FlatList, View, TouchableOpacity, Modal } from 'react
 import { AuthContext } from '../context/AuthContext';
 import { InfoContext } from '../context/InfoContext';
 import { StyledButton, ButtonText } from '../styles/styles';
-import { MaterialIcons, MaterialCommunityIcons, MaterialCommunityIcons } from '@expo/vector-icons'
+import { MaterialIcons, MaterialCommunityIcons } from '@expo/vector-icons'
 
 import moment from 'moment';
 
@@ -12,7 +12,7 @@ import AddTrip from './AddTrip';
 export default function Trips({ navigation }) {
   const { logout } = useContext(AuthContext);
   const { trips, invites, rejectInvites, acceptInvites } = useContext(InfoContext);
-  const [modalOpen, setModalOpen] = useState(false);
+  const [ modalOpen, setModalOpen ] = useState(false);
 
   const pressHandler = (item) => {
     navigation.navigate('TripTabNav', {
@@ -44,16 +44,6 @@ export default function Trips({ navigation }) {
           </View>
         </Modal>
 
-        <MaterialIcons
-          name="add"
-          size={24}
-          style={styles.modalToggle}
-          onPress={() => setModalOpen(true)}
-        />
-        <View>
-          <Text style={styles.text}>Add new trip!</Text>
-        </View>
-
         {invites !== "no invites found" ? <FlatList
           keyExtractor={(item) => item.userid}
           data={invites}
@@ -78,7 +68,7 @@ export default function Trips({ navigation }) {
         /> : ""}
 
           <FlatList
-            keyExtractor={(item) => item.id}
+            keyExtractor={( item ) => item.id}
             data={trips}
             renderItem={({ item }) => (
               <TouchableOpacity onPress={() => pressHandler(item)}>

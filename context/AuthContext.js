@@ -32,7 +32,7 @@ export function AuthProvider({children}) {
   }
 
   const checkStatus = (res, req, setFunc) => {
-    if(req.status === 200) {
+    if (req.status === 200 || req.status === 201) {
       setFunc(res)
     } else {
       Alert.alert(res.message)
@@ -40,6 +40,7 @@ export function AuthProvider({children}) {
   }
 
   const signup = async (userInput) => {
+    console.log("authContext",userInput);
     try {
       const signupReq = await fetch(`http://${API_URL}:8080/user/signup`,
         postOptions(userInput)
