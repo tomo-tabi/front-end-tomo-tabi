@@ -4,12 +4,15 @@ import { AuthContext } from '../context/AuthContext';
 import { InfoContext } from '../context/InfoContext';
 import { StyledButton, ButtonText } from '../styles/styles';
 import { MaterialIcons, MaterialCommunityIcons } from '@expo/vector-icons'
+
+import moment from 'moment';
+
 import AddTrip from './AddTrip';
 
 export default function Trips({ navigation }) {
   const { logout } = useContext(AuthContext);
   const { trips, invites, rejectInvites, acceptInvites } = useContext(InfoContext);
-  const [modalOpen, setModalOpen] = useState(false);
+  const [ modalOpen, setModalOpen ] = useState(false);
 
   const pressHandler = (item) => {
     navigation.navigate('TripTabNav', {
@@ -19,10 +22,15 @@ export default function Trips({ navigation }) {
     })
   }
 
+  const dateFormat = (startDate, endDate) => {
+
+    return `${moment(startDate).format("MMMM, Do")} ➡︎ ${moment(endDate).format("MMMM Do, YYYY")}` 
+  }
+
 
   return (
-    <>
       <View style={styles.container}>
+      <View style={styles.innerContainer}>
 
         <Modal visible={modalOpen} animationType='slide'>
           <View style={StyleSheet.modalContent}>
@@ -35,16 +43,6 @@ export default function Trips({ navigation }) {
             <AddTrip setModalOpen={setModalOpen} />
           </View>
         </Modal>
-
-        <MaterialIcons
-          name="add"
-          size={24}
-          style={styles.modalToggle}
-          onPress={() => setModalOpen(true)}
-        />
-        <View>
-          <Text style={styles.text}>Add new trip!</Text>
-        </View>
 
         {invites !== "no invites found" ? <FlatList
           keyExtractor={(item) => item.userid}
@@ -69,23 +67,32 @@ export default function Trips({ navigation }) {
           )}
         /> : ""}
 
-        <FlatList
-          keyExtractor={(item) => item.userid}
-          data={trips}
-          renderItem={({ item }) => (
-            <TouchableOpacity onPress={() => pressHandler(item)}>
-              <Text style={styles.date}>{item.start_date}➡️➡️{item.end_date}</Text>
-              <Text style={styles.name}>{item.name}</Text>
-            </TouchableOpacity>
-          )}
-        />
-        <StyledButton onPress={() => logout()}>
-          <ButtonText>
-            Logout
-          </ButtonText>
-        </StyledButton>
+          <FlatList
+            keyExtractor={( item ) => item.id}
+            data={trips}
+            renderItem={({ item }) => (
+              <TouchableOpacity onPress={() => pressHandler(item)}>
+                <Text style={styles.date}>{dateFormat(item.start_date, item.end_date)}</Text>
+                <Text style={styles.name}>{item.name}</Text>
+              </TouchableOpacity>
+            )}
+          />
+
+          <StyledButton onPress={() => logout()}>
+            <ButtonText>
+              Logout
+            </ButtonText>
+          </StyledButton>
+
+        <TouchableOpacity onPress={() => setModalOpen(true)} style={styles.iconContainer}>
+          <MaterialCommunityIcons
+            name='plus'
+            size={50}
+            style={styles.modalToggle}
+          />
+        </TouchableOpacity>
       </View>
-    </>
+      </View>
   )
 };
 
@@ -94,26 +101,50 @@ const styles = StyleSheet.create({
     flex: 1,
     backgroundColor: '#fff',
   },
-  date: {
-    fontSize: 20,
-    marginTop: 10,
+  innerContainer:{
+    flex: 1,
+    backgroundColor: '#fff',
     marginHorizontal: 10,
   },
-  name: {
+
+  date:{
+    fontSize: 20,
+    marginTop: 10,
+  },
+
+  name:{
     fontWeight: "bold",
     fontSize: 24,
     padding: 20,
-    marginHorizontal: 10,
     borderRadius: 6,
-    backgroundColor: '#A020F0'
+    backgroundColor:'#9CCAEC'
   },
+
+  iconContainer:{
+    alignItems:"center",
+    alignSelf:"flex-end",
+    backgroundColor:'#F187A4',
+    borderRadius: 40,
+    justiftyContent:"center",
+    margin:5,
+    
+    height:70,
+    width:70,
+    
+    position:"absolute",
+    right:0,
+    bottom:10,
+
+    shadowColor: "#000",
+    shadowOpacity: 0.9,
+    shadowRadius: 5,
+    elevation: 7,
+  },
+
   modalToggle: {
-    marginBottom: 10,
-    borderWidth: 1,
-    borderColor: '#f2f2f2',
-    padding: 10,
-    borderRadius: 10,
-    alignSelf: 'center'
+    margin:10,
+    alignSelf:"flex-end",
+    color:'#fff',
   },
   modalClose: {
     marginTop: 20,

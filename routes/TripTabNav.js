@@ -17,6 +17,7 @@ export default function TripTabNav() {
     <ExpProvider>
       <Tab.Navigator initialRouteName='TimeLine'
         screenOptions={({ route }) => ({
+          headerShown:false,
           tabBarIcon: ({ focused }) => {
             let iconName;
 
@@ -41,6 +42,7 @@ export default function TripTabNav() {
             return <MaterialCommunityIcons name={iconName} size={30} />
           },
           tabBarActiveTintColor:'#A020F0',
+          
         })}
       >
         <Tab.Screen name="TimeLine" component={TimeLine} />
