@@ -56,7 +56,6 @@ export const ExpenseTable = () => {
     }
 
   },[expData])
-  console.log();
 
   const editData = (data, index) => {
     // if (index !== 3) return;
@@ -194,6 +193,7 @@ const styles = StyleSheet.create({
     flex: 1,
     padding: 16,
     paddingTop: 2,
+    paddingHorizontal: 10
   },
   head: {
     height: 40,
@@ -226,6 +226,7 @@ const styles = StyleSheet.create({
     borderRadius: 40,
     justiftyContent:"center",
     margin:5,
+    marginRight:15,
     
     height:70,
     width:70,
