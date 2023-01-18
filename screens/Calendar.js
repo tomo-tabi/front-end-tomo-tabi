@@ -100,6 +100,7 @@ export default function CalendarView(params) {
 
     const formatEventsOnCalendar = (tripEvents) => {
         const eventsObject = {}
+        let counter = 0
         let startDateTrip
         let lastDateTrip
         tripEvents.forEach(event => {
@@ -124,8 +125,9 @@ export default function CalendarView(params) {
                 eventsObject[moment(lastDateTrip).format("YYYY-MM-DD")] = { endingDay: true, color: '#50cebb', textColor: 'white', marked: true, dotColor: 'white' }
 
             }
-            if (eventsObject[moment(startDateTrip).format("YYYY-MM-DD")]) {
+            if (eventsObject[moment(startDateTrip).format("YYYY-MM-DD")] && counter == 0) {
                 eventsObject[moment(startDateTrip).format("YYYY-MM-DD")] = { startingDay: true, color: '#50cebb', textColor: 'white', marked: true, dotColor: 'white' }
+                counter += 1
             }
             if (!eventsObject[moment(date).format("YYYY-MM-DD")]) {
                 eventsObject[moment(date).format("YYYY-MM-DD")] = { color: '#70d7c7', textColor: 'white' }
@@ -134,6 +136,7 @@ export default function CalendarView(params) {
                 }
                 if (moment(date).format("YYYY-MM-DD") == moment(startDateTrip).format("YYYY-MM-DD")) {
                     eventsObject[moment(startDateTrip).format("YYYY-MM-DD")] = { startingDay: true, color: '#50cebb', textColor: 'white' }
+                    counter += 1
                 }
             }
         })
