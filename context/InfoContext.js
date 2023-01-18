@@ -126,26 +126,36 @@ export function InfoProvider({children}) {
   }
   const acceptInvites = async (inviteID) => {
     try{
-      const getInvites = await fetch(`http://${API_URL}:8080/invite/accept/${inviteID}`,{
+      const acceptInvites = await fetch(`http://${API_URL}:8080/invite/accept/${inviteID}`,{
         method:"PUT",
         headers: authHeader
       })
 
-       const res = await getInvites.json();
-       console.log(res);
+       const res = await acceptInvites.json();
+
+       checkStatus(res, acceptInvites, (res) => {
+        getInvites();
+        getTrips()
+        return console.log(res);
+      })
       } catch (e) {
         console.log(e);
       } 
   }
   const rejectInvites = async (inviteID) => {
     try{
-      const getInvites = await fetch(`http://${API_URL}:8080/invite/reject/${inviteID}`,{
+      const rejectInvites = await fetch(`http://${API_URL}:8080/invite/reject/${inviteID}`,{
         method:"PUT",
         headers: authHeader
       })
 
-       const res = await getInvites.json();
-       console.log(res);
+       const res = await rejectInvites.json();
+
+        checkStatus(res, rejectInvites, (res) => {
+        getInvites();
+        getTrips()
+        return console.log(res);
+      })
       } catch (e) {
         console.log(e);
       } 
