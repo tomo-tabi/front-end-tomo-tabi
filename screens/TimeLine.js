@@ -60,11 +60,11 @@ export default function TimeLine ({ route }) {
 
       if(Object.keys(Obj).length !== 0){
         const res = Object.keys(Obj).map((key) => ({
+          id: Obj[key][0]["id"],
           date: key, 
           info: Obj[key]
         }));
         // console.log("🍏", JSON.stringify(res));
-
         setDateSortEvents(res)
       }
     }
