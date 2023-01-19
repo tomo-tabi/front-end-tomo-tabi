@@ -16,7 +16,7 @@ export const ExpenseTable = () => {
   const { userData } = useContext(AuthContext);//to extract username?
   const { getExp, expData } = useContext(ExpContext);
 
-  const [splitPaymentsData, setSplitPaymentData] = useState([]);
+  const [splitPaymentsData, setSplitPaymentData] = useState([[],[]]);
   const [tableHead, setTableHead] = useState(["Name", "Item", "Cost"]);
   // const [tableData, setTableData] = useState([
   //   ["Matthew", "tickets", 5000],
@@ -59,6 +59,7 @@ export const ExpenseTable = () => {
       setSplitPaymentData(splitPayments(expObj))
     }
 
+
   },[expData])
 
   const editData = (data, index) => {
@@ -68,6 +69,8 @@ export const ExpenseTable = () => {
 
   const splitPayments = (payments) => {
     const result = []
+    const someoneOwnsYou = []
+    const oweYou = []
     const people = Object.keys(payments);
     const valuesPaid = Object.values(payments);
   
@@ -87,9 +90,12 @@ export const ExpenseTable = () => {
       sortedValuesPaid[j] -= debt;
 
       if(sortedPeople[i] === userData.username){
-        result.push(`${sortedPeople[i]} owes ${sortedPeople[j]} ¥${debt.toFixed(2)}`);
+        someoneOwnsYou.push(<Text style={styles.textOwe}>You owe {sortedPeople[j]} ¥{debt.toFixed(2)} </Text>);
       }
-      
+
+      if(sortedPeople[j] === userData.username){
+        oweYou.push(<Text style={styles.textOwe}> {sortedPeople[i]} owes you ¥ {debt.toFixed(2)} </Text>)
+      }
 
   
       if (sortedValuesPaid[i] === 0) {
@@ -100,6 +106,10 @@ export const ExpenseTable = () => {
         j--;
       }
     }
+
+    result.push(someoneOwnsYou)
+    result.push(oweYou)
+
     return result
   }
 
@@ -171,11 +181,19 @@ export const ExpenseTable = () => {
 
         {StyledModal(modalOpen, setModalOpen, AddExpenses)}
 
-        <Text>Calculation:</Text>
-        <FlatList
-          data={splitPaymentsData}
-          renderItem={renderItem}
-        />
+      <Text style={styles.textOweTitle} > {'\n'} You owe: </Text>
+
+      {splitPaymentsData[0].length === 0 ?  <Text style={styles.textOwe}> Congrats, you don't owe anything. {'\n'} </Text>  : <FlatList
+        data={splitPaymentsData[0]}
+        renderItem={renderItem}
+      />}
+
+      <Text style={styles.textOweTitle}> Someone owes you:</Text>
+
+      {splitPaymentsData[1].length === 0 ?  <Text style={styles.textOwe}> No one owes you anything...</Text>  : <FlatList
+        data={splitPaymentsData[1]}
+        renderItem={renderItem}
+      />}
         
         <TouchableOpacity onPress={() => setModalOpen(true)} style={globalStyles.addIconButton}>
           <AddButton/>
@@ -188,7 +206,7 @@ export const ExpenseTable = () => {
 const styles = StyleSheet.create({
   tableContainer: {
     flex: 1,
-    backgroundColor: primary
+    backgroundColor: primary,
   },
 
   wrapper: {
@@ -215,4 +233,45 @@ const styles = StyleSheet.create({
   text: {
     textAlign: "center",
   },
+  iconContainer:{
+    alignItems:"center",
+    alignSelf:"flex-end",
+    backgroundColor:'#F187A4',
+    borderRadius: 40,
+    justiftyContent:"center",
+    margin:5,
+    marginRight:15,
+    
+    height:70,
+    width:70,
+    
+    position:"absolute",
+    right:0,
+    bottom:10,
+
+    shadowColor: "#000",
+    shadowOpacity: 0.9,
+    shadowRadius: 5,
+    elevation: 7,
+  },
+  modalContent:{
+    flex:1,
+    margin:10,
+  },
+  modalToggle:{
+    margin:10,
+    alignSelf:"flex-end",
+    color:'#fff',
+  },
+  modalClose:{
+    margin:0,
+    color:'black'
+  },
+  textOwe : {
+    fontSize: 20
+  },
+  textOweTitle : {
+    fontWeight: "bold",
+    fontSize: 24
+  }
 });
