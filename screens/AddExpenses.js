@@ -1,8 +1,7 @@
 import React, { useContext } from 'react';
 import { View } from 'react-native';
-import { globalStyles, StyledButton, SubmitText, MyTextInput } from "../styles/globalStyles";
-
 import { Formik } from 'formik';
+import { MyTextInput, BlueButton } from "../styles/globalStyles";
 
 import { ExpContext } from '../context/ExpContext';
 
@@ -13,7 +12,7 @@ export default function AddExpenses({ setModalOpen }) {
   
 
   return(
-    <View style={globalStyles.container}>
+    <>
       <Formik
         initialValues={{ itemName: '', money: '' }}
         onSubmit={(values) => {
@@ -46,13 +45,14 @@ export default function AddExpenses({ setModalOpen }) {
               keyboardType='numeric'
             />
 
-            <StyledButton onPress={props.handleSubmit}>
-                <SubmitText/>
-            </StyledButton>
+            <BlueButton
+              onPress={props.handleSubmit}
+              buttonText="Submit"
+            />
           </View>
         )}
 
       </Formik>
-    </View>
+    </>
   )
 };

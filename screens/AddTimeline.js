@@ -1,8 +1,7 @@
 import React, { useState, useContext } from 'react';
-import { Text, View, TouchableOpacity } from 'react-native';
+import { View } from 'react-native';
 import { Formik } from 'formik';
-import { MaterialCommunityIcons } from '@expo/vector-icons';
-import { globalStyles, StyledButton, SubmitText, MyTextInput } from "../styles/globalStyles";
+import { MyTextInput, StyledDTPicker, BlueButton } from "../styles/globalStyles";
 import DateTimePicker from '@react-native-community/datetimepicker';
 
 import { InfoContext } from '../context/InfoContext';
@@ -40,7 +39,7 @@ export default function AddTimeline({ setModalOpen }) {
   };
 
   return(
-    <View style={globalStyles.container}>
+    <>
       <Formik
         initialValues={{ eventName: '', eventDate: date }}
         onSubmit={(values) => {
@@ -57,18 +56,29 @@ export default function AddTimeline({ setModalOpen }) {
               onChangeText={props.handleChange('eventName')}
               value={props.values.eventName}
             />
+            <StyledDTPicker
+              label="Event Date"
+              onPress={showDatepicker}
+              iconName="calendar-blank-outline"
+              value={moment(date).format('dddd, MMMM Do YYYY')}
+            />
+            <StyledDTPicker
+              label="Event Time"
+              onPress={showTimepicker}
+              iconName="clock-outline"
+              value={moment(date).format('h:mm A')}
+            />
 
-            <Text>Event Date: </Text>
+            {/* <Text>Event Date: </Text>
             <TouchableOpacity onPress={showDatepicker} style={globalStyles.textInput}>
               <MaterialCommunityIcons name='calendar-blank-outline' size={30}/>
               <Text style={globalStyles.textInputText}>{moment(date).format('dddd, MMMM Do YYYY')}</Text>
-            </TouchableOpacity>
-
-            <Text>Event Time: </Text>
+            </TouchableOpacity> */}
+            {/* <Text>Event Time: </Text>
             <TouchableOpacity onPress={showTimepicker} style={globalStyles.textInput}>
               <MaterialCommunityIcons name='clock-outline' size={30}/>
               <Text style={globalStyles.textInputText}>{moment(date).format('h:mm A')}</Text>
-            </TouchableOpacity>
+            </TouchableOpacity> */}
 
             {show && (
               <DateTimePicker
@@ -83,14 +93,14 @@ export default function AddTimeline({ setModalOpen }) {
                 }}
               />
             )}
-
-            <StyledButton onPress={props.handleSubmit}>
-                <SubmitText/>
-            </StyledButton>
+            <BlueButton
+              onPress={props.handleSubmit}
+              buttonText="Submit"
+            />
           </View>
         )}
 
       </Formik>
-    </View>
+    </>
   )
 };

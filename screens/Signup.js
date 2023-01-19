@@ -1,6 +1,6 @@
 import React, { useContext, useState } from 'react';
 import { StatusBar } from 'expo-status-bar';
-import { Alert } from "react-native";
+import { Alert, View } from "react-native";
 
 //formik
 import { Formik } from 'formik';
@@ -25,7 +25,7 @@ import {
     MsgBox
 } from '../styles/styles';
 
-import {View} from 'react-native';
+import { BlueButton } from '../styles/globalStyles';
 
 const {brand, darkLight} = Colors;
 
@@ -114,11 +114,10 @@ const Signup = ({ navigation }) => {
                           />
 
                           <MsgBox></MsgBox>
-                          <StyledButton onPress={handleSubmit}>
-                              <ButtonText>
-                                  Signup
-                              </ButtonText>
-                          </StyledButton>
+                          <BlueButton
+                            onPress={handleSubmit}
+                            buttonText="Signup"
+                          />
                         </StyleFormArea>
                     )}
                 </Formik>

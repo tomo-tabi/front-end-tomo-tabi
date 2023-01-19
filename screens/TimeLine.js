@@ -1,7 +1,7 @@
 import React, { useState, useEffect, useContext } from 'react';
-import { StyleSheet, Text, FlatList, View, TouchableOpacity } from 'react-native';
-import { InfoContext } from '../context/InfoContext';
+import { StyleSheet, Text, FlatList, View } from 'react-native';
 import { globalStyles, AddButton, StyledModal } from "../styles/globalStyles";
+import { InfoContext } from '../context/InfoContext';
 
 import moment from 'moment';
 
@@ -99,12 +99,15 @@ export default function TimeLine ({ route }) {
             renderItem={renderItem}
           />
         }
+        <StyledModal
+          modalOpen={modalOpen}
+          setModalOpen={setModalOpen}
+          AddComponent={AddTimeline}
+        />
 
-        {StyledModal(modalOpen, setModalOpen, AddTimeline)}
-        
-          <TouchableOpacity onPress={() => setModalOpen(true)} style={globalStyles.addIconButton}>
-              <AddButton/>
-          </TouchableOpacity>
+        <AddButton
+          setModalOpen={setModalOpen}
+        />
       </View>
     </>
   )
