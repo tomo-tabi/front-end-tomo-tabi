@@ -67,6 +67,7 @@ export default function CalendarView(params) {
 
             if (Object.keys(Obj).length !== 0) {
                 const res = Object.keys(Obj).map((key) => ({
+                    id: Obj[key][0]["id"],
                     date: key,
                     info: Obj[key]
                 }));
@@ -118,12 +119,12 @@ export default function CalendarView(params) {
             }
         })
         var getDaysArray = function (start, end) {
-            for (var arr = [], dt = new Date(start); dt <= new Date(end); dt.setDate(dt.getDate() + 1)) {
-                arr.push(new Date(dt));
+            for (var arr = [], dt = moment(start); dt <= moment(end); dt = moment(dt).add(1, 'days')) {
+                arr.push(moment(dt));
             }
             return arr;
         };
-        var daylist = getDaysArray(new Date(startDateTrip), new Date(lastDateTrip));
+        var daylist = getDaysArray(dateFormat(startDateTrip), dateFormat(lastDateTrip));
         daylist.map((v) => v.toISOString().slice(0, 10)).join("")
         daylist.map((date) => {
             if (eventsObject[dateFormat(lastDateTrip)]) {
