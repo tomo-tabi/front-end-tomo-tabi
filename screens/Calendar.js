@@ -152,7 +152,10 @@ export default function CalendarView(params) {
         // console.log("dateSortEvents", dateSortEvents)
         const dayEvent = dateSortEvents.find((item) => dateFormat(item.date) === dateFormat(day));
         // console.log(dayEvent);
-        setInfo([dayEvent])
+        if(dayEvent){
+
+            setInfo([dayEvent])
+        }
     }
 
 
