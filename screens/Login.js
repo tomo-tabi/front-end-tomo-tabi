@@ -86,7 +86,7 @@ const Login = ( { navigation } ) => {
                             />
                             <MsgBox></MsgBox>
                             <StyledButton onPress={handleSubmit}>
-                                <Text style={globalStyles.buttonText}>Logout</Text>
+                                <Text style={globalStyles.buttonText}>Login</Text>
                             </StyledButton>
                             <Line/>
                             <ExtraView>
