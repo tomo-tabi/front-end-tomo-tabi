@@ -1,8 +1,7 @@
-import React, { useState, useContext,  } from 'react'
-import { StyleSheet, Text, FlatList, View, TouchableOpacity } from 'react-native';
-import { MaterialCommunityIcons } from '@expo/vector-icons'
-import { globalStyles, colors, AddButton, StyledButton, StyledModal } from "../styles/globalStyles";
-const { blue, lightBlue, grey } = colors
+import React, { useState, useContext, useEffect,  } from 'react'
+import { StyleSheet, Text, FlatList, View, TouchableOpacity, SectionList } from 'react-native';
+import { globalStyles, colors, AddButton, StyledModal, BlueButton, YellowButton } from "../styles/globalStyles";
+const { primary, blue, yellow } = colors
 
 import { AuthContext } from '../context/AuthContext';
 import { InfoContext } from '../context/InfoContext';
@@ -17,6 +16,9 @@ export default function Trips({ navigation }) {
   const { logout } = useContext(AuthContext);
   const { trips, invites, rejectInvites, acceptInvites } = useContext(InfoContext);
   const [ modalOpen, setModalOpen ] = useState(false);
+  const [ inviteStatus, setInviteStatus ] = useState(false);
+
+  // console.log(invites, trips);
 
   const pressHandler = (item) => {
     navigation.navigate('TripTabNav', {
@@ -28,137 +30,201 @@ export default function Trips({ navigation }) {
   // console.log(trips);
 
   const dateFormat = (startDate, endDate) => {
-    return `${moment(startDate).format("MMMM, Do")} ➡︎ ${moment(endDate).format("MMMM Do, YYYY")}` 
+    return `${moment(startDate).format("MMM, Do")} ➡︎ ${moment(endDate).format("MMM Do, YYYY")}` 
   }
 
+  useEffect(() => {
+    // console.log("in",invites);
+    if(invites){
+        setInviteStatus(true);
+    } else {
+      setInviteStatus(false);
+    }
+  }, [invites])
 
   return (
     <View style={globalStyles.container}>
-      {StyledModal(modalOpen, setModalOpen, AddTrip)}
+      <StyledModal
+        modalOpen={modalOpen}
+        setModalOpen={setModalOpen}
+        AddComponent={AddTrip}
+      />
+      <Text style={styles.header}>
+        {inviteStatus ?
+        "Pending Invites" 
+        :"No Invites"
+        }
+      </Text>
 
-      {/* <Modal visible={modalOpen} animationType='slide'>
-        <View style={StyleSheet.modalContent}>
-          <MaterialIcons
-            name="close"
-            size={24}
-            style={{ ...styles.modalToggle, ...styles.modalClose }}
-            onPress={() => setModalOpen(false)}
-          />
-          <AddTrip setModalOpen={setModalOpen} />
+      {inviteStatus !== false ?
+        <View style={styles.inviteView}>
+          <FlatList
+            keyExtractor={(item) => {
+              // console.log(item.id);
+              return item.id
+            }}
+            data={invites}
+            renderItem={({ item }) => (
+              <View style={styles.inviteTripCard}>
+                
+                <View style={styles.inviteTripInfo}>
+                  <Text style={styles.inviteText}>User '{item.username}' has invited you trip:</Text>
+                  <Text style={styles.inviteTripName}>{item.name}</Text>
+                </View>
+
+                <View style={styles.inviteBtnView}>
+                  <YellowButton 
+                      onPress = {() => acceptInvites(item.id)}
+                      iconName='check'
+                  />
+                  <YellowButton 
+                    onPress = {() => rejectInvites(item.id)}
+                    iconName='window-close'
+                  />
+                </View>
+              </View>
+            )}
+          /> 
         </View>
-      </Modal> */}
+        : ""
+      }
+      <Text style={styles.header}>Trips</Text>
 
-      {invites !== "no invites found" ?
-        <>
-        <Text style={styles.text}>
-          Pending Invites
-        </Text> 
+      <View style={styles.tripView}>
         <FlatList
-          keyExtractor={(item) => {
-            console.log(item.id);
-            return item.id
-          }}
-          data={invites}
+          keyExtractor={( item ) => item.id}
+          data={trips}
+          numColumns={2}
+          columnWrapperStyle={styles.row}
           renderItem={({ item }) => (
-            <TouchableOpacity >
-              <Text style={styles.date}>The user {item.username} has invited you to the following trip:</Text>
-              <Text style={styles.inviteName}>{item.name} </Text>
-              <MaterialCommunityIcons
-                name='check-bold'
-                size={24}
-                style={{ ...styles.icon}}
-                onPress={() => acceptInvites(item.id)}
-              />
-              <MaterialCommunityIcons
-                name='window-close'
-                size={24}
-                style={{ ...styles.icon}}
-                onPress={() => rejectInvites(item.id)}
-              />
+            <TouchableOpacity onPress={() => pressHandler(item)} style={styles.item}>
+                <View style={styles.tripInnerView}>
+                  <Text style={styles.tripName}>{item.name}</Text>
+                  <Text style={styles.tripDate}>{dateFormat(item.start_date, item.end_date)}</Text>
+                </View>
             </TouchableOpacity>
           )}
-        /> 
-        </>
-        : <Text style={styles.text}> No Invites </Text> 
-      }
+        />
+      </View>
 
-    <FlatList
-      keyExtractor={( item ) => item.id}
-      data={trips}
-      numColumns={2}
-      columnWrapperStyle={styles.row}
-      renderItem={({ item }) => (
-        <TouchableOpacity onPress={() => pressHandler(item)} style={styles.item}>
-            <View style={styles.view}>
-              <Text style={styles.name}>{item.name}</Text>
-              <Text style={styles.date}>{dateFormat(item.start_date, item.end_date)}</Text>
-            </View>
-        </TouchableOpacity>
-      )}
-    />
+      <BlueButton
+        onPress={() => logout()}
+        buttonText="Logout"
+      />
 
-    <StyledButton onPress={() => logout()}>
-      <Text style={globalStyles.buttonText}>Logout</Text>
-    </StyledButton>
-
-    <TouchableOpacity onPress={() => setModalOpen(true)} style={globalStyles.addIconButton}>
-      <AddButton/>
-    </TouchableOpacity>
-  </View>
+      <AddButton
+        setModalOpen={setModalOpen}
+      />
+    </View>
   )
 };
 
 const styles = StyleSheet.create({
-  row:{
+  row:{ //each row of flat list
     justifyContent:'space-between',
   },
-  item: {
+  item: { // each trip file wrapper
     backgroundColor: blue,
+    // flex:1,
+
     padding: 5,
-    marginBottom:10,
+    marginBottom:5,
     height: 100,
-    width:181,
+    width:179,
     borderRadius:6,
     alignItems:'flex-start',
     
-    shadowColor: grey,
-    shadowOpacity: 0.3,
-    elevation: 7,
+    // shadowColor: 'black',
+    // shadowOpacity: 0.8,
+    // elevation: 3,
   },
-  view:{
+  tripView:{
+    flex:2,
+    shadowColor: 'grey',
+    shadowOpacity: 0.8,
+    elevation: 7,
+    
+    padding: 5,
+    borderTopLeftRadius:6,
+    borderTopRightRadius:6,
+    backgroundColor:primary
+  },
+  tripInnerView:{//inside each trip file
     flex:1,
   },
-  name:{
+  tripName:{
     alignItems:'center',
     fontWeight: "bold",
     fontSize: 24,
     paddingHorizontal: 5,
   },
-  date:{
+  tripDate:{
     fontSize: 16,
     paddingHorizontal: 5,
     paddingTop:5,
   },
 
-  text: {
-    paddingHorizontal:135,
-    marginBottom: 10,
-    borderRadius:6,
-    padding: 10,
+  header: {
+    // flex:1,
+    paddingVertical:10,
+    marginBottom: 5,
+    fontWeight:'bold',
+    // borderRadius:6,
+    // textAlign: 'center',
+    includeFontPadding:false,
+    // justifyContent: 'center',
+    // alignItems: 'center',
+    // height:100,
+    // padding: 10,
     fontSize:20,
-    backgroundColor:lightBlue,
-    alignSelf: 'center',
+    // backgroundColor:lightBlue,
+    // alignSelf: 'center',
   },
-  icon: {
-    // alignSelf: 'left'
+  inviteText:{
+    fontSize: 16,
   },
-  inviteName: {
-    width: 300,
+  inviteView:{
+    // flex:1,
+    marginBottom:10,
+    // paddingHorizontal:10,    
+    // padding:10,
+    // backgroundColor: primary,
+    // borderRadius:6,
+    
+  },
+  inviteTripCard:{
+    flex:1,
+    margin:5,
+    // padding:5,
+    // borderBottomWidth:1,
+    borderRadius: 6,
+    overflow:'hidden',
+    // backgroundColor: "black"
+    shadowColor: 'grey',
+    shadowOpacity: 0.8,
+    elevation: 7,
+  },
+  inviteTripInfo:{
+    // flex:1,
+    padding:5,
+    // borderRadius: 6,
+    backgroundColor: blue
+  },
+  inviteTripName: {
+    flex:1,
+    // width: 300,
     fontWeight: "bold",
     fontSize: 24,
-    padding: 20,
-    marginHorizontal: 10,
-    borderRadius: 6,
-    backgroundColor: '#A020F0'
+    // padding: 20,
+    // marginHorizontal: 10,
+    // borderRadius: 6,
+    // backgroundColor: blue
+  },
+  inviteBtnView:{
+    flex:1,
+    flexDirection:'row',
+    backgroundColor: yellow,
+    // borderWidth:1,
+    // borderColor:'black'
   }
 })

@@ -1,11 +1,11 @@
 import React, { useState, useEffect, useContext, useRef } from 'react';
+import { StyleSheet, Text, FlatList, View } from 'react-native';
 import { Calendar, CalendarList, Agenda } from 'react-native-calendars';
+import { StyledModal, AddButton, globalStyles, colors } from "../styles/globalStyles";
+const { yellow } = colors
+const darkYellow = '#fcc256'
+
 import { InfoContext } from '../context/InfoContext';
-
-
-
-import { StyleSheet, Text, FlatList, View, Modal, TouchableOpacity, Button } from 'react-native';
-import { MaterialCommunityIcons } from '@expo/vector-icons';
 import moment from 'moment';
 
 import AddTimeline from './AddTimeline';
@@ -13,7 +13,6 @@ import AddTimeline from './AddTimeline';
 
 export default function CalendarView(params) {
     const { tripEvents, getTripEvents, tripid, trips } = useContext(InfoContext)
-
 
     const flatlistRef = useRef()
 
@@ -79,8 +78,13 @@ export default function CalendarView(params) {
 
     }, [tripEvents])
 
+    const dateFormat = (date) => {
+        return moment(date).format("YYYY-MM-DD");
+    }
+
 
     const renderItem = ({ item }) => {
+        // console.log("it",item);
         let eventArr = item.info;
         return (
             <>
@@ -101,15 +105,16 @@ export default function CalendarView(params) {
     const formatEventsOnCalendar = (tripEvents) => {
         const eventsObject = {}
         let counter = 0
-        let startDateTrip
-        let lastDateTrip
+        let startDateTrip, lastDateTrip
+
         tripEvents.forEach(event => {
-            eventsObject[moment(event.event_date).format("YYYY-MM-DD")] = { color: '#70d7c7', textColor: 'white', marked: true, dotColor: 'white' }
+            eventsObject[dateFormat(event.event_date)] = { color: yellow, textColor: 'white', marked: true, dotColor: 'white' }
         })
+
         trips.forEach((trip) => {
             if (trip.id === tripid) {
-                startDateTrip = moment(trip.start_date)
-                lastDateTrip = moment(trip.end_date)
+                startDateTrip = dateFormat(trip.start_date)
+                lastDateTrip = dateFormat(trip.end_date)
             }
         })
         var getDaysArray = function (start, end) {
@@ -121,21 +126,21 @@ export default function CalendarView(params) {
         var daylist = getDaysArray(new Date(startDateTrip), new Date(lastDateTrip));
         daylist.map((v) => v.toISOString().slice(0, 10)).join("")
         daylist.map((date) => {
-            if (eventsObject[moment(lastDateTrip).format("YYYY-MM-DD")]) {
-                eventsObject[moment(lastDateTrip).format("YYYY-MM-DD")] = { endingDay: true, color: '#50cebb', textColor: 'white', marked: true, dotColor: 'white' }
+            if (eventsObject[dateFormat(lastDateTrip)]) {
+                eventsObject[dateFormat(lastDateTrip)] = { endingDay: true, color: darkYellow, textColor: 'white', marked: true, dotColor: 'white' }
 
             }
-            if (eventsObject[moment(startDateTrip).format("YYYY-MM-DD")] && counter == 0) {
-                eventsObject[moment(startDateTrip).format("YYYY-MM-DD")] = { startingDay: true, color: '#50cebb', textColor: 'white', marked: true, dotColor: 'white' }
+            if (eventsObject[dateFormat(startDateTrip)] && counter == 0) {
+                eventsObject[dateFormat(startDateTrip)] = { startingDay: true, color: darkYellow, textColor: 'white', marked: true, dotColor: 'white' }
                 counter += 1
             }
-            if (!eventsObject[moment(date).format("YYYY-MM-DD")]) {
-                eventsObject[moment(date).format("YYYY-MM-DD")] = { color: '#70d7c7', textColor: 'white' }
-                if (moment(date).format("YYYY-MM-DD") == moment(lastDateTrip).format("YYYY-MM-DD")) {
-                    eventsObject[moment(lastDateTrip).format("YYYY-MM-DD")] = { endingDay: true, color: '#50cebb', textColor: 'white' }
+            if (!eventsObject[dateFormat(date)]) {
+                eventsObject[dateFormat(date)] = { color: yellow, textColor: 'white' }
+                if (dateFormat(date) == dateFormat(lastDateTrip)) {
+                    eventsObject[dateFormat(lastDateTrip)] = { endingDay: true, color: darkYellow, textColor: 'white' }
                 }
-                if (moment(date).format("YYYY-MM-DD") == moment(startDateTrip).format("YYYY-MM-DD")) {
-                    eventsObject[moment(startDateTrip).format("YYYY-MM-DD")] = { startingDay: true, color: '#50cebb', textColor: 'white' }
+                if (dateFormat(date) == dateFormat(startDateTrip)) {
+                    eventsObject[dateFormat(startDateTrip)] = { startingDay: true, color: darkYellow, textColor: 'white' }
                     counter += 1
                 }
             }
@@ -144,26 +149,10 @@ export default function CalendarView(params) {
     }
 
     const checkDate = (day) => {
-        console.log("dateSortEvents", dateSortEvents)
-        dateSortEvents.forEach(date => {
-            if(moment(date.date).format("YYYY-MM-DD") == moment(day).format("YYYY-MM-DD")){
-                console.log(date.info)
-                let eventArr = date.info
-                setInfo(
-                    <>
-                        <Text style={styles.date}>{date.date}</Text>
-                        {eventArr.map((eventObj) => {
-                            return (
-                                <View key={eventObj.id} style={styles.dayContainer}>
-                                    <Text style={styles.dayTime}>{eventObj.time}</Text>
-                                    <Text style={styles.dayEvent}>{eventObj.event_name}</Text>
-                                </View>
-                            )
-                        })}
-                    </>
-                    )
-            }
-        });
+        // console.log("dateSortEvents", dateSortEvents)
+        const dayEvent = dateSortEvents.find((item) => dateFormat(item.date) === dateFormat(day));
+        // console.log(dayEvent);
+        setInfo([dayEvent])
     }
 
 
@@ -171,11 +160,11 @@ export default function CalendarView(params) {
         <>
             <Calendar
                 // Initially visible month. Default = now
-                initialDate={`${moment().format("YYYY-MM-DD")}`}
+                initialDate={`${dateFormat()}`}
                 // Handler which gets executed on day press. Default = undefined
                 onDayPress={(day) => {checkDate(day.dateString)}}
                 // Month format in calendar title. Formatting values: http://arshaw.com/xdate/#Formatting
-                monthFormat={'MMM yyyy'}
+                monthFormat={'MMMM, yyyy'}
                 // If firstDay=1 week starts from Monday. Note that dayNames and dayNamesShort should still start from Sunday
                 firstDay={1}
                 // Hide day names. Default = false
@@ -191,44 +180,29 @@ export default function CalendarView(params) {
                 //     /*Return JSX*/
                 // }}
 
-
-
                 markingType={'period'}
                 markedDates={formatEventsOnCalendar(tripEvents)}
 
             />
-            <View style={styles.container}>
-                <View style={styles.innerContainer}>
-                    {info}
-                    {/* {Array.isArray(dateSortEvents) &&
-                        <FlatList
-                            keyExtractor={(item) => item.id}
-                            ref={flatlistRef}
-                            data={dateSortEvents}
-                            renderItem={renderItem}
-                        />
-                    } */}
-
-                    <Modal visible={modalOpen} animationType="slide">
-                        <View style={styles.modalContent}>
-                            <MaterialCommunityIcons
-                                name='window-close'
-                                size={24}
-                                style={{ ...styles.modalToggle, ...styles.modalClose }}
-                                onPress={() => setModalOpen(false)}
-                            />
-                            <AddTimeline setModalOpen={setModalOpen} setSelectedDateCalendar={setSelectedDateCalendar} selectedDateCalendar={selectedDateCalendar}/>
-                        </View>
-                    </Modal>
-
-                    <TouchableOpacity onPress={() => setModalOpen(true)} style={styles.iconContainer}>
-                        <MaterialCommunityIcons
-                            name='plus'
-                            size={50}
-                            style={styles.modalToggle}
-                        />
-                    </TouchableOpacity>
-                </View>
+            <View style={globalStyles.container}>
+                {/* info has to render as a flat list */}
+                {Array.isArray(info) ? 
+                <FlatList
+                    keyExtractor={(item) => item.id}
+                    data={info}
+                    renderItem={renderItem}
+                />
+                :""
+                }
+                    {/* {info} */}
+                    <StyledModal
+                        modalOpen={modalOpen}
+                        setModalOpen={setModalOpen}
+                        AddComponent={AddTimeline}
+                    />
+                    <AddButton
+                        setModalOpen={setModalOpen}
+                    />
             </View>
         </>
     )
@@ -236,16 +210,6 @@ export default function CalendarView(params) {
 
 
 const styles = StyleSheet.create({
-    container: {
-        flex: 1,
-        backgroundColor: '#fff',
-    },
-    innerContainer: {
-        flex: 1,
-        backgroundColor: '#fff',
-        marginHorizontal: 10,
-    },
-
     date: {
         fontWeight: "bold",
         fontSize: 24,
@@ -253,27 +217,6 @@ const styles = StyleSheet.create({
         marginTop: 10,
         borderRadius: 6,
         backgroundColor: '#9CCAEC'
-    },
-
-    iconContainer: {
-        alignItems: "center",
-        alignSelf: "flex-end",
-        backgroundColor: '#F187A4',
-        borderRadius: 40,
-        justiftyContent: "center",
-        margin: 5,
-
-        height: 70,
-        width: 70,
-
-        position: "absolute",
-        right: 0,
-        bottom: 10,
-
-        shadowColor: "#000",
-        shadowOpacity: 0.9,
-        shadowRadius: 5,
-        elevation: 7,
     },
     dayContainer: {
         marginTop: 7,
@@ -289,18 +232,4 @@ const styles = StyleSheet.create({
         paddingLeft: 24,
         paddingBottom: 10,
     },
-
-    modalContent: {
-        flex: 1,
-        margin: 10,
-    },
-    modalToggle: {
-        margin: 10,
-        alignSelf: "flex-end",
-        color: '#fff',
-    },
-    modalClose: {
-        margin: 0,
-        color: 'black'
-    }
 })

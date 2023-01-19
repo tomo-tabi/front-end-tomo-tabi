@@ -14,25 +14,25 @@ export const colors = {
 
 const { primary, pink, blue, yellow, lightBlue, navy, grey } = colors
 
-// import { globalStyles, StyledButton, SubmitText, MyTextInput } from "../styles/globalStyles";
+// import { globalStyles, SubmitText, MyTextInput } from "../styles/globalStyles";
 //globalStyles.addIconButton
 export const globalStyles = StyleSheet.create({
   container:{
     flex: 1,
-    backgroundColor: primary,//used to be '#fff'
+    backgroundColor: lightBlue,//used to be '#fff'
     paddingHorizontal: 10,
     paddingTop:10,
   },
-  expenseContainer:{
-    flex: 1,
-    padding: 16,
-    paddingTop: 2,
-  },
+  // expenseContainer:{
+  //   flex: 1,
+  //   padding: 16,
+  //   paddingTop: 2,
+  // },
 
   addIconButton:{//iconContainer
     alignItems:"center",
     alignSelf:"flex-end",
-    backgroundColor:'#F187A4',
+    backgroundColor: pink,
     borderRadius: 40,
     justiftyContent:"center",
     margin:5,
@@ -49,6 +49,41 @@ export const globalStyles = StyleSheet.create({
     shadowOpacity: 0.9,
     shadowRadius: 5,
     elevation: 7,
+  },
+  buttonStyle:{
+    backgroundColor: blue, 
+    // justiftyContent: 'center',
+    alignItems: 'center',
+    borderRadius: 5,
+    marginVertical: 3,
+    padding: 18,
+    paddingHorizontal: 10,
+    // flex:1,
+  },
+  yellow:{
+    backgroundColor:'none',
+    flex:1,
+    marginVertical:0,
+    // borderWidth:1,
+    // borderColor:'black',
+    // justifyContent:"flex-end",
+    borderRadius:0,
+    padding:5,
+  },
+  temp:{
+    backgroundColor: yellow,
+    borderRadius: 6,
+    alignContent:"space-around",
+    paddingVertical:10,
+    // paddingTop:1,
+
+    marginHorizontal: 5,
+    marginVertical:10,
+    
+    // textAlign:'center',
+    // borderWidth:1,
+    // borderColor:'black',
+
   },
   buttonText:{
     fontSize:16,
@@ -67,11 +102,13 @@ export const globalStyles = StyleSheet.create({
     fontSize:16,
   },
   textInputText:{
+    color: navy,//input text color?
     marginLeft:14,
     fontSize:16,
   },
   modalContent:{
     flex:1,
+    backgroundColor:primary,
     // margin:5,
   },
   modalToggle:{
@@ -93,62 +130,36 @@ export const LeftIcon = styled(View)`
   z-index: 1;
 `;
 
-export const StyledInputLabel = styled(Text)`
-  color: ${ navy };
-  font-size: 13px;
-  text-align: left;
-`;
-
-export const StyledButton = styled(TouchableOpacity)`
-  background-color: ${ blue };
-  justify-content: center;
-  align-items: center;
-  border-radius: 5px;
-  margin-vertical: 5px;
-  height: 60px;
-`;
-export const StyledTextInput = ({ ...props} ) => {
-  return (
-    <TextInput style={globalStyles.textInputText} {...props}/>
-  )
-}
-
-export function SubmitText() {
-  return (
-    <Text style={globalStyles.buttonText}>
-        Submit
-     </Text>
-  )
-}
-
-
 
 export const MyTextInput = ( { label, icon, ...props }) => {
   return (
       <View>
-        <StyledInputLabel>{label}</StyledInputLabel>
+        <Text>{label}</Text>
         <View style={globalStyles.textInput}>
           <MaterialCommunityIcons name={icon} size={30} />
-          <StyledTextInput {...props}/>
+          <TextInput style={globalStyles.textInputText} {...props}/>
         </View>
       </View>
   );
 };
 
-export const AddButton = () => {
+export const AddButton = ({ setModalOpen }) => {
   return (
-    <MaterialCommunityIcons
-      name='plus'
-      size={50}
-      style={globalStyles.modalToggle}
-    />
+    <TouchableOpacity onPress={() => setModalOpen(true)} style={globalStyles.addIconButton}>
+      <MaterialCommunityIcons
+        name='plus'
+        size={50}
+        style={globalStyles.modalToggle}
+      />
+    </TouchableOpacity>
   )
-}
+};
 
-export const StyledModal = (modalOpen, setModalOpen, AddComponent) => {
+export const StyledModal = ({ modalOpen, setModalOpen, AddComponent }) => {
+  // console.log("Trig");
   return (
     <Modal visible={modalOpen} animationType="slide">
-      <View style={globalStyles.modalContent}>
+      <View style={[globalStyles.container, globalStyles.modalContent]}>
         <MaterialCommunityIcons
           name='window-close'
           size={24}
@@ -158,5 +169,54 @@ export const StyledModal = (modalOpen, setModalOpen, AddComponent) => {
         <AddComponent setModalOpen={setModalOpen}/>
       </View>
     </Modal>
+  )
+};
+
+export const StyledDTPicker = ({ label, onPress, iconName, ...textInputProps }) => {
+  // console.log(lable);
+  return (
+    <>
+      <Text>{label}</Text>
+      <TouchableOpacity onPress={onPress} style={globalStyles.textInput}>
+        <MaterialCommunityIcons name={iconName} size={30}/>
+        <TextInput 
+          style={globalStyles.textInputText} 
+          editable={false}
+          {...textInputProps}
+          // placeholder={placeholder}
+          // value={textInput}
+          // onChangeText={onChangeText}
+        />
+      </TouchableOpacity>
+    </>
+  )
+};
+
+export const BlueButton = ({ onPress, buttonText }) => {
+  return (
+    <TouchableOpacity onPress={onPress} style={globalStyles.buttonStyle}>
+      <Text style={globalStyles.buttonText}>{buttonText}</Text>
+    </TouchableOpacity>
+  )
+}
+
+export const YellowButton = ({ onPress, iconName, buttonText }) => {
+
+  return (
+    <TouchableOpacity onPress={onPress} style={[globalStyles.buttonStyle, globalStyles.yellow]}>
+      <MaterialCommunityIcons name={iconName} size={30}/>
+      {buttonText ? 
+      <Text style={globalStyles.buttonText}>{buttonText}</Text>
+      :""}
+    </TouchableOpacity>
+  )
+}
+
+export const TempButton = ({ onPress, buttonText }) => {
+
+  return (
+    <TouchableOpacity onPress={onPress} style={[globalStyles.buttonStyle, globalStyles.yellow, globalStyles.temp]}>
+      <Text style={[globalStyles.buttonText,{color:'black'}]}>{buttonText}</Text>
+    </TouchableOpacity>
   )
 }

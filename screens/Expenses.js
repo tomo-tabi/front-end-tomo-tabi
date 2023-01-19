@@ -1,7 +1,7 @@
 import React, { useState, useCallback, useContext, useEffect } from "react";
-import { Linking, StyleSheet, View, TouchableOpacity, FlatList, Text } from "react-native";
+import { Linking, StyleSheet, View, TouchableOpacity, Text, ScrollView } from "react-native";
 import { Table, TableWrapper, Row, Cell } from "react-native-table-component";
-import { globalStyles, colors, StyledButton, AddButton, StyledModal } from "../styles/globalStyles";
+import { globalStyles, colors, AddButton, StyledModal, TempButton } from "../styles/globalStyles";
 
 import { AuthContext } from "../context/AuthContext";
 import { ExpContext } from "../context/ExpContext";
@@ -18,11 +18,6 @@ export const ExpenseTable = () => {
 
   const [splitPaymentsData, setSplitPaymentData] = useState([[],[]]);
   const [tableHead, setTableHead] = useState(["Name", "Item", "Cost"]);
-  // const [tableData, setTableData] = useState([
-  //   ["Matthew", "tickets", 5000],
-  //   ["Eric", "drinks", 1500],
-  //   ["Pol", "Hotel Fee", 6000],
-  // ]);
   const [tableData, setTableData] = useState([]);
 
   useEffect(() => {
@@ -90,11 +85,11 @@ export const ExpenseTable = () => {
       sortedValuesPaid[j] -= debt;
 
       if(sortedPeople[i] === userData.username){
-        someoneOwnsYou.push(<Text style={styles.textOwe}>You owe {sortedPeople[j]} ¥{debt.toFixed(2)} </Text>);
+        someoneOwnsYou.push(<Text style={styles.oweCalc}>You owe {sortedPeople[j]} ¥{debt.toFixed(2)}</Text>);
       }
 
       if(sortedPeople[j] === userData.username){
-        oweYou.push(<Text style={styles.textOwe}> {sortedPeople[i]} owes you ¥ {debt.toFixed(2)} </Text>)
+        oweYou.push(<Text style={styles.oweCalc}>{sortedPeople[i]} owes you ¥ {debt.toFixed(2)}</Text>)
       }
 
   
@@ -112,14 +107,6 @@ export const ExpenseTable = () => {
 
     return result
   }
-
-  const renderItem = ({ item }) => {
-    return (
-      <Text style={styles.moneyCalc}>{item}</Text>
-    )
-  }
-
-// console.log(splitPaymentsData);
 
 
   const PayPayURL = "paypay://";
@@ -146,17 +133,19 @@ export const ExpenseTable = () => {
     }, [url]);
     
     return(
-      <StyledButton onPress={handlePress}>
-        <Text style={globalStyles.buttonText}>{children}</Text>
-      </StyledButton>
+      <TempButton
+        onPress={handlePress}
+        buttonText={children}
+      />
     );
   };
 
   // post exp needs: itemName, money, optional purchaserid (if blank defaults to userid)
 
   return (
-    <View style={styles.tableContainer}>
-      <Table style={styles.table}>
+    <View style={{flex:1}}>
+    <ScrollView style={{flex:1}}>
+      <Table>
         <TableWrapper>
             <Row data={tableHead} style={styles.head} textStyle={styles.text}/>
           {
@@ -174,104 +163,110 @@ export const ExpenseTable = () => {
           }
         </TableWrapper>
       </Table>
+
       <View style={globalStyles.container}>
-        
+
+        <StyledModal
+          modalOpen={modalOpen}
+          setModalOpen={setModalOpen}
+          AddComponent={AddExpenses}
+        />
+
+        <View style={styles.calcView}>
+
+        <Text style={styles.textOweTitle} > You owe: </Text>
+
+        {splitPaymentsData[0].length === 0 ?  <Text style={styles.oweCalc}>Congrats, you don't owe anything. </Text>  : 
+        splitPaymentsData[0].map((item) => {
+          // console.log(item);
+          return (item)
+        })
+        // <FlatList
+        //   data={splitPaymentsData[0]}
+        //   renderItem={renderItem}
+        // />
+        }
+
+        <Text style={styles.textOweTitle}> Someone owes you:</Text>
+
+        {splitPaymentsData[1].length === 0 ?  <Text style={styles.oweCalc}>No one owes you anything...</Text>  : 
+        splitPaymentsData[1].map((item) => {
+          console.log(item);
+          return (item)
+        })
+        // <FlatList
+        //   data={splitPaymentsData[1]}
+        //   renderItem={renderItem}
+        // />
+        }
+        </View>
+      
+      </View>
+    </ScrollView>
+    <View style={{height:100, backgroundColor: primary,}}>
+      <View style={styles.buttons}>
         <OpenURLButton url={PayPayURL}>Open PayPay</OpenURLButton>
         <OpenURLButton url={LinePayURL}>Open Line Pay</OpenURLButton>
-
-        {StyledModal(modalOpen, setModalOpen, AddExpenses)}
-
-      <Text style={styles.textOweTitle} > {'\n'} You owe: </Text>
-
-      {splitPaymentsData[0].length === 0 ?  <Text style={styles.textOwe}> Congrats, you don't owe anything. {'\n'} </Text>  : <FlatList
-        data={splitPaymentsData[0]}
-        renderItem={renderItem}
-      />}
-
-      <Text style={styles.textOweTitle}> Someone owes you:</Text>
-
-      {splitPaymentsData[1].length === 0 ?  <Text style={styles.textOwe}> No one owes you anything...</Text>  : <FlatList
-        data={splitPaymentsData[1]}
-        renderItem={renderItem}
-      />}
-        
-        <TouchableOpacity onPress={() => setModalOpen(true)} style={globalStyles.addIconButton}>
-          <AddButton/>
-        </TouchableOpacity>
+      </View>
+      <AddButton
+        setModalOpen={setModalOpen}
+      />
       </View>
     </View>
   );
 };
 
 const styles = StyleSheet.create({
-  tableContainer: {
-    flex: 1,
-    backgroundColor: primary,
-  },
-
   wrapper: {
+    flex:1,
     flexDirection: "row",
     height: 40,
     borderBottomColor: blue,
     borderBottomWidth:1,
+    backgroundColor: primary,
   },
 
   head: {
+    flex:1,
     height: 40,
     backgroundColor: blue,
   },
-
-  table: {
-    marginBottom:10,
-  },
-
-  moneyCalc:{
-    marginVertical:10,
-    marginHorizontal:10,
-  },
-
-  text: {
-    textAlign: "center",
-  },
-  iconContainer:{
-    alignItems:"center",
-    alignSelf:"flex-end",
-    backgroundColor:'#F187A4',
-    borderRadius: 40,
-    justiftyContent:"center",
-    margin:5,
-    marginRight:15,
-    
+  buttons:{
+    // flex:1,
+    width:300,
     height:70,
-    width:70,
-    
+    flexDirection:'row',
+    // backgroundColor: pink,
     position:"absolute",
-    right:0,
-    bottom:10,
+    bottom:15,
+    overflow:'visible',
+    // padding:5
+    
+  },
 
-    shadowColor: "#000",
-    shadowOpacity: 0.9,
-    shadowRadius: 5,
-    elevation: 7,
-  },
-  modalContent:{
-    flex:1,
-    margin:10,
-  },
-  modalToggle:{
-    margin:10,
-    alignSelf:"flex-end",
-    color:'#fff',
-  },
-  modalClose:{
-    margin:0,
-    color:'black'
+  text: {// table text
+    textAlign: "center",
+    
   },
   textOwe : {
-    fontSize: 20
+    fontSize: 20,
+
   },
   textOweTitle : {
     fontWeight: "bold",
     fontSize: 24
-  }
+  },
+  oweCalc:{
+    fontSize: 20,
+    marginLeft:10,
+    marginBottom:10,
+  },
+  calcView:{
+    flex:1,
+    // borderWidth:1,
+    padding:5,
+    marginBottom:10, 
+    backgroundColor:blue,
+    borderRadius:6
+  },
 });

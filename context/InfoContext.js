@@ -117,11 +117,12 @@ export function InfoProvider({children}) {
       })
 
        const res = await getInvites.json();
-       if(res){
-        setInvites(res);
-       }
+       checkStatus(res,getInvites,setInvites)
+      //  if(res){
+      //   setInvites(res);
+      //  }
       } catch (e) {
-        console.log(e);
+        console.log(`Invite Error: ${e}`);
       } 
   }
   const acceptInvites = async (inviteID) => {
@@ -202,7 +203,7 @@ export function InfoProvider({children}) {
   useEffect(() => {
     if(userData){
       getTrips();
-      getInvites()
+      getInvites();
     }
   }, [userData])
   

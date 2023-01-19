@@ -3,7 +3,7 @@ import { Alert, View, Text } from "react-native";
 import {Formik} from 'formik';
 import { StatusBar } from 'expo-status-bar';
 import { Octicons, Ionicons } from '@expo/vector-icons';
-import { globalStyles, colors, StyledButton } from "../styles/globalStyles";
+import { globalStyles, colors, BlueButton } from "../styles/globalStyles";
 
 import { AuthContext } from '../context/AuthContext';
 
@@ -85,9 +85,10 @@ const Login = ( { navigation } ) => {
                                 setHidePassword={setHidePassword}
                             />
                             <MsgBox></MsgBox>
-                            <StyledButton onPress={handleSubmit}>
-                                <Text style={globalStyles.buttonText}>Login</Text>
-                            </StyledButton>
+                            <BlueButton
+                                onPress={handleSubmit}
+                                buttonText="Login"
+                            />
                             <Line/>
                             <ExtraView>
                               <ExtraText>Don't have an account already?</ExtraText>

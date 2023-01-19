@@ -1,6 +1,7 @@
 import React, { useContext } from 'react';
 import { View } from 'react-native';
-import { globalStyles, StyledButton, SubmitText, MyTextInput } from "../styles/globalStyles";
+import { globalStyles, colors, MyTextInput, BlueButton } from "../styles/globalStyles";
+const { primary } = colors;
 
 import { Formik } from 'formik';
 
@@ -10,7 +11,7 @@ export default function Invite() {
   const { postInvite } = useContext(InfoContext);
 
   return (
-    <View style={globalStyles.container}>
+    <View style={[globalStyles.container,{backgroundColor: primary}]}>
       <Formik
         initialValues={{ email: ''}}
         onSubmit={(values, actions) => {
@@ -27,10 +28,11 @@ export default function Invite() {
               onChangeText={props.handleChange('email')}
               value={props.values.email}
             />
-  
-            <StyledButton onPress={props.handleSubmit}>
-              <SubmitText />
-            </StyledButton>
+
+            <BlueButton
+              onPress={props.handleSubmit}
+              buttonText="Submit"
+            />
           </>
         )}
       </Formik>
