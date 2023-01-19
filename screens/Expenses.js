@@ -5,6 +5,7 @@ import { globalStyles, colors, AddButton, StyledModal, TempButton } from "../sty
 
 import { AuthContext } from "../context/AuthContext";
 import { ExpContext } from "../context/ExpContext";
+import { InfoContext } from "../context/InfoContext";
 
 import AddExpenses from "./AddExpenses";
 
@@ -15,6 +16,8 @@ export const ExpenseTable = () => {
 
   const { userData } = useContext(AuthContext);//to extract username?
   const { getExp, expData } = useContext(ExpContext);
+  const { getUsersInTrip, tripid, usersInTrip } = useContext(InfoContext);
+
 
   const [splitPaymentsData, setSplitPaymentData] = useState([[],[]]);
   const [tableHead, setTableHead] = useState(["Name", "Item", "Cost"]);
@@ -22,6 +25,7 @@ export const ExpenseTable = () => {
 
   useEffect(() => {
     getExp()
+    getUsersInTrip(tripid)
   }, [])
 
   //format data for table
@@ -37,6 +41,8 @@ export const ExpenseTable = () => {
           obj.money
         ])
       })
+
+
       setTableData(expArr)
     }
 
@@ -49,6 +55,11 @@ export const ExpenseTable = () => {
         }
         if(!expObj[obj.username]){
           expObj[obj.username] =  Number(obj.money)
+        }
+      })
+      usersInTrip.forEach((user)=> {
+        if(!expObj[user]){
+          expObj[user] = 0
         }
       })
       setSplitPaymentData(splitPayments(expObj))
@@ -191,7 +202,7 @@ export const ExpenseTable = () => {
 
         {splitPaymentsData[1].length === 0 ?  <Text style={styles.oweCalc}>No one owes you anything...</Text>  : 
         splitPaymentsData[1].map((item) => {
-          console.log(item);
+          // console.log(item);
           return (item)
         })
         // <FlatList
