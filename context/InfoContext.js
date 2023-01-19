@@ -11,6 +11,7 @@ export function InfoProvider({children}) {
   const [invites, setInvites] = useState(null);//all pending invites for user
   const [tripEvents, setTripEvents] = useState(null);//trip events for one trip
   const [tripid, setTripid] = useState(null);//trip id
+  const [usersInTrip, setUsersInTrip] = useState([])
 
   const { userData, userToken } = useContext(AuthContext);
 
@@ -125,6 +126,26 @@ export function InfoProvider({children}) {
         console.log(`Invite Error: ${e}`);
       } 
   }
+
+  const getUsersInTrip = async (tripID) => {
+    try{
+      const getUsersInTrip = await fetch(`http://${API_URL}:8080/trip/users/${tripID}`,{
+        method:"GET",
+        headers: authHeader
+      })
+
+      const res = await getUsersInTrip.json();
+      const usersTrip=[]
+      res.forEach(user => {
+        usersTrip.push(user.username)
+      });
+      setUsersInTrip(usersTrip)
+    } catch (e) {
+      console.log(e);
+    } 
+  } 
+
+
   const acceptInvites = async (inviteID) => {
     try{
       const acceptInvites = await fetch(`http://${API_URL}:8080/invite/accept/${inviteID}`,{
@@ -209,7 +230,7 @@ export function InfoProvider({children}) {
   
 
   return (
-    <InfoContext.Provider value={{trips, tripEvents, tripid, invites, rejectInvites, acceptInvites, getInvites, getTripEvents, postTripEvents, postNewTrip, getTrips, postInvite}}>
+    <InfoContext.Provider value={{trips, tripEvents, tripid, invites, usersInTrip, rejectInvites, acceptInvites, getInvites, getTripEvents, postTripEvents, postNewTrip, getTrips, postInvite, getUsersInTrip}}>
       {children}
     </InfoContext.Provider>
   )
