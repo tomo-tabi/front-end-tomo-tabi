@@ -80,6 +80,7 @@ const Signup = ({ navigation }) => {
                               placeholder="xxx@gmail.com"
                               placeholderTextColor={darkLight}
                               onChangeText={handleChange('email')}
+                              autoCapitalize="none"
                               onBlur={handleBlur('email')}
                               value={values.email}
                               keyboardType="email-address"
