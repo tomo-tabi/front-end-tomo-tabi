@@ -1,7 +1,9 @@
 import React from 'react';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import { MaterialCommunityIcons } from '@expo/vector-icons';
-// import Ionicons from 'react-native-vector-icons/Ionicons';
+import { colors } from "../styles/globalStyles";
+
+const { primary, blue } = colors;
 
 import Calendar from '../screens/Calendar';
 import TimeLine from '../screens/TimeLine';
@@ -41,7 +43,7 @@ export default function TripTabNav() {
 
             return <MaterialCommunityIcons name={iconName} size={30} />
           },
-          tabBarActiveTintColor:'#A020F0',
+          tabBarActiveTintColor:blue,
           
         })}
       >

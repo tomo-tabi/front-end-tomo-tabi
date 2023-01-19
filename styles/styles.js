@@ -104,7 +104,7 @@ export const StyledTextInput = styled(TextInput)`
 export const StyledInputLabel = styled(Text)`
   color: ${tertiary};
   font-size: 13px;
-  text-slign: left;
+  text-align: left;
 `;
 
 export const LeftIcon = styled(View)`

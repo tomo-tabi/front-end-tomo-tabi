@@ -1,10 +1,14 @@
 import React, { useState, useCallback, useContext, useEffect } from "react";
-import { Alert, Button, Linking, StyleSheet, View, TouchableOpacity, Modal, FlatList, Text } from "react-native";
-import { Table, TableWrapper, Row, Rows, Cell } from "react-native-table-component";
-import { MaterialCommunityIcons } from '@expo/vector-icons';
+import { Linking, StyleSheet, View, TouchableOpacity, FlatList, Text } from "react-native";
+import { Table, TableWrapper, Row, Cell } from "react-native-table-component";
+import { globalStyles, colors, StyledButton, AddButton, StyledModal } from "../styles/globalStyles";
+
 import { AuthContext } from "../context/AuthContext";
 import { ExpContext } from "../context/ExpContext";
+
 import AddExpenses from "./AddExpenses";
+
+const { primary, blue } = colors;
 
 export const ExpenseTable = () => {
   const [ modalOpen, setModalOpen ] = useState(false);
@@ -140,24 +144,28 @@ export const ExpenseTable = () => {
         }
       }
     }, [url]);
-
-    return <Button title={children} onPress={handlePress} />;
+    
+    return(
+      <StyledButton onPress={handlePress}>
+        <Text style={globalStyles.buttonText}>{children}</Text>
+      </StyledButton>
+    );
   };
 
   // post exp needs: itemName, money, optional purchaserid (if blank defaults to userid)
 
   return (
-    <View style={styles.container}>
-      <Table borderStyle={{ borderWidth: 1 }} style={styles.table}>
-        <TableWrapper >
-          <Row data={tableHead} style={styles.head} textStyle={styles.text}/>
+    <View style={styles.tableContainer}>
+      <Table style={styles.table}>
+        <TableWrapper>
+            <Row data={tableHead} style={styles.head} textStyle={styles.text}/>
           {
             tableData.map((data, i) => (
-              <TableWrapper >
+              <TableWrapper>
                 <TouchableOpacity key={i} style={styles.wrapper} onPress={() => editData(data, i)}>
                   {
                     data.map((cell, j) => (
-                      <Cell key={j} data={cell} textStyle={styles.text} borderStyle={{ borderWidth: 1 }}/>
+                      <Cell key={j} data={cell} textStyle={styles.text} borderStyle={styles.cellBorderStyle}/>
                     ))
                   }
                 </TouchableOpacity>
@@ -166,21 +174,12 @@ export const ExpenseTable = () => {
           }
         </TableWrapper>
       </Table>
-      
-      <OpenURLButton url={PayPayURL}>Open PayPay</OpenURLButton>
-      <OpenURLButton url={LinePayURL}>Open Line Pay</OpenURLButton>
+      <View style={globalStyles.container}>
+        
+        <OpenURLButton url={PayPayURL}>Open PayPay</OpenURLButton>
+        <OpenURLButton url={LinePayURL}>Open Line Pay</OpenURLButton>
 
-      <Modal visible={modalOpen} animationType="slide">
-        <View style={styles.modalContent}>
-          <MaterialCommunityIcons
-            name='window-close'
-            size={24}
-            style={{...styles.modalToggle, ...styles.modalClose}}
-            onPress={() => setModalOpen(false)}
-          />
-          <AddExpenses setModalOpen={setModalOpen}/>
-        </View>
-      </Modal>
+        {StyledModal(modalOpen, setModalOpen, AddExpenses)}
 
       <Text style={styles.textOweTitle} > {'\n'} You owe: </Text>
 
@@ -196,45 +195,41 @@ export const ExpenseTable = () => {
         renderItem={renderItem}
       />}
         
-      <TouchableOpacity onPress={() => setModalOpen(true)} style={styles.iconContainer}>
-        <MaterialCommunityIcons
-          name='plus'
-          size={50}
-          style={styles.modalToggle}
-        />
-      </TouchableOpacity>
+        <TouchableOpacity onPress={() => setModalOpen(true)} style={globalStyles.addIconButton}>
+          <AddButton/>
+        </TouchableOpacity>
+      </View>
     </View>
   );
 };
 
 const styles = StyleSheet.create({
-  container: {
+  tableContainer: {
     flex: 1,
-    padding: 16,
-    paddingTop: 2,
-    paddingHorizontal: 10,
+    backgroundColor: primary,
   },
-  head: {
-    height: 40,
-    backgroundColor: "#f1f8ff",
-  },
+
   wrapper: {
     flexDirection: "row",
     height: 40,
+    borderBottomColor: blue,
+    borderBottomWidth:1,
   },
+
+  head: {
+    height: 40,
+    backgroundColor: blue,
+  },
+
   table: {
-    marginBottom:10
+    marginBottom:10,
   },
+
   moneyCalc:{
-    marginVertical:10
+    marginVertical:10,
+    marginHorizontal:10,
   },
-  // title: {
-  //   flex: 1,
-  //   backgroundColor: "#f6f8fa",
-  // },
-  row: {
-    height: 28,
-  },
+
   text: {
     textAlign: "center",
   },
@@ -280,21 +275,3 @@ const styles = StyleSheet.create({
     fontSize: 24
   }
 });
-
-{/* <Table borderStyle={{ borderWidth: 1 }}>
-  <Row
-    data={tableHead}
-    flexArr={[2, 2, 1]}
-    style={styles.head}
-    textStyle={styles.text}
-  />
-
-  <TableWrapper style={styles.wrapper}>
-    <Rows
-      data={tableData}
-      flexArr={[2, 2, 1]}
-      style={styles.row}
-      textStyle={styles.text}
-    />
-  </TableWrapper>
-</Table> */}

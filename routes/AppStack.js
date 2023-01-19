@@ -11,7 +11,11 @@ export default function AppStack() {
   return (
     <InfoProvider>
       <Stack.Navigator>
-        <Stack.Screen name='Trips' component={Trips} />
+        <Stack.Screen name='Trips' component={Trips} 
+          options={({route}) => ({
+            headerShown:false
+          })} 
+        />
         <Stack.Screen name='TripTabNav' component={TripTabNav} 
           options= {({route}) => ({
             // headerTitle: getHeaderTitle(route)

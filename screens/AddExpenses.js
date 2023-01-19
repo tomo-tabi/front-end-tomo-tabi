@@ -1,16 +1,8 @@
-import React, { useState, useContext } from 'react';
-import { StyleSheet, Text, View, TouchableOpacity } from 'react-native';
-import {Formik} from 'formik';
+import React, { useContext } from 'react';
+import { View } from 'react-native';
+import { globalStyles, StyledButton, SubmitText, MyTextInput } from "../styles/globalStyles";
 
-import { Octicons, MaterialCommunityIcons } from '@expo/vector-icons';
-
-import {
-  LeftIcon,
-  StyledInputLabel,
-  StyledTextInput,
-  StyledButton,
-  ButtonText,
-} from '../styles/styles';
+import { Formik } from 'formik';
 
 import { ExpContext } from '../context/ExpContext';
 
@@ -21,13 +13,12 @@ export default function AddExpenses({ setModalOpen }) {
   
 
   return(
-    <View style={styles.container}>
+    <View style={globalStyles.container}>
       <Formik
         initialValues={{ itemName: '', money: '' }}
         onSubmit={(values) => {
           postExp(values);
           setModalOpen(false);
-          
         }}
       >
         {(props) => (
@@ -56,9 +47,7 @@ export default function AddExpenses({ setModalOpen }) {
             />
 
             <StyledButton onPress={props.handleSubmit}>
-                <ButtonText>
-                    Submit
-                </ButtonText>
+                <SubmitText/>
             </StyledButton>
           </View>
         )}
@@ -66,25 +55,4 @@ export default function AddExpenses({ setModalOpen }) {
       </Formik>
     </View>
   )
-};
-
-const styles = StyleSheet.create({
-  container:{
-    flex: 1,
-    backgroundColor: '#fff',
-  },
-
-})
-
-const MyTextInput = ( { label, icon, ...props }) => {
-  return (
-      <View>
-          <LeftIcon>
-              <MaterialCommunityIcons name={icon} size={30} />
-              
-          </LeftIcon>
-          <StyledInputLabel>{label}</StyledInputLabel>
-          <StyledTextInput {...props} />
-      </View>
-  );
 };
