@@ -79,6 +79,7 @@ const Signup = ({ navigation }) => {
                               icon="mail"
                               placeholder="xxx@gmail.com"
                               placeholderTextColor={darkLight}
+                              autoCapitalize="none"
                               onChangeText={handleChange('email')}
                               onBlur={handleBlur('email')}
                               value={values.email}
