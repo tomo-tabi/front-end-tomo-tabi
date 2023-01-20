@@ -1,7 +1,7 @@
 import React, { useState, useContext } from 'react';
 import { View } from 'react-native';
 import { Formik } from 'formik';
-import { MyTextInput, StyledDTPicker, BlueButton } from "../styles/globalStyles";
+import { MyTextInput, StyledDTPicker, BlueButton, TestingGoogleSearch } from "../styles/globalStyles";
 import DateTimePicker from '@react-native-community/datetimepicker';
 
 import { InfoContext } from '../context/InfoContext';
@@ -10,7 +10,7 @@ import moment from 'moment';
 
 export default function AddTimeline({ setModalOpen }) {
   const { postTripEvents } = useContext(InfoContext);
-  
+
   // for time date picker
   const [date, setDate] = useState(new Date())
   const [mode, setMode] = useState('date');
@@ -38,9 +38,10 @@ export default function AddTimeline({ setModalOpen }) {
     showMode('time');
   };
 
-  return(
+  return (
     <>
       <Formik
+        keyboardShouldPersistTaps={'handled'}
         initialValues={{ eventName: '', eventDate: date }}
         onSubmit={(values) => {
           postTripEvents(values);
@@ -49,6 +50,13 @@ export default function AddTimeline({ setModalOpen }) {
       >
         {(props) => (
           <View>
+            <TestingGoogleSearch
+              label="Event Name"
+              icon="account-outline"
+              // placeholder="Grand Canyon"
+              // onChangeText={props.handleChange('eventName')}
+              // value={props.values.eventName}
+            />
             <MyTextInput
               label="Event Name"
               icon="account-outline"
@@ -87,9 +95,9 @@ export default function AddTimeline({ setModalOpen }) {
                 mode={mode}
                 is24Hour={false}
                 display="default"
-                onChange={(event, selectedDate)=> {
-                  onChange(undefined,selectedDate)
-                  props.setFieldValue('eventDate',selectedDate)
+                onChange={(event, selectedDate) => {
+                  onChange(undefined, selectedDate)
+                  props.setFieldValue('eventDate', selectedDate)
                 }}
               />
             )}
@@ -99,7 +107,6 @@ export default function AddTimeline({ setModalOpen }) {
             />
           </View>
         )}
-
       </Formik>
     </>
   )

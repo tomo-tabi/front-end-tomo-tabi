@@ -1,7 +1,7 @@
 import React, { createContext, useContext, useState, useEffect } from "react";
 import { Alert } from "react-native";
 import { AuthContext } from "./AuthContext";
-import API_URL from "../config";
+import {API_URL} from "../config";
 import moment from 'moment';
 
 export const InfoContext = createContext();
