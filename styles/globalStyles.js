@@ -25,11 +25,6 @@ export const globalStyles = StyleSheet.create({
     paddingHorizontal: 10,
     paddingTop:10,
   },
-  // expenseContainer:{
-  //   flex: 1,
-  //   padding: 16,
-  //   paddingTop: 2,
-  // },
 
   addIconButton:{//iconContainer
     alignItems:"center",
@@ -52,7 +47,7 @@ export const globalStyles = StyleSheet.create({
     shadowRadius: 5,
     elevation: 7,
   },
-  buttonStyle:{
+  buttonStyle:{ //blue button
     backgroundColor: blue, 
     // justiftyContent: 'center',
     alignItems: 'center',
@@ -62,7 +57,7 @@ export const globalStyles = StyleSheet.create({
     paddingHorizontal: 10,
     // flex:1,
   },
-  yellow:{
+  yellow:{// yellow button for invite
     backgroundColor:'none',
     flex:1,
     marginVertical:0,
@@ -132,20 +127,6 @@ export const globalStyles = StyleSheet.create({
     color:'black'
   },
 });
-
-// mostly formik
-// export const LeftIcon = styled(View)`
-//   left: 10px;
-//   top: 35px;
-//   position: absolute;
-//   z-index: 1;
-// `;
-export const RightIcon = styled(TouchableOpacity)`
-  right: 15px;
-  top: 38px;
-  position: absolute;
-  z-index: 1;
-`;
 
 const darkLight = "#9CA3AF"
 
@@ -263,6 +244,7 @@ export const BlueButton = ({ onPress, buttonText }) => {
 }
 
 export const YellowButton = ({ onPress, iconName, buttonText }) => {
+  // yellow button for invite
 
   return (
     <TouchableOpacity onPress={onPress} style={[globalStyles.buttonStyle, globalStyles.yellow]}>
@@ -275,6 +257,7 @@ export const YellowButton = ({ onPress, iconName, buttonText }) => {
 }
 
 export const TempButton = ({ onPress, buttonText }) => {
+  // yellow button for expenses
 
   return (
     <TouchableOpacity onPress={onPress} style={[globalStyles.buttonStyle, globalStyles.yellow, globalStyles.temp]}>
