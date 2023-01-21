@@ -52,7 +52,7 @@ export default function Trips({ navigation }) {
         setModalOpen={setModalOpen}
         AddComponent={AddTrip}
       />
-      <Text style={styles.header}>
+      <Text style={globalStyles.header}>
         {inviteStatus ?
         "Pending Invites" 
         :"No Invites"
@@ -91,7 +91,7 @@ export default function Trips({ navigation }) {
         </View>
         : ""
       }
-      <Text style={styles.header}>Trips</Text>
+      <Text style={globalStyles.header}>Trips</Text>
 
       <View style={styles.tripView}>
         <FlatList
@@ -165,23 +165,6 @@ const styles = StyleSheet.create({
     fontSize: 16,
     paddingHorizontal: 5,
     paddingTop:5,
-  },
-
-  header: {
-    // flex:1,
-    paddingVertical:10,
-    marginBottom: 5,
-    fontWeight:'bold',
-    // borderRadius:6,
-    // textAlign: 'center',
-    includeFontPadding:false,
-    // justifyContent: 'center',
-    // alignItems: 'center',
-    // height:100,
-    // padding: 10,
-    fontSize:20,
-    // backgroundColor:lightBlue,
-    // alignSelf: 'center',
   },
   inviteText:{
     fontSize: 16,
