@@ -4,12 +4,12 @@ import { Formik } from 'formik';
 import { MyTextInput, StyledDTPicker, BlueButton } from "../styles/globalStyles";
 import DateTimePicker from '@react-native-community/datetimepicker';
 
-import { InfoContext } from '../context/InfoContext';
+import { EventContext } from '../context/EventContext';
 
 import moment from 'moment';
 
 export default function AddTimeline({ setModalOpen }) {
-  const { postTripEvents } = useContext(InfoContext);
+  const { postTripEvents } = useContext(EventContext)
   
   // for time date picker
   const [date, setDate] = useState(new Date())

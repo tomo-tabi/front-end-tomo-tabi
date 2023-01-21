@@ -4,9 +4,7 @@ import {Formik} from 'formik';
 import { StatusBar } from 'expo-status-bar';
 import { Octicons, Ionicons } from '@expo/vector-icons';
 import { globalStyles, colors, BlueButton } from "../styles/globalStyles";
-
-import { AuthContext } from '../context/AuthContext';
-
+const { primary, pink, blue, yellow, lightBlue, navy, grey } = colors
 import {
     StyledContainer,
     InnerContainer,
@@ -26,21 +24,20 @@ import {
     TextLink,
     TextLinkContent
 } from '../styles/styles';
-const { primary, pink, blue, yellow, lightBlue, navy, grey } = colors
-
 const { darkLight } = Colors;
-console.log(darkLight);
 
 // keyboard avoiding view
 import KeyboardAvoidingWrapper from '../styles/KeyboardAvoidingWrapper';
 
+import { AuthContext } from '../context/AuthContext';
+// console.log(darkLight);
+
 const Login = ( { navigation } ) => {
+    const { login } = useContext(AuthContext);    
+
     const [ hidePassword, setHidePassword ] = useState(true);
     // function handeling token and async storage and update loginState
-    
-    const { login } = useContext(AuthContext);    
     // console.log("🍉",userData);
-
 
     const pressSignupHandler = () => {
         navigation.navigate('Signup')

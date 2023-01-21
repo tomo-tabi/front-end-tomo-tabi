@@ -1,10 +1,11 @@
-import React, { useState, useContext, useEffect,  } from 'react'
+import React, { useState, useContext, useEffect  } from 'react'
 import { StyleSheet, Text, FlatList, View, TouchableOpacity, SectionList } from 'react-native';
 import { globalStyles, colors, AddButton, StyledModal, BlueButton, YellowButton } from "../styles/globalStyles";
 const { primary, blue, yellow } = colors
 
 import { AuthContext } from '../context/AuthContext';
-import { InfoContext } from '../context/InfoContext';
+import { TripContext } from '../context/TripContext';
+import { InviteContext } from '../context/InviteContext';
 
 import moment from 'moment';
 
@@ -14,7 +15,9 @@ import AddTrip from './AddTrip';
 
 export default function Trips({ navigation }) {
   const { logout } = useContext(AuthContext);
-  const { trips, invites, rejectInvites, acceptInvites } = useContext(InfoContext);
+  const { trips } = useContext(TripContext);
+  const { invites, rejectInvites, acceptInvites } = useContext(InviteContext)
+  
   const [ modalOpen, setModalOpen ] = useState(false);
   const [ inviteStatus, setInviteStatus ] = useState(false);
 

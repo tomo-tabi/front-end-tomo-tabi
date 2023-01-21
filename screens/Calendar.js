@@ -5,14 +5,17 @@ import { StyledModal, AddButton, globalStyles, colors } from "../styles/globalSt
 const { yellow } = colors
 const darkYellow = '#fcc256'
 
-import { InfoContext } from '../context/InfoContext';
+import { TripContext } from '../context/TripContext';
+import { EventContext } from "../context/EventContext";
+
 import moment from 'moment';
 
 import AddTimeline from './AddTimeline';
 
-
 export default function CalendarView(params) {
-    const { tripEvents, getTripEvents, tripid, trips } = useContext(InfoContext)
+    const { trips } = useContext(TripContext)
+    const { tripid, tripEvents, getTripEvents  } = useContext(EventContext);
+    // const { tripEvents, getTripEvents, tripid, trips } = useContext(InfoContext)
 
     const flatlistRef = useRef()
 
@@ -64,8 +67,10 @@ export default function CalendarView(params) {
 
             // console.log("🦴", JSON.stringify(Obj));
             //convert into array
+            
 
             if (Object.keys(Obj).length !== 0) {
+                
                 const res = Object.keys(Obj).map((key) => ({
                     id: Obj[key][0]["id"],
                     date: key,
@@ -107,10 +112,12 @@ export default function CalendarView(params) {
         const eventsObject = {}
         let counter = 0
         let startDateTrip, lastDateTrip
-
-        tripEvents.forEach(event => {
-            eventsObject[dateFormat(event.event_date)] = { color: yellow, textColor: 'white', marked: true, dotColor: 'white' }
-        })
+        // console.log(tripEvents);
+        if(tripEvents !== null){
+            tripEvents.forEach(event => {
+                eventsObject[dateFormat(event.event_date)] = { color: yellow, textColor: 'white', marked: true, dotColor: 'white' }
+            })
+        }
 
         trips.forEach((trip) => {
             if (trip.id === tripid) {
@@ -146,16 +153,20 @@ export default function CalendarView(params) {
                 }
             }
         })
+    
         return eventsObject
     }
 
     const checkDate = (day) => {
         // console.log("dateSortEvents", dateSortEvents)
-        const dayEvent = dateSortEvents.find((item) => dateFormat(item.date) === dateFormat(day));
-        // console.log(dayEvent);
-        if(dayEvent){
+        if(Array.isArray(dateSortEvents)) {
 
-            setInfo([dayEvent])
+            const dayEvent = dateSortEvents.find((item) => dateFormat(item.date) === dateFormat(day));
+            // console.log(dayEvent);
+            if(dayEvent){
+    
+                setInfo([dayEvent])
+            }
         }
     }
 

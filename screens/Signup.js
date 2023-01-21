@@ -19,23 +19,21 @@ import {
     StyledInputLabel,
     StyledTextInput,
     RightIcon,
-    StyledButton,
-    ButtonText,
     Colors,
     MsgBox
 } from '../styles/styles';
-
-import { BlueButton } from '../styles/globalStyles';
-
 const {brand, darkLight} = Colors;
 
-//keyboard avoiding view
+import { BlueButton } from '../styles/globalStyles';
 import KeyboardAvoidingWrapper from '../styles/KeyboardAvoidingWrapper';
+
+//keyboard avoiding view
 import { AuthContext } from '../context/AuthContext';
 
 const Signup = ({ navigation }) => {
-    const [ hidePassword, setHidePassword ] = useState(true);
     const { signup } = useContext(AuthContext);
+    
+    const [ hidePassword, setHidePassword ] = useState(true);
     
     // function handeling token and async storage and update loginState
     const pressHandler = (userInputObj) => {

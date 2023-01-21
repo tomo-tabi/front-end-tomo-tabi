@@ -5,10 +5,11 @@ const { primary } = colors;
 
 import { Formik } from 'formik';
 
-import { InfoContext } from '../context/InfoContext';
+import { InviteContext } from '../context/InviteContext';
 
 export default function Invite() {
-  const { postInvite } = useContext(InfoContext);
+  const { postInvite } = useContext(InviteContext);
+  // console.log("post",postInvite);
 
   return (
     <View style={[globalStyles.container,{backgroundColor: primary}]}>
