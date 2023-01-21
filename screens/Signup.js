@@ -111,7 +111,6 @@ const styles = StyleSheet.create({
     fontSize:25,
     textAlign:'center', 
     color: greyBlue,
-     
   },
   img:{
     height:100,
