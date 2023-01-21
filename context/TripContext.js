@@ -83,19 +83,19 @@ export function TripProvider({children}) {
       } 
     } 
   
-    const postNewTrip = async (newTripInput) => {
+    const postTrip = async (newTripInput) => {
       try{
         // console.log(newTripInput);
         
-        const postNewTrip = await fetch(`http://${API_URL}:8080/trip`, {
+        const postTrip = await fetch(`http://${API_URL}:8080/trip`, {
           method:"POST",
           headers: authHeader,
           body:JSON.stringify(newTripInput)
         })
   
-        const res = await postNewTrip.json();
+        const res = await postTrip.json();
   
-        checkStatus(res, postNewTrip, (res) => {
+        checkStatus(res, postTrip, (res) => {
           getTrips();
           return console.log(res);
         })
@@ -115,7 +115,7 @@ export function TripProvider({children}) {
   
     
     return (
-      <TripContext.Provider value={{trips, usersInTrip, postNewTrip, getTrips, getUsersInTrip}}>
+      <TripContext.Provider value={{trips, usersInTrip, postTrip, getTrips, getUsersInTrip}}>
         {children}
       </TripContext.Provider>
     )

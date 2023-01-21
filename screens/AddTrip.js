@@ -9,13 +9,12 @@ import { TripContext } from '../context/TripContext';
 import moment from 'moment';
 
 export default function AddTrip({setModalOpen}) {
-  const { postNewTrip, getTrips } = useContext(TripContext);
+  const { postTrip, getTrips } = useContext(TripContext);
   
   const [show, setShow] = useState(false);
   const [date, setDate] = useState(new Date());
   const [startDate, setStartDate] = useState(null);
   const [endDate, setEndDate] = useState(null);
-  // const { postNewTrip, getTrips } = useContext(InfoContext);
 
   const onChange = (event, selectedDate) => {
     const currentDate = selectedDate || date;
@@ -55,7 +54,7 @@ export default function AddTrip({setModalOpen}) {
         onSubmit={(values) => {
           values = {...values, startDate: moment(startDate).format("YYYY-MM-DD"), endDate: moment(endDate).format("YYYY-MM-DD")}
           // console.log("formik",startDate, endDate);
-          postNewTrip(values);
+          postTrip(values);
           getTrips();
           setModalOpen(false);
         }}
