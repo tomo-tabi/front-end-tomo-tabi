@@ -4,13 +4,11 @@ import {Formik} from 'formik';
 import { colors, BlueButton, MyTextInput, PasswordTextInput } from "../styles/globalStyles";
 const { primary, greyBlue } = colors
 
-// keyboard avoiding view
 import KeyboardAvoidingWrapper from '../styles/KeyboardAvoidingWrapper';
 
 import { AuthContext } from '../context/AuthContext';
-// console.log(darkLight);
 
-export const Signup = ( ) => {
+export default function Signup () {
   const { signup } = useContext(AuthContext); 
 
   const [ hidePassword, setHidePassword ] = useState(true);
@@ -39,8 +37,7 @@ export const Signup = ( ) => {
 
         <Formik
           initialValues={{ username: '', email: '', password: '', confirmpassword: ''}}
-          onSubmit={(values, actions) => {
-            actions.resetForm();
+          onSubmit={(values) => {
             pressHandler(values);
           }}
         >
@@ -84,12 +81,10 @@ export const Signup = ( ) => {
             />
             <Text></Text> 
             {/* to put space between text and submit */}
-
             <BlueButton
               onPress={props.handleSubmit}
               buttonText="Submit"
             />
-            
           </>
         )}
         </Formik>
@@ -98,7 +93,6 @@ export const Signup = ( ) => {
   );
 }
 
-// export default LoginTest;
 const styles = StyleSheet.create({
   container:{
     flex:1,
@@ -106,18 +100,11 @@ const styles = StyleSheet.create({
     paddingHorizontal:20, 
     paddingTop:10,
   },
-
   centerView:{
-    // alignContent:'center',
     flex:1,
     justifyContent:'center',
     alignItems:'center',
     marginBottom:10,
-  },
-  line:{
-    height:0.7,
-    backgroundColor:greyBlue,
-    marginVertical:10,
   },
   title:{
     fontWeight:'bold',
@@ -129,8 +116,5 @@ const styles = StyleSheet.create({
   img:{
     height:100,
     resizeMode:'contain',
-    // borderWidth:1,
-    // borderColor:'black'
-
   }
 })

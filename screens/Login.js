@@ -4,14 +4,11 @@ import {Formik} from 'formik';
 import { globalStyles, colors, BlueButton, MyTextInput, PasswordTextInput } from "../styles/globalStyles";
 const { primary, greyBlue } = colors
 
-
-// keyboard avoiding view
 import KeyboardAvoidingWrapper from '../styles/KeyboardAvoidingWrapper';
 
 import { AuthContext } from '../context/AuthContext';
-// console.log(darkLight);
 
-export const Login = ( { navigation } ) => {
+export default function Login ( { navigation } ) {
   const { login } = useContext(AuthContext);    
 
   const [ hidePassword, setHidePassword ] = useState(true);
@@ -31,8 +28,7 @@ export const Login = ( { navigation } ) => {
 
         <Formik
           initialValues={{ email: '', password: ''}}
-          onSubmit={(values, actions) => {
-            actions.resetForm();
+          onSubmit={(values) => {
             login(values);
           }}
         >
@@ -44,12 +40,12 @@ export const Login = ( { navigation } ) => {
               placeholder="abc@gmail.com"
               onChangeText={props.handleChange('email')}
               autoCapitalize="none"
-              // onBlur={handleBlur('email')} what is this
+              // onBlur={props.handleBlur('email')} //what is this
               value={props.values.email}
             />
             <PasswordTextInput
               onChangeText={props.handleChange('password')}
-              // onBlur={handleBlur('password')} what is this
+              // onBlur={props.handleBlur('password')} //what is this
               autoCapitalize="none"
               value={props.values.password}
               secureTextEntry={hidePassword}
@@ -73,13 +69,11 @@ export const Login = ( { navigation } ) => {
           </>
         )}
         </Formik>
-        
       </View>
     </KeyboardAvoidingWrapper>
   );
 }
 
-// export default LoginTest;
 const styles = StyleSheet.create({
   container:{
     flex:1,
@@ -87,9 +81,7 @@ const styles = StyleSheet.create({
     paddingHorizontal:20, 
     paddingTop:30,
     justifyContent: 'space-around',
-    
   },
-
   centerView:{
     // alignContent:'center',
     flex:1,
@@ -110,8 +102,5 @@ const styles = StyleSheet.create({
   img:{
     height:190,
     resizeMode:'contain',
-    // borderWidth:1,
-    // borderColor:'black'
-
   }
 })
