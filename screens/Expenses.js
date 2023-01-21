@@ -6,9 +6,9 @@ import { globalStyles, colors, AddButton, StyledModal, TempButton } from "../sty
 import { AuthContext } from "../context/AuthContext";
 import { ExpContext } from "../context/ExpContext";
 import { EventContext } from "../context/EventContext";
+import { TripContext } from "../context/TripContext";
 
 import AddExpenses from "./AddExpenses";
-import { TripContext } from "../context/TripContext";
 
 const { primary, blue } = colors;
 
@@ -24,8 +24,8 @@ export const ExpenseTable = () => {
   const [tableData, setTableData] = useState([]);
 
   useEffect(() => {
-    getExp()
-    getUsersInTrip(tripid)
+    getExp();
+    getUsersInTrip(tripid);
   }, [])
 
   //format data for table
