@@ -14,7 +14,7 @@ const { primary, blue } = colors;
 
 export const ExpenseTable = () => {
   const { userData } = useContext(AuthContext);//to extract username?
-  const { getUsersInTrip } = useContext(TripContext);
+  const { getUsersInTrip, usersInTrip } = useContext(TripContext);
   const { getExp, expData } = useContext(ExpContext);
   const { tripid } = useContext(EventContext)
   
