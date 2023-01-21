@@ -8,11 +8,13 @@ import { ExpContext } from "../context/ExpContext";
 import { EventContext } from "../context/EventContext";
 
 import AddExpenses from "./AddExpenses";
+import { TripContext } from "../context/TripContext";
 
 const { primary, blue } = colors;
 
 export const ExpenseTable = () => {
   const { userData } = useContext(AuthContext);//to extract username?
+  const { getUsersInTrip } = useContext(TripContext);
   const { getExp, expData } = useContext(ExpContext);
   const { tripid } = useContext(EventContext)
   
