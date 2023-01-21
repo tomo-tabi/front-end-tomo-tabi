@@ -23,8 +23,13 @@ export function InviteProvider({children}) {
         method:"GET",
         headers: authHeader
       })
-
+      
+      if(getInvites.status === 404) {
+        setInvites(null);
+        return
+      }
       const res = await getInvites.json();
+
       checkStatus(res,getInvites,setInvites)
 
     } catch (e) {
@@ -63,7 +68,7 @@ export function InviteProvider({children}) {
 
       checkStatus(res, rejectInvites, (res) => {
         getInvites();
-        getTrips()
+        getTrips();
         return console.log(res);
       })
     } catch (e) {
