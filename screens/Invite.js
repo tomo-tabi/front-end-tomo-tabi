@@ -10,7 +10,6 @@ import { InviteContext } from '../context/InviteContext';
 export default function Invite() {
   const { postInvite } = useContext(InviteContext);
   // console.log("post",postInvite);
-  // const { postInvite } = useContext(InfoContext);
 
   return (
     <View style={[globalStyles.container,{backgroundColor: primary}]}>
