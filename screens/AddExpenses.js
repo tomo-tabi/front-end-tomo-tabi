@@ -6,11 +6,12 @@ import { MyTextInput, BlueButton } from "../styles/globalStyles";
 import { ExpContext } from '../context/ExpContext';
 
 export default function AddExpenses({ setModalOpen }) {
-  const { postExp } = useContext(ExpContext);
+  const { postExp } = useContext(ExpContext)
+  // console.log(postExp);
+
   //need somesort of dropdown menu to select user
   // drop down using get user? and use username to display name?
   
-
   return(
     <>
       <Formik

@@ -4,16 +4,18 @@ import { Formik } from 'formik';
 import { StyledDTPicker, MyTextInput, BlueButton } from "../styles/globalStyles";
 import DateTimePicker from '@react-native-community/datetimepicker';
 
-import { InfoContext } from '../context/InfoContext';
+import { TripContext } from '../context/TripContext';
 
 import moment from 'moment';
 
 export default function AddTrip({setModalOpen}) {
+  const { postNewTrip, getTrips } = useContext(TripContext);
+  
   const [show, setShow] = useState(false);
   const [date, setDate] = useState(new Date());
   const [startDate, setStartDate] = useState(null);
   const [endDate, setEndDate] = useState(null);
-  const { postNewTrip, getTrips } = useContext(InfoContext);
+  // const { postNewTrip, getTrips } = useContext(InfoContext);
 
   const onChange = (event, selectedDate) => {
     const currentDate = selectedDate || date;

@@ -1,18 +1,20 @@
 import React, { useState, useEffect, useContext } from 'react';
 import { StyleSheet, Text, FlatList, View } from 'react-native';
 import { globalStyles, AddButton, StyledModal } from "../styles/globalStyles";
-import { InfoContext } from '../context/InfoContext';
+
+import { EventContext } from '../context/EventContext';
 
 import moment from 'moment';
 
 import AddTimeline from './AddTimeline';
 
 export default function TimeLine ({ route }) {
+  const { id } = route.params;
+  const { tripEvents, getTripEvents } = useContext(EventContext)
+
   const [ modalOpen, setModalOpen ] = useState(false);
   const [ dateSortEvents, setDateSortEvents ] = useState({}) 
   
-  const { id } = route.params;
-  const { tripEvents, getTripEvents } = useContext(InfoContext)
   //fetch one trip detail with trip id 
 
   useEffect(() => {

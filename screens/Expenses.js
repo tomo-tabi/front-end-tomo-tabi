@@ -5,20 +5,18 @@ import { globalStyles, colors, AddButton, StyledModal, TempButton } from "../sty
 
 import { AuthContext } from "../context/AuthContext";
 import { ExpContext } from "../context/ExpContext";
-import { InfoContext } from "../context/InfoContext";
+import { EventContext } from "../context/EventContext";
 
 import AddExpenses from "./AddExpenses";
 
 const { primary, blue } = colors;
 
 export const ExpenseTable = () => {
-  const [ modalOpen, setModalOpen ] = useState(false);
-
   const { userData } = useContext(AuthContext);//to extract username?
   const { getExp, expData } = useContext(ExpContext);
-  const { getUsersInTrip, tripid, usersInTrip } = useContext(InfoContext);
-
-
+  const { tripid } = useContext(EventContext)
+  
+  const [modalOpen, setModalOpen] = useState(false);
   const [splitPaymentsData, setSplitPaymentData] = useState([[],[]]);
   const [tableHead, setTableHead] = useState(["Name", "Item", "Cost"]);
   const [tableData, setTableData] = useState([]);
@@ -138,7 +136,7 @@ export const ExpenseTable = () => {
           await Linking.openURL("https://play.google.com/store/apps/details?id=com.paypay.android%22")
         }
         else {
-          await Linking.openURL("https://play.google.com/store/apps/details?id=com.linecorp.linepay")
+          await Linking.openURL("https://play.google.com/store/apps/details?id=com.linepaycorp.talaria&hl=en&gl=US")
         }
       }
     }, [url]);
