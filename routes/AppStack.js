@@ -1,6 +1,6 @@
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
 
-import Compose from '../context/Compose';
+import Compose from '../utils/Compose';
 import Trips from '../screens/Trips';
 import TripTabNav from './TripTabNav';
 
@@ -14,8 +14,6 @@ const Stack = createNativeStackNavigator();
 
 export default function AppStack() {
   return (
-    // <InfoProvider>
-      // <AllProvider>
     <Compose components={[TripProvider, EventProvider, InviteProvider, ExpProvider]}>
       <Stack.Navigator>
         <Stack.Screen name='Trips' component={Trips} 
@@ -31,7 +29,5 @@ export default function AppStack() {
         />
       </Stack.Navigator>
     </Compose>
-      // </AllProvider>
-    // </InfoProvider>
   )
 };
