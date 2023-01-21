@@ -114,12 +114,10 @@ export default function CalendarView(params) {
         let startDateTrip, lastDateTrip
         // console.log(tripEvents);
         if(tripEvents !== null){
-
-        
-
-        tripEvents.forEach(event => {
-            eventsObject[dateFormat(event.event_date)] = { color: yellow, textColor: 'white', marked: true, dotColor: 'white' }
-        })
+            tripEvents.forEach(event => {
+                eventsObject[dateFormat(event.event_date)] = { color: yellow, textColor: 'white', marked: true, dotColor: 'white' }
+            })
+        }
 
         trips.forEach((trip) => {
             if (trip.id === tripid) {
@@ -155,7 +153,7 @@ export default function CalendarView(params) {
                 }
             }
         })
-    }
+    
         return eventsObject
     }
 
