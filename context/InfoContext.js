@@ -47,9 +47,13 @@ export function InfoProvider({children}) {
       return
     }
     const tripEventsRes = await tripEventsReq.json();
-    // console.log("🍎",tripEventsRes.message);
+    // console.log("🍎",tripEventsReq.status);
 
-    checkStatus(tripEventsRes, tripEventsReq, setTripEvents)
+    checkStatus(tripEventsRes, tripEventsReq, setTripEvents);
+
+    if(tripEventsReq.status === 404){
+      setTripEvents(null)
+    }
     // return tripEventsRes
     
   };
@@ -106,7 +110,7 @@ export function InfoProvider({children}) {
       }
 
     } catch (e) {
-      console.log(e);
+      console.log(`Get Trip Error: ${e}`);
     }
   }
 
@@ -141,7 +145,7 @@ export function InfoProvider({children}) {
       });
       setUsersInTrip(usersTrip)
     } catch (e) {
-      console.log(e);
+      console.log(`Get Users In Trip Error: ${e}`);
     } 
   } 
 
@@ -161,7 +165,7 @@ export function InfoProvider({children}) {
         return console.log(res);
       })
       } catch (e) {
-        console.log(e);
+        console.log(`Accept Invites Error: ${e}`);
       } 
   }
   const rejectInvites = async (inviteID) => {
@@ -179,13 +183,13 @@ export function InfoProvider({children}) {
         return console.log(res);
       })
       } catch (e) {
-        console.log(e);
+        console.log(`Reject Invite Error: ${e}`);
       } 
   }
 
   const postNewTrip = async (newTripInput) => {
     try{
-      console.log(newTripInput);
+      // console.log(newTripInput);
       
       const postNewTrip = await fetch(`http://${API_URL}:8080/trip`, {
         method:"POST",

@@ -2,12 +2,12 @@ import React, { createContext, useContext, useState } from "react";
 import API_URL from "../config";
 
 import { AuthContext } from "./AuthContext";
-import { InfoContext } from "./InfoContext";
+import { EventContext } from "./EventContext";
 
 export const ExpContext = createContext();
 
 export function ExpProvider({ children }) {
-  const { tripid } = useContext(InfoContext);
+  const { tripid } = useContext(EventContext);
   const { userToken } = useContext(AuthContext);
 
   const [ expData, setExpData ] = useState(null);

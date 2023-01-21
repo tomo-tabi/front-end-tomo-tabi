@@ -22,9 +22,10 @@ export function AuthProvider({children}) {
   };
 
   const setData = async (userInfo) => {
+    // console.log("object");
     if (userInfo) {
       setIsLoading(true);
-      AsyncStorage.setItem('userToken', userInfo.token);
+      await AsyncStorage.setItem('userToken', userInfo.token);
       setUserData(userInfo);
       setUserToken(userInfo.token);
       setIsLoading(false);
@@ -89,6 +90,7 @@ export function AuthProvider({children}) {
       } else {
         setUserToken(userTokenStored);
         
+        
         const isLoggedInReq = await fetch(`http://${API_URL}:8080/user/`, {
           method:"GET",
           headers: {
@@ -98,14 +100,14 @@ export function AuthProvider({children}) {
           }
         });
         
+        
+        // console.log("???", isLoggedInReq);
         const isLoggedInRes = await isLoggedInReq.json();
         checkStatus(isLoggedInRes, isLoggedInReq, setUserData)
-        // console.log(isLoggedInRes);
-        // setUserData(isLoggedInRes);
         setIsLoading(false);
       }
     } catch (e) {
-      console.log(`Login Error: ${e}`)
+      console.log(`Logged in Error: ${e}`)
     }
   }
 
