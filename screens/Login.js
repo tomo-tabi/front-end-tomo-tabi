@@ -29,6 +29,7 @@ import {
 const { primary, pink, blue, yellow, lightBlue, navy, grey } = colors
 
 const { darkLight } = Colors;
+console.log(darkLight);
 
 // keyboard avoiding view
 import KeyboardAvoidingWrapper from '../styles/KeyboardAvoidingWrapper';
