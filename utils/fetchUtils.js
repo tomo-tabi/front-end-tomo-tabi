@@ -20,6 +20,11 @@ export const userCheckStatus = (res, req, setFunc) => {
   }
 }
 
+// for post requests status will be 201 reflect that in code
+// -> get rid of anonymous functions in: postTripEvents, postExp, acceptInvites, 
+// rejectInvites, postInvite, postTrip
+//
+
 export const checkStatus = (res, req, setFunc) => {
   if (req.status === 404) {
     // console.log("404 stat",res.url);
