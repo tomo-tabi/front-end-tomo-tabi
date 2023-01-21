@@ -29,6 +29,7 @@ import {
 const { primary, pink, blue, yellow, lightBlue, navy, grey } = colors
 
 const { darkLight } = Colors;
+console.log(darkLight);
 
 // keyboard avoiding view
 import KeyboardAvoidingWrapper from '../styles/KeyboardAvoidingWrapper';
@@ -116,7 +117,7 @@ const MyTextInput = ( { label, icon, isPassword, hidePassword, setHidePassword, 
             <StyledTextInput {...props} />
             {isPassword && (
                 <RightIcon onPress={() => setHidePassword(!hidePassword)}>
-                    <Ionicons name={hidePassword ? 'md-eye-off' : 'md-eye'} size={30} color={darkLight} />
+                    <Ionicons name={hidePassword ? 'md-eye-off' : 'md-eye'} size={30} />
                 </RightIcon>
             )}
         </View>

@@ -132,13 +132,13 @@ const MyTextInput = ( { label, icon, isPassword, hidePassword, setHidePassword, 
     return (
         <View>
             <LeftIcon>
-                <Octicons name={icon} size={30} color={brand} />
+                <Octicons name={icon} size={30} />
             </LeftIcon>
             <StyledInputLabel>{label}</StyledInputLabel>
             <StyledTextInput {...props} />
             {isPassword && (
                 <RightIcon onPress={() => setHidePassword(!hidePassword)}>
-                    <Ionicons name={hidePassword ? 'md-eye-off' : 'md-eye'} size={30} color={darkLight} />
+                    <Ionicons name={hidePassword ? 'md-eye-off' : 'md-eye'} size={30} />
                 </RightIcon>
             )}
         </View>
