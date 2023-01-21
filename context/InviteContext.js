@@ -1,55 +1,35 @@
 import React, { createContext, useContext, useState, useEffect } from "react";
 import { Alert } from "react-native";
 import { AuthContext } from "./AuthContext";
-import API_URL from "../config";
 import { TripContext } from "./TripContext"
 import { EventContext } from "./EventContext";
+import { checkStatus } from "../utils/fetchUtils";
+import API_URL from "../config";
 
 export const InviteContext = createContext();
 
 export function InviteProvider({children}) {
-  const [invites, setInvites] = useState(null);//all pending invites for user
-
-  const { userData, userToken } = useContext(AuthContext);
+  const { userData, authHeader } = useContext(AuthContext);
   const { getTrips } = useContext(TripContext);
   const { tripid } = useContext(EventContext);
-  // console.log(tripid);
-
-  const authHeader = {
-    'Accept': 'application/json, text/plain, */*', 
-    'Content-Type': 'application/json',
-    'Authorization': `Bearer ${userToken}`
-  };
-
-  // should I import this from Auth context?
-  const checkStatus = (res, req, setFunc) => {
-    // console.log(req.status);
-    if (req.status === 404) {
-      return
-    }
-    if (req.status === 200) {
-      setFunc(res);
-    } else {
-      Alert.alert(res.message);
-    }
-  };
   
+  const [invites, setInvites] = useState(null);//all pending invites for user
+  // console.log(tripid);
  
   const getInvites = async () => {
     try{
+
       const getInvites = await fetch(`http://${API_URL}:8080/invite/`,{
         method:"GET",
         headers: authHeader
       })
 
-       const res = await getInvites.json();
-       checkStatus(res,getInvites,setInvites)
-      //  if(res){
-      //   setInvites(res);
-      //  }
-      } catch (e) {
-        console.log(`Invite Error: ${e}`);
-      } 
+      const res = await getInvites.json();
+      checkStatus(res,getInvites,setInvites)
+
+    } catch (e) {
+      console.log(`Invite Error: ${e}`);
+    } 
   }
 
 
@@ -61,16 +41,16 @@ export function InviteProvider({children}) {
         headers: authHeader
       })
 
-       const res = await acceptInvites.json();
+      const res = await acceptInvites.json();
 
-       checkStatus(res, acceptInvites, (res) => {
+      checkStatus(res, acceptInvites, (res) => {
         getInvites();
         getTrips()
         return console.log(res);
       })
-      } catch (e) {
+    } catch (e) {
         console.log(`Accept Invite Error: ${e}`);
-      } 
+    } 
   }
   const rejectInvites = async (inviteID) => {
     try{
@@ -78,17 +58,17 @@ export function InviteProvider({children}) {
         method:"PUT",
         headers: authHeader
       })
+      
+      const res = await rejectInvites.json();
 
-       const res = await rejectInvites.json();
-
-        checkStatus(res, rejectInvites, (res) => {
+      checkStatus(res, rejectInvites, (res) => {
         getInvites();
         getTrips()
         return console.log(res);
       })
-      } catch (e) {
-        console.log(`Reject Invite Error: ${e}`);
-      } 
+    } catch (e) {
+      console.log(`Reject Invite Error: ${e}`);
+    } 
   }
 
   

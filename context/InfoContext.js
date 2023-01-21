@@ -187,19 +187,19 @@ export function InfoProvider({children}) {
       } 
   }
 
-  const postNewTrip = async (newTripInput) => {
+  const postTrip = async (newTripInput) => {
     try{
       // console.log(newTripInput);
       
-      const postNewTrip = await fetch(`http://${API_URL}:8080/trip`, {
+      const postTrip = await fetch(`http://${API_URL}:8080/trip`, {
         method:"POST",
         headers: authHeader,
         body:JSON.stringify(newTripInput)
       })
 
-      const res = await postNewTrip.json();
+      const res = await postTrip.json();
 
-      checkStatus(res, postNewTrip, (res) => {
+      checkStatus(res, postTrip, (res) => {
         getTrips();
         return console.log(res);
       })
@@ -234,7 +234,7 @@ export function InfoProvider({children}) {
   
 
   return (
-    <InfoContext.Provider value={{trips, tripEvents, tripid, invites, usersInTrip, rejectInvites, acceptInvites, getInvites, getTripEvents, postTripEvents, postNewTrip, getTrips, postInvite, getUsersInTrip}}>
+    <InfoContext.Provider value={{trips, tripEvents, tripid, invites, usersInTrip, rejectInvites, acceptInvites, getInvites, getTripEvents, postTripEvents, postTrip, getTrips, postInvite, getUsersInTrip}}>
       {children}
     </InfoContext.Provider>
   )

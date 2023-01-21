@@ -3,35 +3,15 @@ import API_URL from "../config";
 
 import { AuthContext } from "./AuthContext";
 import { EventContext } from "./EventContext";
+import { checkStatus } from "../utils/fetchUtils";
 
 export const ExpContext = createContext();
 
 export function ExpProvider({ children }) {
   const { tripid } = useContext(EventContext);
-  const { userToken } = useContext(AuthContext);
+  const { authHeader } = useContext(AuthContext);
 
   const [ expData, setExpData ] = useState(null);
-
-  const authHeader = {
-    'Accept': 'application/json, text/plain, */*', 
-    'Content-Type': 'application/json',
-    'Authorization': `Bearer ${userToken}`
-  }
-
-  // should I import this from Auth context?
-  const checkStatus = (res, req, setFunc) => {
-    // console.log(setFunc);
-    if (req.status === 404) {
-      return
-    }
-
-    if (req.status === 200) {
-      setFunc(res);
-    } else {
-      Alert.alert(res.message);
-    }
-  };
-
 
   const getExp = async () => {
     const getExpReq = await fetch(`http://${API_URL}:8080/expense/${tripid}`, {

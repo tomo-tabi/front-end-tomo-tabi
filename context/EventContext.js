@@ -1,35 +1,17 @@
 import React, { createContext, useContext, useState } from "react";
-import { Alert } from "react-native";
 import { AuthContext } from "./AuthContext";
+import { checkStatus } from "../utils/fetchUtils";
 import API_URL from "../config";
 
 export const EventContext = createContext();
 
 export function EventProvider({children}) {
+  const { userData, authHeader } = useContext(AuthContext);
+  
   const [tripEvents, setTripEvents] = useState(null);//trip events for one trip
   const [tripid, setTripid] = useState(null);//trip id
 
-  const { userData, userToken } = useContext(AuthContext);
 
-  const authHeader = {
-    'Accept': 'application/json, text/plain, */*', 
-    'Content-Type': 'application/json',
-    'Authorization': `Bearer ${userToken}`
-  };
-
-  // should I import this from Auth context?
-  const checkStatus = (res, req, setFunc) => {
-    // console.log(req.status);
-    if (req.status === 404) {
-      return
-    }
-    if (req.status === 200) {
-      setFunc(res);
-    } else {
-      Alert.alert(res.message);
-    }
-  };
-  
   const getTripEvents = async (tripid) => {
     // console.log("🍎",tripid);
     setTripid(tripid);// maybe in trips screen page??
@@ -39,17 +21,17 @@ export function EventProvider({children}) {
       headers: authHeader
     })
     // console.log("🍎",tripEventsReq);
-    if(tripEventsReq.status === 204) {
-      return
-    }
+
     const tripEventsRes = await tripEventsReq.json();
-    // console.log("🍎",tripEventsReq.status);
+    // console.log("🍎",tripEventsReq.url);
+
+    if(tripEventsReq.status === 404){ //need to reset for calendar
+      return setTripEvents(null);
+    }
 
     checkStatus(tripEventsRes, tripEventsReq, setTripEvents);
 
-    if(tripEventsReq.status === 404){
-      setTripEvents(null)
-    }
+    
     // return tripEventsRes
     
   };
