@@ -85,6 +85,50 @@ export function TripProvider({children}) {
     }
   };
 
+  const editTrip = async (TripInput) => {
+    try{
+      // console.log(newTripInput);
+      
+      const editTrip = await fetch(`http://${API_URL}:8080/trip/${TripInput.id}`, {
+        method:"PUT",
+        headers: authHeader,
+        body:JSON.stringify(TripInput)
+      })
+
+      const res = await editTrip.json();
+
+      checkStatus(res, editTrip, (res) => {
+        getTrips();
+        return console.log(res);
+      })
+
+    }catch(e) {
+      console.log(`Edit Trip Error: ${e}`);
+    }
+  };
+
+  const deleteTrip = async (TripInput) => {
+    try{
+      // console.log(newTripInput);
+      
+      const deleteTrip = await fetch(`http://${API_URL}:8080/trip/${TripInput.id}`, {
+        method:"DELETE",
+        headers: authHeader,
+        body:JSON.stringify(TripInput)
+      })
+
+      const res = await deleteTrip.json();
+
+      checkStatus(res, deleteTrip, (res) => {
+        getTrips();
+        return console.log(res);
+      })
+
+    }catch(e) {
+      console.log(`Delete Trip Error: ${e}`);
+    }
+  };
+
 
   useEffect(() => {
     if(userData){
@@ -95,7 +139,7 @@ export function TripProvider({children}) {
 
   
   return (
-    <TripContext.Provider value={{trips, usersInTrip, postTrip, getTrips, getUsersInTrip}}>
+    <TripContext.Provider value={{trips, usersInTrip, postTrip, getTrips, getUsersInTrip, editTrip, deleteTrip}}>
       {children}
     </TripContext.Provider>
   )
