@@ -1,6 +1,7 @@
 import styled from 'styled-components';
 import { StyleSheet, TouchableOpacity, Text, View, TextInput, Modal } from "react-native";
 import { MaterialCommunityIcons } from '@expo/vector-icons';
+import { useRef } from 'react';
 
 export const colors = {
   primary:"#ffffff",
@@ -9,10 +10,11 @@ export const colors = {
   yellow:"#FECE76",
   lightBlue:"#E5EFF9",
   navy:"#1F2937",
-  grey:"#E5E7EB"
+  grey:"#E5E7EB",
+  greyBlue:"#6692B3"
 }
 
-const { primary, pink, blue, yellow, lightBlue, navy, grey } = colors
+const { primary, pink, blue, yellow, lightBlue, navy, grey, greyBlue } = colors
 
 // import { globalStyles, SubmitText, MyTextInput } from "../styles/globalStyles";
 //globalStyles.addIconButton
@@ -23,11 +25,6 @@ export const globalStyles = StyleSheet.create({
     paddingHorizontal: 10,
     paddingTop:10,
   },
-  // expenseContainer:{
-  //   flex: 1,
-  //   padding: 16,
-  //   paddingTop: 2,
-  // },
 
   addIconButton:{//iconContainer
     alignItems:"center",
@@ -50,7 +47,7 @@ export const globalStyles = StyleSheet.create({
     shadowRadius: 5,
     elevation: 7,
   },
-  buttonStyle:{
+  buttonStyle:{ //blue button
     backgroundColor: blue, 
     // justiftyContent: 'center',
     alignItems: 'center',
@@ -60,7 +57,7 @@ export const globalStyles = StyleSheet.create({
     paddingHorizontal: 10,
     // flex:1,
   },
-  yellow:{
+  yellow:{// yellow button for invite
     backgroundColor:'none',
     flex:1,
     marginVertical:0,
@@ -84,6 +81,15 @@ export const globalStyles = StyleSheet.create({
     // borderWidth:1,
     // borderColor:'black',
 
+  },
+  header: {
+    paddingVertical:10,
+    marginBottom: 5,
+    fontWeight:'bold',
+    // includeFontPadding:false,
+    fontSize:20,
+    // borderWidth:1,
+    // borderColor:'black'
   },
   buttonText:{
     fontSize:16,
@@ -122,23 +128,60 @@ export const globalStyles = StyleSheet.create({
   },
 });
 
-// mostly formik
-export const LeftIcon = styled(View)`
-  left: 10px;
-  top: 35px;
-  position: absolute;
-  z-index: 1;
-`;
-
+const darkLight = "#9CA3AF"
 
 export const MyTextInput = ( { label, icon, ...props }) => {
+  const touchRef = useRef();
   return (
       <View>
         <Text>{label}</Text>
-        <View style={globalStyles.textInput}>
-          <MaterialCommunityIcons name={icon} size={30} />
-          <TextInput style={globalStyles.textInputText} {...props}/>
-        </View>
+        <TouchableOpacity 
+          onPress={() => {touchRef.current.focus()}}
+          style={globalStyles.textInput}
+        >
+          <MaterialCommunityIcons name={icon} size={30}/>
+          <TextInput ref={touchRef} style={globalStyles.textInputText} 
+            placeholderTextColor={darkLight}
+            {...props}
+          />
+        </TouchableOpacity>
+      </View>
+  );
+};
+
+export const PasswordTextInput = ( { hidePassword, setHidePassword, ...props }) => {
+  const touchRef = useRef();
+  return (
+      <View>
+        <Text>Password</Text>
+        <TouchableOpacity 
+            onPress={() => {touchRef.current.focus()}}
+            style={globalStyles.textInput}
+          >
+            <MaterialCommunityIcons name='lock-outline' size={30} />
+            <TextInput style={globalStyles.textInputText}
+              ref={touchRef}
+              placeholder="Password"
+              placeholderTextColor={darkLight}
+              {...props}
+            />
+          <TouchableOpacity 
+            onPress={() => setHidePassword(!hidePassword)}
+            style={{
+              // elevation:1,
+              position:'absolute',
+              right:10,
+              borderWidth:0
+
+              // top:35,
+            }}
+          >
+            <MaterialCommunityIcons 
+              name={hidePassword ? "eye-off-outline" : "eye-outline"} 
+              size={30} 
+            />
+          </TouchableOpacity>
+        </TouchableOpacity>
       </View>
   );
 };
@@ -201,6 +244,7 @@ export const BlueButton = ({ onPress, buttonText }) => {
 }
 
 export const YellowButton = ({ onPress, iconName, buttonText }) => {
+  // yellow button for invite
 
   return (
     <TouchableOpacity onPress={onPress} style={[globalStyles.buttonStyle, globalStyles.yellow]}>
@@ -213,6 +257,7 @@ export const YellowButton = ({ onPress, iconName, buttonText }) => {
 }
 
 export const TempButton = ({ onPress, buttonText }) => {
+  // yellow button for expenses
 
   return (
     <TouchableOpacity onPress={onPress} style={[globalStyles.buttonStyle, globalStyles.yellow, globalStyles.temp]}>

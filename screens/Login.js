@@ -1,124 +1,106 @@
 import React, { useState, useContext } from 'react';
-import { Alert, View, Text } from "react-native";
+import { View, Text, TouchableOpacity, StyleSheet, Image } from "react-native";
 import {Formik} from 'formik';
-import { StatusBar } from 'expo-status-bar';
-import { Octicons, Ionicons } from '@expo/vector-icons';
-import { globalStyles, colors, BlueButton } from "../styles/globalStyles";
-const { primary, pink, blue, yellow, lightBlue, navy, grey } = colors
-import {
-    StyledContainer,
-    InnerContainer,
-    PageLogo,
-    PageTitle,
-    SubTitle,
-    StyleFormArea,
-    LeftIcon,
-    StyledInputLabel,
-    StyledTextInput,
-    RightIcon,
-    Colors,
-    MsgBox,
-    Line,
-    ExtraView,
-    ExtraText,
-    TextLink,
-    TextLinkContent
-} from '../styles/styles';
-const { darkLight } = Colors;
+import { globalStyles, colors, BlueButton, MyTextInput, PasswordTextInput } from "../styles/globalStyles";
+const { primary, greyBlue } = colors
 
-// keyboard avoiding view
 import KeyboardAvoidingWrapper from '../styles/KeyboardAvoidingWrapper';
 
 import { AuthContext } from '../context/AuthContext';
-// console.log(darkLight);
 
-const Login = ( { navigation } ) => {
-    const { login } = useContext(AuthContext);    
+export default function Login ( { navigation } ) {
+  const { login } = useContext(AuthContext);    
 
-    const [ hidePassword, setHidePassword ] = useState(true);
-    // function handeling token and async storage and update loginState
-    // console.log("🍉",userData);
+  const [ hidePassword, setHidePassword ] = useState(true);
 
-    const pressSignupHandler = () => {
-        navigation.navigate('Signup')
-    }
+  const pressSignupHandler = () => {
+    navigation.navigate('Signup')
+  };
 
-    return (
-        <KeyboardAvoidingWrapper>
-          <StyledContainer>
-              <StatusBar style={"dark"} />
-              <InnerContainer>
-                  <PageLogo resezieMode="cover" source={require('./../assets/travel.png')} />
-                  <PageTitle>Tomo Tabi</PageTitle>
-                  <SubTitle>Account Login</SubTitle>
-                  <Formik
-                      initialValues={{ email: '', password: ''}}
-                      onSubmit={(userInputObj) => {
-                        login(userInputObj)
-                      }}
-                  >
-                      {({ handleChange, handleBlur, handleSubmit, values }) => (
-                          <StyleFormArea>
-                            <MyTextInput 
-                                label="Email Address"
-                                icon="mail"
-                                placeholder="xxx@gmail.com"
-                                placeholderTextColor={darkLight}
-                                onChangeText={handleChange('email')}
-                                autoCapitalize="none"
-                                onBlur={handleBlur('email')}
-                                value={values.email}
-                                keyboardType="email-address"
-                            />
-                            <MyTextInput 
-                                label="password"
-                                icon="lock"
-                                placeholder="* * * * * * *"
-                                placeholderTextColor={darkLight}
-                                onChangeText={handleChange('password')}
-                                onBlur={handleBlur('password')}
-                                value={values.password}
-                                secureTextEntry={hidePassword}
-                                isPassword={true}
-                                hidePassword={hidePassword}
-                                setHidePassword={setHidePassword}
-                            />
-                            <MsgBox></MsgBox>
-                            <BlueButton
-                                onPress={handleSubmit}
-                                buttonText="Login"
-                            />
-                            <Line/>
-                            <ExtraView>
-                              <ExtraText>Don't have an account already?</ExtraText>
-                              <TextLink onPress={pressSignupHandler}>
-                                  <TextLinkContent>Sign up</TextLinkContent>
-                              </TextLink>
-                            </ExtraView>
-                          </StyleFormArea>
-                      )}
-                  </Formik>
-              </InnerContainer>
-          </StyledContainer>
-        </KeyboardAvoidingWrapper>
-    );
+  return (
+    <KeyboardAvoidingWrapper>
+      <View style={styles.container}>
+        <View style={styles.centerView}>
+          <Image source={require('./../assets/travel.png')} style={styles.img}/>
+          <Text style={styles.title}>Tomo Tabi</Text>
+          <Text style={[globalStyles.header, {marginVertical:5, paddingVertical:0}]}>Login</Text>
+        </View>
+
+        <Formik
+          initialValues={{ email: '', password: ''}}
+          onSubmit={(values) => {
+            login(values);
+          }}
+        >
+        {(props) => (
+          <>
+            <MyTextInput
+              label="Email Address"
+              icon="email-outline"
+              placeholder="abc@gmail.com"
+              onChangeText={props.handleChange('email')}
+              autoCapitalize="none"
+              // onBlur={props.handleBlur('email')} //what is this
+              value={props.values.email}
+            />
+            <PasswordTextInput
+              onChangeText={props.handleChange('password')}
+              // onBlur={props.handleBlur('password')} //what is this
+              autoCapitalize="none"
+              value={props.values.password}
+              secureTextEntry={hidePassword}
+              hidePassword={hidePassword}
+              setHidePassword={setHidePassword}
+            />
+
+            <BlueButton
+              onPress={props.handleSubmit}
+              buttonText="Submit"
+            />
+            
+            <View style={styles.line}></View>
+
+            <View style={styles.centerView}>
+              <Text>Don't have an account already?</Text>
+              <TouchableOpacity onPress={pressSignupHandler}>
+                  <Text style={{color: greyBlue, fontSize: 15}}>Sign up</Text>
+              </TouchableOpacity>
+            </View>
+          </>
+        )}
+        </Formik>
+      </View>
+    </KeyboardAvoidingWrapper>
+  );
 }
 
-const MyTextInput = ( { label, icon, isPassword, hidePassword, setHidePassword, ...props }) => {
-    return (
-        <View>
-            <LeftIcon>
-                <Octicons name={icon} size={30} />
-            </LeftIcon>
-            <StyledInputLabel>{label}</StyledInputLabel>
-            <StyledTextInput {...props} />
-            {isPassword && (
-                <RightIcon onPress={() => setHidePassword(!hidePassword)}>
-                    <Ionicons name={hidePassword ? 'md-eye-off' : 'md-eye'} size={30} />
-                </RightIcon>
-            )}
-        </View>
-    );
-};
-
-export default Login;
+const styles = StyleSheet.create({
+  container:{
+    flex:1,
+    backgroundColor: primary, 
+    paddingHorizontal:20, 
+    paddingTop:30,
+    justifyContent: 'space-around',
+  },
+  centerView:{
+    // alignContent:'center',
+    flex:1,
+    justifyContent:'center',
+    alignItems:'center'
+  },
+  line:{
+    height:0.7,
+    backgroundColor:greyBlue,
+    marginVertical:10,
+  },
+  title:{
+    fontWeight:'bold',
+    fontSize:30,
+    textAlign:'center', 
+    color: greyBlue, 
+  },
+  img:{
+    height:190,
+    resizeMode:'contain',
+  }
+})
