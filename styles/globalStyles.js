@@ -198,6 +198,23 @@ export const AddButton = ({ setModalOpen }) => {
   )
 };
 
+export const EditModal = ({ modalEditOpen, setModalEditOpen, EditComponent, EditData }) => {
+  // console.log("Trig");
+  return (
+    <Modal visible={modalEditOpen} animationType="slide">
+      <View style={[globalStyles.container, globalStyles.modalContent]}>
+        <MaterialCommunityIcons
+          name='window-close'
+          size={24}
+          style={{...globalStyles.modalToggle, ...globalStyles.modalClose}}
+          onPress={() => setModalEditOpen(false)}
+        />
+        <EditComponent EditData={EditData} setModalEditOpen={setModalEditOpen}/>
+      </View>
+    </Modal>
+  )
+};
+
 export const StyledModal = ({ modalOpen, setModalOpen, AddComponent }) => {
   // console.log("Trig");
   return (
