@@ -1,12 +1,13 @@
 import React, { useState, useEffect, useContext } from 'react';
 import { StyleSheet, Text, FlatList, View } from 'react-native';
-import { globalStyles, AddButton, StyledModal } from "../styles/globalStyles";
+import { globalStyles, AddButton, StyledModal, EditModal } from "../styles/globalStyles";
 
 import { EventContext } from '../context/EventContext';
 
 import moment from 'moment';
 
 import AddTimeline from './AddTimeline';
+import EditTimeline from './EditTimeline';
 
 export default function TimeLine ({ route }) {
   const { id } = route.params;
@@ -14,6 +15,8 @@ export default function TimeLine ({ route }) {
 
   const [ modalOpen, setModalOpen ] = useState(false);
   const [ dateSortEvents, setDateSortEvents ] = useState({}) 
+  const [ modalEditOpen, setModalEditOpen ] = useState(false)
+  const [ eventEditData, setEventEditData ] = useState({}) // Set the event I want to send to Edit Timeline component
   
   //fetch one trip detail with trip id 
 
@@ -80,10 +83,14 @@ export default function TimeLine ({ route }) {
       <>
         <Text style={styles.date}>{item.date}</Text>
         {eventArr.map((eventObj) => {
+          const objToSend = {}
+          objToSend["date"] = moment(item["date"] + " " + eventObj["time"],"dddd, MMMM Do YYYY HH:mm A")
+          objToSend["event_name"] = eventObj["event_name"]
+          objToSend["event_id"] = eventObj["id"]
           return(
             <View key={eventObj.id} style={styles.dayContainer}>
               <Text style={styles.dayTime}>{eventObj.time}</Text>
-              <Text style={styles.dayEvent}>{eventObj.event_name}</Text>
+              <Text style={styles.dayEvent} onPress={() => {setEventEditData(objToSend); setModalEditOpen(true) }}>{eventObj.event_name}</Text>
             </View>
           )
         })}
@@ -105,6 +112,13 @@ export default function TimeLine ({ route }) {
           modalOpen={modalOpen}
           setModalOpen={setModalOpen}
           AddComponent={AddTimeline}
+        />
+
+        <EditModal
+        modalEditOpen={modalEditOpen}
+        setModalEditOpen={setModalEditOpen}
+        EditComponent={EditTimeline}
+        EditData={eventEditData}
         />
 
         <AddButton
