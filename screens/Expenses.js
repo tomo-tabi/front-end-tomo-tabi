@@ -1,7 +1,7 @@
 import React, { useState, useCallback, useContext, useEffect } from "react";
 import { Linking, StyleSheet, View, TouchableOpacity, Text, ScrollView } from "react-native";
 import { Table, TableWrapper, Row, Cell } from "react-native-table-component";
-import { globalStyles, colors, AddButton, StyledModal, TempButton, EditModal } from "../styles/globalStyles";
+import { globalStyles, colors, AddButton, StyledModal, TempButton, EditModal, EditButton } from "../styles/globalStyles";
 
 import { AuthContext } from "../context/AuthContext";
 import { ExpContext } from "../context/ExpContext";
@@ -10,9 +10,6 @@ import { TripContext } from "../context/TripContext";
 
 import AddExpenses from "./AddExpenses";
 import EditExpenses from "./EditExpense";
-
-import { Ionicons } from '@expo/vector-icons';
-
 
 const { primary, blue } = colors;
 
@@ -29,9 +26,16 @@ export const ExpenseTable = () => {
   const [modalEditOpen, setModalEditOpen] = useState(false)
   const [expenseEditData, setExpenseEditData] = useState({}) // Set the event I want to send to Edit Timeline component
 
+  const editPress = (editObj) => {
+    setExpenseEditData(editObj); 
+    setModalEditOpen(true);
+  }
+
   useEffect(() => {
     getExp();
     getUsersInTrip(tripid);
+    console.log(userData);
+    
   }, [])
 
   //format data for table
@@ -45,11 +49,12 @@ export const ExpenseTable = () => {
           obj.username,
           obj.item_name,
           obj.money,
-          <Ionicons
-            name="ellipsis-horizontal-sharp"
-            style={{ position: 'absolute', right: 37 }}
-            size={24} color="black"
-            onPress={()=> { setExpenseEditData(obj); setModalEditOpen(true) } } />
+          <EditButton
+            setModalOpen={setModalEditOpen}
+            setEditData={setExpenseEditData}
+            editData={obj}
+            style={{alignSelf:'center'}}
+          />
         ])
       })
 
@@ -78,11 +83,6 @@ export const ExpenseTable = () => {
 
 
   }, [expData])
-
-  const editData = (data, index) => {
-    // if (index !== 3) return;
-    console.log(data, index);
-  };
 
   const splitPayments = (payments) => {
     const result = []
@@ -172,14 +172,12 @@ export const ExpenseTable = () => {
             <Row data={tableHead} style={styles.head} textStyle={styles.text} />
             {
               tableData.map((data, i) => (
-                <TableWrapper>
-                  <TouchableOpacity key={i} style={styles.wrapper} onPress={() => editData(data, i)}>
+                <TableWrapper style={styles.wrapper}>
                     {
                       data.map((cell, j) => (
                         <Cell onPress={() => console.log(j)} key={j} data={cell} textStyle={styles.text} borderStyle={styles.cellBorderStyle} />
                       ))
                     }
-                  </TouchableOpacity>
                 </TableWrapper>
               ))
             }
@@ -203,10 +201,6 @@ export const ExpenseTable = () => {
                 // console.log(item);
                 return (item)
               })
-              // <FlatList
-              //   data={splitPaymentsData[0]}
-              //   renderItem={renderItem}
-              // />
             }
 
             <Text style={styles.textOweTitle}> Someone owes you:</Text>
@@ -216,10 +210,6 @@ export const ExpenseTable = () => {
                 // console.log(item);
                 return (item)
               })
-              // <FlatList
-              //   data={splitPaymentsData[1]}
-              //   renderItem={renderItem}
-              // />
             }
           </View>
 
@@ -235,12 +225,19 @@ export const ExpenseTable = () => {
         />
       </View>
 
-      <EditModal
+      <StyledModal
+        modalOpen={modalEditOpen}
+        setModalOpen={setModalEditOpen}
+        AddComponent={EditExpenses}
+        EditData={expenseEditData}
+      />
+
+      {/* <EditModal
           modalEditOpen={modalEditOpen}
           setModalEditOpen={setModalEditOpen}
           EditComponent={EditExpenses}
           EditData={expenseEditData}
-        />
+        /> */}
     </View>
   );
 };

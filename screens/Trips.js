@@ -1,6 +1,6 @@
 import React, { useState, useContext, useEffect } from 'react'
 import { StyleSheet, Text, FlatList, View, TouchableOpacity, SectionList } from 'react-native';
-import { globalStyles, colors, AddButton, StyledModal, BlueButton, YellowButton, EditModal } from "../styles/globalStyles";
+import { globalStyles, colors, AddButton, StyledModal, BlueButton, YellowButton, EditModal, EditButton } from "../styles/globalStyles";
 const { primary, blue, yellow } = colors
 
 import { AuthContext } from '../context/AuthContext';
@@ -45,7 +45,7 @@ export default function Trips({ navigation }) {
   // console.log(trips);
 
   const dateFormat = (startDate, endDate) => {
-    return `${moment(startDate).format("MMM, Do")} ➡︎ ${moment(endDate).format("MMM Do, YYYY")}`
+    return `${moment(startDate).format("Do MMM")} – ${moment(endDate).format("Do MMM YYYY")}`
   }
 
   useEffect(() => {
@@ -114,13 +114,18 @@ export default function Trips({ navigation }) {
           renderItem={({ item }) => (
             <TouchableOpacity onPress={() => pressHandler(item)} style={styles.item}>
               <View style={styles.tripInnerView}>
-                <View>
+                <View style={{ flexDirection:'row', justifyContent:'space-between' }}>
                   <Text style={styles.tripName}>{item.name} </Text>
-                  <Ionicons
+                  <EditButton
+                    setModalOpen={setModalEditOpen}
+                    setEditData={setTripEditData}
+                    editData={item}
+                  />
+                  {/* <Ionicons
                     name="ellipsis-horizontal-sharp"
                     style={{ position: 'absolute', right: 0 }}
                     size={24} color="black"
-                    onPress={() => { handleEdit(item); setModalEditOpen(true) }} />
+                    onPress={() => { handleEdit(item) }} /> */}
                 </View>
                 <Text style={styles.tripDate}>{dateFormat(item.start_date, item.end_date)}</Text>
               </View>
@@ -134,12 +139,19 @@ export default function Trips({ navigation }) {
         buttonText="Logout"
       />
 
-      <EditModal
+      <StyledModal
+        modalOpen={modalEditOpen}
+        setModalOpen={setModalEditOpen}
+        AddComponent={EditTrip}
+        EditData={tripEditData}
+      />
+
+      {/* <EditModal
         modalEditOpen={modalEditOpen}
         setModalEditOpen={setModalEditOpen}
         EditComponent={EditTrip}
         EditData={tripEditData}
-      />
+      /> */}
 
       <AddButton
         setModalOpen={setModalOpen}
