@@ -8,7 +8,7 @@ import { EventContext } from '../context/EventContext';
 
 import moment from 'moment';
 
-export default function EditTimeline({ setModalEditOpen, EditData }) {
+export default function EditTimeline({ setModalOpen, EditData }) {
   const { editTripEvents, deleteTripEvents } = useContext(EventContext)
   
   // for time date picker
@@ -43,12 +43,12 @@ export default function EditTimeline({ setModalEditOpen, EditData }) {
 
   const editEvent = (info) => {
     editTripEvents(info)
-    setModalEditOpen(false)
+    setModalOpen(false)
   }
 
   const deleteEvent = (info) => {
     deleteTripEvents(info)
-    setModalEditOpen(false)
+    setModalOpen(false)
   }
 
   return(

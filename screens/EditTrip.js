@@ -8,7 +8,7 @@ import { TripContext } from '../context/TripContext';
 
 import moment from 'moment';
 
-export default function EditTrip({ setModalEditOpen, EditData }) {
+export default function EditTrip({ setModalOpen, EditData }) {
     const { editTrip, deleteTrip } = useContext(TripContext)
 
     // for time date picker
@@ -30,12 +30,12 @@ export default function EditTrip({ setModalEditOpen, EditData }) {
 
     const editTripSubmit = (info) => {
         editTrip(info)
-        setModalEditOpen(false)
+        setModalOpen(false)
     }
 
     const deleteTripSubmit = (info) => {
         deleteTrip(info)
-        setModalEditOpen(false)
+        setModalOpen(false)
     }
 
     const showStartDatePicker = () => {
