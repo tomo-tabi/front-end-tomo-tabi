@@ -9,9 +9,6 @@ import { InviteContext } from '../context/InviteContext';
 
 import moment from 'moment';
 
-import { Ionicons } from '@expo/vector-icons';
-
-
 import AddTrip from './AddTrip';
 import EditTrip from './EditTrip';
 
@@ -37,11 +34,6 @@ export default function Trips({ navigation }) {
     })
   }
 
-
-  const handleEdit = (item) => {
-    setTripEditData(item)
-    setModalEditOpen(true)
-  }
   // console.log(trips);
 
   const dateFormat = (startDate, endDate) => {
