@@ -19,7 +19,7 @@ export function ExpProvider({ children }) {
       headers: authHeader
     })
 
-    if(getExp.status === 204) {
+    if(getExp.status === 404) {
       return
     }
 
