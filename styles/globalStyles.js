@@ -215,7 +215,7 @@ export const EditModal = ({ modalEditOpen, setModalEditOpen, EditComponent, Edit
   )
 };
 
-export const StyledModal = ({ modalOpen, setModalOpen, AddComponent }) => {
+export const StyledModal = ({ modalOpen, setModalOpen, AddComponent, ...props }) => {
   // console.log("Trig");
   return (
     <Modal visible={modalOpen} animationType="slide">
@@ -226,7 +226,7 @@ export const StyledModal = ({ modalOpen, setModalOpen, AddComponent }) => {
           style={{...globalStyles.modalToggle, ...globalStyles.modalClose}}
           onPress={() => setModalOpen(false)}
         />
-        <AddComponent setModalOpen={setModalOpen}/>
+        <AddComponent setModalOpen={setModalOpen} {...props}/>
       </View>
     </Modal>
   )
