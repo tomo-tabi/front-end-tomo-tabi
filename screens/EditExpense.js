@@ -5,17 +5,17 @@ import { MyTextInput, BlueButton } from "../styles/globalStyles";
 
 import { ExpContext } from '../context/ExpContext';
 
-export default function EditExpenses({ setModalEditOpen, EditData }) {
+export default function EditExpenses({ setModalOpen, EditData }) {
     const { editExpense, deleteExpense } = useContext(ExpContext)
 
     const editExpenseSubmit = (info) => {
         editExpense(info)
-        setModalEditOpen(false)
+        setModalOpen(false)
     }
 
     const deleteExpenseSubmit = (info) => {
         deleteExpense(info)
-        setModalEditOpen(false)
+        setModalOpen(false)
     }
 
     return (
@@ -43,7 +43,7 @@ export default function EditExpenses({ setModalEditOpen, EditData }) {
 
                         <BlueButton
                             onPress={() => { editExpenseSubmit(props.values) }}
-                            buttonText="Edit"
+                            buttonText="Submit Edit"
                         />
                         <BlueButton
                             onPress={() => deleteExpenseSubmit(props.values)}

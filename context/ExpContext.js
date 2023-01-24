@@ -3,7 +3,7 @@ import API_URL from "../config";
 
 import { AuthContext } from "./AuthContext";
 import { EventContext } from "./EventContext";
-import { checkStatus } from "../utils/fetchUtils";
+import { checkStatus, sendStatus } from "../utils/fetchUtils";
 
 export const ExpContext = createContext();
 
@@ -14,22 +14,17 @@ export function ExpProvider({ children }) {
   const [ expData, setExpData ] = useState(null);
 
   const getExp = async () => {
-    const getExpReq = await fetch(`http://${API_URL}:8080/expense/${tripid}`, {
+    const getExp = await fetch(`http://${API_URL}:8080/expense/${tripid}`, {
       method:"GET",
       headers: authHeader
     })
 
-    if(getExpReq.status === 204) {
+    if(getExp.status === 404) {
       return
     }
-    // console.log("H",getExpReq.status);
-    
-    const getExpRes = await getExpReq.json();
-    // console.log("H",getExpRes);
 
-    checkStatus(getExpRes, getExpReq, setExpData)
+    checkStatus(getExp, setExpData);
     
-    // setExpData(getExpRes);
     
     //returns:
     // [
@@ -50,20 +45,18 @@ export function ExpProvider({ children }) {
     // ]
 
   }
+
   const postExp = async (expInput) => {
     expInput.tripid = tripid;
 
-    const postExpReq = await fetch(`http://${API_URL}:8080/expense/create`, {
+    const postExp = await fetch(`http://${API_URL}:8080/expense/create`, {
       method:"POST",
       headers: authHeader,
       body:JSON.stringify(expInput)
     })
+
+    sendStatus(postExp, getExp);
     
-    const postExpRes = await postExpReq.json();
-    checkStatus(postExpRes, postExpReq, (res) => {
-      getExp();
-      return console.log(res);
-    })
   }
 
   const editExpense = async (expInput) => {
@@ -75,12 +68,9 @@ export function ExpProvider({ children }) {
       headers: authHeader,
       body:JSON.stringify(expInput)
     })
+
+    sendStatus(editExpense, getExp);
     
-    const postExpRes = await editExpense.json();
-    checkStatus(postExpRes, editExpense, (res) => {
-      getExp();
-      return console.log(res);
-    })
   }
 
   const deleteExpense = async (expInput) => {
@@ -92,12 +82,9 @@ export function ExpProvider({ children }) {
       headers: authHeader,
       body:JSON.stringify(expInput)
     })
+
+    sendStatus(deleteExpense, getExp);
     
-    const postExpRes = await deleteExpense.json();
-    checkStatus(postExpRes, deleteExpense, (res) => {
-      getExp();
-      return console.log(res);
-    })
   }
 
   return (
