@@ -1,6 +1,6 @@
-import React, { useState, useContext, useEffect  } from 'react'
+import React, { useState, useContext, useEffect } from 'react'
 import { StyleSheet, Text, FlatList, View, TouchableOpacity, SectionList } from 'react-native';
-import { globalStyles, colors, AddButton, StyledModal, BlueButton, YellowButton } from "../styles/globalStyles";
+import { globalStyles, colors, AddButton, StyledModal, BlueButton, YellowButton, EditModal } from "../styles/globalStyles";
 const { primary, blue, yellow } = colors
 
 import { AuthContext } from '../context/AuthContext';
@@ -9,7 +9,11 @@ import { InviteContext } from '../context/InviteContext';
 
 import moment from 'moment';
 
+import { Ionicons } from '@expo/vector-icons';
+
+
 import AddTrip from './AddTrip';
+import EditTrip from './EditTrip';
 
 // import { enableExpoCliLogging } from 'expo/build/logs/Logs';
 
@@ -17,9 +21,11 @@ export default function Trips({ navigation }) {
   const { logout } = useContext(AuthContext);
   const { trips } = useContext(TripContext);
   const { invites, rejectInvites, acceptInvites } = useContext(InviteContext)
-  
-  const [ modalOpen, setModalOpen ] = useState(false);
-  const [ inviteStatus, setInviteStatus ] = useState(false);
+
+  const [modalOpen, setModalOpen] = useState(false);
+  const [inviteStatus, setInviteStatus] = useState(false);
+  const [modalEditOpen, setModalEditOpen] = useState(false)
+  const [tripEditData, setTripEditData] = useState({}) // Set the trip I want to send to Edit Trip component
 
   // console.log(invites, trips);
 
@@ -30,16 +36,22 @@ export default function Trips({ navigation }) {
       params: { id: item.id, name: item.name },
     })
   }
+
+
+  const handleEdit = (item) => {
+    setTripEditData(item)
+    setModalEditOpen(true)
+  }
   // console.log(trips);
 
   const dateFormat = (startDate, endDate) => {
-    return `${moment(startDate).format("MMM, Do")} ➡︎ ${moment(endDate).format("MMM Do, YYYY")}` 
+    return `${moment(startDate).format("MMM, Do")} ➡︎ ${moment(endDate).format("MMM Do, YYYY")}`
   }
 
   useEffect(() => {
     // console.log("in",invites);
-    if(invites){
-        setInviteStatus(true);
+    if (invites) {
+      setInviteStatus(true);
     } else {
       setInviteStatus(false);
     }
@@ -54,8 +66,8 @@ export default function Trips({ navigation }) {
       />
       <Text style={globalStyles.header}>
         {inviteStatus ?
-        "Pending Invites" 
-        :"No Invites"
+          "Pending Invites"
+          : "No Invites"
         }
       </Text>
 
@@ -76,35 +88,42 @@ export default function Trips({ navigation }) {
                 </View>
 
                 <View style={styles.inviteBtnView}>
-                  <YellowButton 
-                      onPress = {() => acceptInvites(item.id)}
-                      iconName='check'
+                  <YellowButton
+                    onPress={() => acceptInvites(item.id)}
+                    iconName='check'
                   />
-                  <YellowButton 
-                    onPress = {() => rejectInvites(item.id)}
+                  <YellowButton
+                    onPress={() => rejectInvites(item.id)}
                     iconName='window-close'
                   />
                 </View>
               </View>
             )}
-          /> 
+          />
         </View>
         : ""
       }
-      <Text style={globalStyles.header}>Trips</Text>
+      <Text style={globalStyles.header}>Trips </Text>
 
       <View style={styles.tripView}>
         <FlatList
-          keyExtractor={( item ) => item.id}
+          keyExtractor={(item) => item.id}
           data={trips}
-          numColumns={2}
-          columnWrapperStyle={styles.row}
+          // numColumns={2}
+          // columnWrapperStyle={styles.row}
           renderItem={({ item }) => (
             <TouchableOpacity onPress={() => pressHandler(item)} style={styles.item}>
-                <View style={styles.tripInnerView}>
-                  <Text style={styles.tripName}>{item.name}</Text>
-                  <Text style={styles.tripDate}>{dateFormat(item.start_date, item.end_date)}</Text>
+              <View style={styles.tripInnerView}>
+                <View>
+                  <Text style={styles.tripName}>{item.name} </Text>
+                  <Ionicons
+                    name="ellipsis-horizontal-sharp"
+                    style={{ position: 'absolute', right: 0 }}
+                    size={24} color="black"
+                    onPress={() => { handleEdit(item); setModalEditOpen(true) }} />
                 </View>
+                <Text style={styles.tripDate}>{dateFormat(item.start_date, item.end_date)}</Text>
+              </View>
             </TouchableOpacity>
           )}
         />
@@ -115,6 +134,13 @@ export default function Trips({ navigation }) {
         buttonText="Logout"
       />
 
+      <EditModal
+        modalEditOpen={modalEditOpen}
+        setModalEditOpen={setModalEditOpen}
+        EditComponent={EditTrip}
+        EditData={tripEditData}
+      />
+
       <AddButton
         setModalOpen={setModalOpen}
       />
@@ -123,81 +149,82 @@ export default function Trips({ navigation }) {
 };
 
 const styles = StyleSheet.create({
-  row:{ //each row of flat list
-    justifyContent:'space-between',
+  row: { //each row of flat list
+    justifyContent: 'space-between',
   },
   item: { // each trip file wrapper
     backgroundColor: blue,
-    // flex:1,
-
     padding: 5,
-    marginBottom:5,
-    height: 100,
-    width:179,
-    borderRadius:6,
-    alignItems:'flex-start',
-    
+    marginBottom: 5,
+    height: 85, //Changed this from 100 to 85
+    // width: 179,
+    borderRadius: 6,
+    // alignItems: 'flex',
+
+
+
+    // flex:1,
     // shadowColor: 'black',
     // shadowOpacity: 0.8,
     // elevation: 3,
   },
-  tripView:{
-    flex:2,
+  tripView: {
+    flex: 2,
     shadowColor: 'grey',
     shadowOpacity: 0.8,
     elevation: 7,
-    
+
     padding: 5,
-    borderTopLeftRadius:6,
-    borderTopRightRadius:6,
-    backgroundColor:primary
+    borderTopLeftRadius: 6,
+    borderTopRightRadius: 6,
+    backgroundColor: primary
   },
-  tripInnerView:{//inside each trip file
-    flex:1,
+  tripInnerView: {//inside each trip file
+    flex: 1,
   },
-  tripName:{
-    alignItems:'center',
+  tripName: {
+    alignItems: 'center',
     fontWeight: "bold",
     fontSize: 24,
     paddingHorizontal: 5,
   },
-  tripDate:{
+  tripDate: {
     fontSize: 16,
     paddingHorizontal: 5,
-    paddingTop:5,
+    paddingTop: 5,
   },
-  inviteText:{
+  inviteText: {
     fontSize: 16,
   },
-  inviteView:{
+  inviteView: {
     // flex:1,
-    marginBottom:10,
+    marginBottom: 10,
     // paddingHorizontal:10,    
     // padding:10,
     // backgroundColor: primary,
     // borderRadius:6,
-    
+
   },
-  inviteTripCard:{
-    flex:1,
-    margin:5,
+  inviteTripCard: {
+    flex: 1,
+    margin: 5,
     // padding:5,
     // borderBottomWidth:1,
     borderRadius: 6,
-    overflow:'hidden',
+    overflow: 'hidden',
     // backgroundColor: "black"
     shadowColor: 'grey',
     shadowOpacity: 0.8,
     elevation: 7,
   },
-  inviteTripInfo:{
+  inviteTripInfo: {
     // flex:1,
-    padding:5,
+    padding: 5,
     // borderRadius: 6,
     backgroundColor: blue
   },
   inviteTripName: {
-    flex:1,
+    flex: 1,
     // width: 300,
     fontWeight: "bold",
     fontSize: 24,
@@ -206,9 +233,9 @@ const styles = StyleSheet.create({
     // borderRadius: 6,
     // backgroundColor: blue
   },
-  inviteBtnView:{
-    flex:1,
-    flexDirection:'row',
+  inviteBtnView: {
+    flex: 1,
+    flexDirection: 'row',
     backgroundColor: yellow,
     // borderWidth:1,
     // borderColor:'black'

@@ -64,11 +64,44 @@ export function ExpProvider({ children }) {
       getExp();
       return console.log(res);
     })
+  }
 
+  const editExpense = async (expInput) => {
+    expInput.tripid = tripid;
+    const expenseid = expInput.id 
+
+    const editExpense = await fetch(`http://${API_URL}:8080/expense/update/${expenseid}`, {
+      method:"PUT",
+      headers: authHeader,
+      body:JSON.stringify(expInput)
+    })
+    
+    const postExpRes = await editExpense.json();
+    checkStatus(postExpRes, editExpense, (res) => {
+      getExp();
+      return console.log(res);
+    })
+  }
+
+  const deleteExpense = async (expInput) => {
+    expInput.tripid = tripid;
+    const expenseid = expInput.id 
+
+    const deleteExpense = await fetch(`http://${API_URL}:8080/expense/delete/${expenseid}`, {
+      method:"DELETE",
+      headers: authHeader,
+      body:JSON.stringify(expInput)
+    })
+    
+    const postExpRes = await deleteExpense.json();
+    checkStatus(postExpRes, deleteExpense, (res) => {
+      getExp();
+      return console.log(res);
+    })
   }
 
   return (
-    <ExpContext.Provider value={{ getExp, postExp, expData }}>
+    <ExpContext.Provider value={{ getExp, postExp, editExpense, deleteExpense, expData }}>
       {children}
     </ExpContext.Provider>
   )
