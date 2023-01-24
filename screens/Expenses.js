@@ -26,16 +26,9 @@ export const ExpenseTable = () => {
   const [modalEditOpen, setModalEditOpen] = useState(false)
   const [expenseEditData, setExpenseEditData] = useState({}) // Set the event I want to send to Edit Timeline component
 
-  const editPress = (editObj) => {
-    setExpenseEditData(editObj); 
-    setModalEditOpen(true);
-  }
-
   useEffect(() => {
     getExp();
     getUsersInTrip(tripid);
-    console.log(userData);
-    
   }, [])
 
   //format data for table
@@ -44,22 +37,30 @@ export const ExpenseTable = () => {
 
     if (expData) {
       expData.forEach((obj) => {
-        //formate name, item name and money?
-        expArr.push([
-          obj.username,
-          obj.item_name,
-          obj.money,
-          <EditButton
+        console.log(obj.email, userData.email);
+        
+        let edit
+        if(obj.email === userData.email){
+          edit = 
+            <EditButton
             setModalOpen={setModalEditOpen}
             setEditData={setExpenseEditData}
             editData={obj}
             style={{alignSelf:'center'}}
           />
+        } else {
+          edit = <View></View>
+        }
+        //formate name, item name and money?
+        expArr.push([
+          obj.username,
+          obj.item_name,
+          obj.money,
+          edit
         ])
       })
 
-
-      setTableData(expArr)
+      setTableData(expArr);
     }
 
     let expObj = {}
@@ -215,6 +216,7 @@ export const ExpenseTable = () => {
 
         </View>
       </ScrollView>
+
       <View style={{ height: 100, backgroundColor: primary, }}>
         <View style={styles.buttons}>
           <OpenURLButton url={PayPayURL}>Open PayPay</OpenURLButton>
@@ -231,13 +233,6 @@ export const ExpenseTable = () => {
         AddComponent={EditExpenses}
         EditData={expenseEditData}
       />
-
-      {/* <EditModal
-          modalEditOpen={modalEditOpen}
-          setModalEditOpen={setModalEditOpen}
-          EditComponent={EditExpenses}
-          EditData={expenseEditData}
-        /> */}
     </View>
   );
 };
