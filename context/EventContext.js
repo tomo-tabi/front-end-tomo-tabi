@@ -1,6 +1,6 @@
 import React, { createContext, useContext, useState } from "react";
 import { AuthContext } from "./AuthContext";
-import { checkStatus } from "../utils/fetchUtils";
+import { checkStatus, sendStatus } from "../utils/fetchUtils";
 import API_URL from "../config";
 
 export const EventContext = createContext();
@@ -39,18 +39,13 @@ export function EventProvider({children}) {
   const postTripEvents = async (tripEventInput) => {
     tripEventInput.tripid = tripid
      
-    const postTripEventsReq = await fetch(`http://${API_URL}:8080/timeline/create`, {
+    const postTripEvents = await fetch(`http://${API_URL}:8080/timeline/create`, {
       method:"POST",
       headers: authHeader,
       body:JSON.stringify(tripEventInput)
     })
 
-    const postTripEventsRes = await postTripEventsReq.json();
-
-    checkStatus(postTripEventsRes, postTripEventsReq, (res) => {
-      getTripEvents(tripid);
-      return console.log(res);
-    })
+    sendStatus(postTripEvents, getTripEvents, tripid)
     
   };
 
@@ -58,38 +53,29 @@ export function EventProvider({children}) {
     tripEventInput.tripid = tripid
     const eventid = tripEventInput.event_id
     console.log("edit this info", tripEventInput)
-
      
-    const editTripEventsReq = await fetch(`http://${API_URL}:8080/timeline/update/${eventid}`, {
+    const editTripEvents = await fetch(`http://${API_URL}:8080/timeline/update/${eventid}`, {
       method:"PUT",
       headers: authHeader,
       body:JSON.stringify(tripEventInput)
     })
 
-    const editTripEventsRes = await editTripEventsReq.json();
+    sendStatus(editTripEvents, getTripEvents, tripid)
 
-    checkStatus(editTripEventsRes, editTripEventsReq, (res) => {
-      getTripEvents(tripid);
-      return console.log(res);
-    })
   }
 
   const deleteTripEvents = async (tripEventInput) => {
     tripEventInput.tripid = tripid
     const eventid = tripEventInput.event_id
      
-    const deleteTripEventsReq = await fetch(`http://${API_URL}:8080/timeline/delete/${eventid}`, {
+    const deleteTripEvents = await fetch(`http://${API_URL}:8080/timeline/delete/${eventid}`, {
       method:"DELETE",
       headers: authHeader,
       body:JSON.stringify(tripEventInput)
     })
 
-    const deleteTripEventsRes = await deleteTripEventsReq.json();
+    sendStatus(deleteTripEvents, getTripEvents, tripid);
 
-    checkStatus(deleteTripEventsRes, deleteTripEventsReq, (res) => {
-      getTripEvents(tripid);
-      return console.log(res);
-    })
   }
   
 

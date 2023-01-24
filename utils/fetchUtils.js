@@ -38,3 +38,15 @@ export const checkStatus = (res, req, setFunc) => {
     Alert.alert(res.message);
   }
 }
+
+export const sendStatus = async (req, getFunc, input) => {
+  // for update, edit, and delete
+  if (req.status === 201 || req.status === 200) {
+    //re render
+    getFunc(input);
+  } else {
+    // 500
+    const res = await req.json();
+    checkStatus(res, req)
+  }
+}
