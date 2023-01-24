@@ -86,7 +86,7 @@ export default function EditTrip({ setModalOpen, EditData }) {
                         />
                         <BlueButton
                             onPress={() => deleteTripSubmit(props.values)}
-                            buttonText="Delete Event"
+                            buttonText="Delete Trip"
                         />
 
                         {showEndDate && (
