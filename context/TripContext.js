@@ -51,7 +51,7 @@ export function TripProvider({children}) {
         method:"GET",
         headers: authHeader
       })
-      console.log(getUsersInTrip.status);
+      // console.log(getUsersInTrip.status);
 
       if(getUsersInTrip.status === 404){ //need to reset for calendar
         return setUsersInTrip(null);
