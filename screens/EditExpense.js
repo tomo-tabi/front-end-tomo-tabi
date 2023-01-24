@@ -43,7 +43,7 @@ export default function EditExpenses({ setModalEditOpen, EditData }) {
 
                         <BlueButton
                             onPress={() => { editExpenseSubmit(props.values) }}
-                            buttonText="Edit"
+                            buttonText="Submit Edit"
                         />
                         <BlueButton
                             onPress={() => deleteExpenseSubmit(props.values)}

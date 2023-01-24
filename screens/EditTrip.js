@@ -82,7 +82,7 @@ export default function EditTrip({ setModalEditOpen, EditData }) {
 
                         <BlueButton
                             onPress={() => { editTripSubmit(props.values) }}
-                            buttonText="Edit"
+                            buttonText="Submit Edit"
                         />
                         <BlueButton
                             onPress={() => deleteTripSubmit(props.values)}

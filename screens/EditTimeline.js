@@ -97,7 +97,7 @@ export default function EditTimeline({ setModalEditOpen, EditData }) {
             )}
             <BlueButton
             onPress={() => {editEvent(props.values)}}
-              buttonText="Edit"
+              buttonText="Submit Edit"
             />
             <BlueButton
               onPress={() => deleteEvent(props.values)}
