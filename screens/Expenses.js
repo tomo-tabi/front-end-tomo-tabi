@@ -37,7 +37,7 @@ export const ExpenseTable = () => {
 
     if (expData) {
       expData.forEach((obj) => {
-        console.log(obj.email, userData.email);
+        // console.log(obj.email, userData.email);
         
         let edit
         if(obj.email === userData.email){
@@ -74,9 +74,9 @@ export const ExpenseTable = () => {
           expObj[obj.username] = Number(obj.money)
         }
       })
-      usersInTrip.forEach((user) => {
-        if (!expObj[user]) {
-          expObj[user] = 0
+      usersInTrip.forEach((userObj) => {
+        if (!expObj[userObj.username]) {
+          expObj[userObj.username] = 0
         }
       })
       setSplitPaymentData(splitPayments(expObj))
