@@ -28,9 +28,8 @@ export function InviteProvider({children}) {
         setInvites(null);
         return
       }
-      const res = await getInvites.json();
 
-      checkStatus(res,getInvites,setInvites)
+      checkStatus(getInvites,setInvites)
 
     } catch (e) {
       console.log(`Invite Error: ${e}`);
@@ -86,7 +85,7 @@ export function InviteProvider({children}) {
     sendStatus(postInviteReq, () => {
       return Alert.alert("Invite Created")
     })
-    
+
   }
 
   useEffect(() => {

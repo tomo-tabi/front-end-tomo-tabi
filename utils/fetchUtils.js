@@ -25,12 +25,16 @@ export const userCheckStatus = (res, req, setFunc) => {
 // rejectInvites, postInvite, postTrip
 //
 
-export const checkStatus = (res, req, setFunc) => {
+export const checkStatus = async (req, setFunc) => {
+
   if (req.status === 404) {
     // console.log("404 stat",res.url);
     // need to reset trips (to be added?)
     return
   }
+
+  const res = await req.json();
+
   if (req.status === 200) {
     setFunc(res);
   } else {

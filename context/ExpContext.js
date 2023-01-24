@@ -14,20 +14,17 @@ export function ExpProvider({ children }) {
   const [ expData, setExpData ] = useState(null);
 
   const getExp = async () => {
-    const getExpReq = await fetch(`http://${API_URL}:8080/expense/${tripid}`, {
+    const getExp = await fetch(`http://${API_URL}:8080/expense/${tripid}`, {
       method:"GET",
       headers: authHeader
     })
 
-    if(getExpReq.status === 204) {
+    if(getExp.status === 204) {
       return
     }
-    
-    const getExpRes = await getExpReq.json();
 
-    checkStatus(getExpRes, getExpReq, setExpData);
+    checkStatus(getExp, setExpData);
     
-    // setExpData(getExpRes);
     
     //returns:
     // [

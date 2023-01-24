@@ -16,20 +16,19 @@ export function EventProvider({children}) {
     // console.log("🍎",tripid);
     setTripid(tripid);// maybe in trips screen page??
     
-    const tripEventsReq = await fetch(`http://${API_URL}:8080/timeline/${tripid}`,{
+    const tripEvents = await fetch(`http://${API_URL}:8080/timeline/${tripid}`,{
       method:"GET",
       headers: authHeader
     })
-    // console.log("🍎",tripEventsReq);
+    // console.log("🍎",tripEvents);
 
-    const tripEventsRes = await tripEventsReq.json();
-    // console.log("🍎",tripEventsReq.url);
+    // console.log("🍎",tripEvents.url);
 
-    if(tripEventsReq.status === 404){ //need to reset for calendar
+    if(tripEvents.status === 404){ //need to reset for calendar
       return setTripEvents(null);
     }
 
-    checkStatus(tripEventsRes, tripEventsReq, setTripEvents);
+    checkStatus(tripEvents, setTripEvents);
 
     
     // return tripEventsRes
