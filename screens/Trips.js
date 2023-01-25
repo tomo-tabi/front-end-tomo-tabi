@@ -9,6 +9,9 @@ import { InviteContext } from '../context/InviteContext';
 
 import moment from 'moment';
 
+import { Ionicons } from '@expo/vector-icons';
+import Dialog from "react-native-dialog";//New
+
 import AddTrip from './AddTrip';
 import EditTrip from './EditTrip';
 
@@ -23,6 +26,7 @@ export default function Trips({ navigation }) {
   const [inviteStatus, setInviteStatus] = useState(false);
   const [modalEditOpen, setModalEditOpen] = useState(false)
   const [tripEditData, setTripEditData] = useState({}) // Set the trip I want to send to Edit Trip component
+  const [visible, setVisible] = useState(true);
 
   // console.log(invites, trips);
 
@@ -39,6 +43,11 @@ export default function Trips({ navigation }) {
   const dateFormat = (startDate, endDate) => {
     return `${moment(startDate).format("Do MMM")} – ${moment(endDate).format("Do MMM YYYY")}`
   }
+
+   // handle pop up message
+   const hideDialog = () => {
+    setVisible(false);
+  };
 
   useEffect(() => {
     // console.log("in",invites);
@@ -124,6 +133,17 @@ export default function Trips({ navigation }) {
             </TouchableOpacity>
           )}
         />
+        {trips === null &&
+          <View>
+            <Dialog.Container visible={visible}>
+              <Dialog.Title style={styles.dialogTitle}>There is no trip now!</Dialog.Title>
+              <Dialog.Description style={styles.dialogDescription}>
+                Plan a new trip and have fun!
+              </Dialog.Description>
+              <Dialog.Button label="OK" style={styles.dialogButton} onPress={hideDialog}/>
+            </Dialog.Container>
+          </View>
+        }
       </View>
 
       <BlueButton
@@ -243,5 +263,16 @@ const styles = StyleSheet.create({
     backgroundColor: yellow,
     // borderWidth:1,
     // borderColor:'black'
-  }
+  },
+  dialogTitle: {
+    fontSize: 25,
+    color: "darkcyan"
+  },
+  dialogDescription: {
+    fontWeight: 'bold', 
+    color: 'goldenrod'
+  },
+  dialogButton: {
+    fontWeight: 'bold'
+  },
 })
