@@ -1,7 +1,7 @@
 import React, { useContext, useEffect, useState } from 'react';
 import { FlatList, View, Text, TouchableOpacity ,StyleSheet } from 'react-native';
 import { MaterialCommunityIcons } from '@expo/vector-icons';
-import { globalStyles, colors, MyTextInput, BlueButton, Line } from "../styles/globalStyles";
+import { globalStyles, colors, MyTextInput, BlueButton, Seperator } from "../styles/globalStyles";
 const { primary, lightBlue, grey } = colors;
 
 
@@ -59,21 +59,17 @@ export default function Invite() {
       return
     }
     return (
-      <View style={[styles.flexRow,{alignItems:'center'}]}>
+      <View style={[globalStyles.flexRow,{alignItems:'center'}]}>
         <Text style={[styles.memberList]}>{item.username}</Text>
         <Text style={[styles.status, styles[item.status]]}>{status}</Text>
       </View>
     )
   }
 
-  const seperator = () => {
-    return <Line style={{backgroundColor:grey, marginVertical:0, marginHorizontal:5}}/>
-  }
-
   return (
     <View style={[globalStyles.container,{backgroundColor: primary}]}>
 
-      <View style={[globalStyles.header,styles.headerExtra,styles.flexRow]}>
+      <View style={[globalStyles.header,styles.headerExtra,globalStyles.flexRow]}>
         <Text style={[globalStyles.header, {paddingVertical:0}]}>Send Invite</Text>
         <TouchableOpacity onPress={()=> setShow(!show)}>
           <MaterialCommunityIcons name={show ? 'chevron-up' : 'chevron-down'} size={30}/>
@@ -85,17 +81,6 @@ export default function Invite() {
         You have not sent any invites yet! 
         Start sending invitations to plan the trip together
       </Text> */}
-
-      <Text style={[globalStyles.header,styles.headerExtra]}>Invite Status</Text>
-      <View style={{maxHeight:"50%"}}>
-      <FlatList
-        keyExtractor={(item) => item.email}
-        data={dummyObj}
-        renderItem={renderInvite}
-        ItemSeparatorComponent={seperator}
-      />
-      </View>
-      
 
       {show ? 
 
@@ -128,12 +113,22 @@ export default function Invite() {
       </View>
       : ""
       }
+      <Text style={[globalStyles.header,styles.headerExtra]}>Invite Status</Text>
+      <View style={{maxHeight:"50%"}}>
+        <FlatList
+          keyExtractor={(item) => item.email}
+          data={dummyObj}
+          renderItem={renderInvite}
+          ItemSeparatorComponent={<Seperator/>}
+        />
+      </View>
+
       <Text style={[globalStyles.header,styles.headerExtra]}>Members</Text>
       <FlatList
         keyExtractor={(item) => item.email}
         data={usersInTrip}
         renderItem={renderMember}
-        ItemSeparatorComponent={seperator}
+        ItemSeparatorComponent={<Seperator/>}
       />
 
       
@@ -160,12 +155,8 @@ const styles = StyleSheet.create({
     marginBottom:10,
     paddingHorizontal:10,
   },
-  flexRow:{
-    flexDirection:'row',
-    alignContent:'space-between', 
-    justifyContent:'space-between' 
-  },
-  memberList: {
+
+  memberList: {//almost same as voteing.js
     fontSize:17,
     marginLeft:10,
     flex: 1,
@@ -174,13 +165,14 @@ const styles = StyleSheet.create({
     // borderWidth: 1,
     // borderColor: 'black',
   },
-  status:{
+  status:{//almost same as voteing.js
     borderRadius:20,
     borderWidth:1.5,
     marginRight:5,
     fontSize:17,
     textAlignVertical:'center',
     textAlign:'center',
+
     width:90,
     height:27,
   },
