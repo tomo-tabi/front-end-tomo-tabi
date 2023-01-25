@@ -18,7 +18,7 @@ export default function Invite() {
   const { getUsersInTrip, usersInTrip } = useContext(TripContext);
 
   const [ show, setShow ] = useState(false);
-  const [ noInvitesSent, setNoInvitesSent ] = useState(true);
+  const [ noInvitesSent, setNoInvitesSent ] = useState(false);
 
   useEffect(() => {
     getUsersInTrip(tripid);
@@ -39,12 +39,14 @@ export default function Invite() {
   },[usersInTrip])
 
   useEffect(() => {
-    if (invitesSent && show) {// has invites
-      // console.log("💄",!invitesSent, show);
+    console.log("💄",!invitesSent, show);
+    if (!invitesSent && show) {// no invites sent & no members
+      setNoInvitesSent(true);
+    } else {
       setNoInvitesSent(false);
     }
   },[invitesSent, show])
-  // console.log(noInvitesSent);
+  console.log(noInvitesSent);
 
   
 
@@ -127,7 +129,7 @@ export default function Invite() {
       </View>
       : ""
       }
-      { invitesSent ? 
+      { Array.isArray(invitesSent) && !invitesSent.find((item) => item.status === 'accepted') ? 
         <>
           <Text style={[globalStyles.header,styles.headerExtra]}>Invite Status</Text>
           <View style={{maxHeight:"50%"}}>
