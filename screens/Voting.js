@@ -3,13 +3,15 @@ import { MaterialCommunityIcons } from '@expo/vector-icons';
 import { globalStyles, colors, Seperator, YesOrNoCard } from "../styles/globalStyles"
 const { primary, grey } = colors
 
-export default function Voting({ route }) {
+export default function Voting({ route, navigation }) {
   // fucntion to naviagte to Voting (from timeline?)
-  const pressHandler = (eventName) => {
-    navigation.navigate('Voting',{
-      eventName: eventName
-    })
-  } 
+
+  // const pressHandler = (eventName) => {
+  //   navigation.navigate('Voting',{
+  //     eventName: eventName
+  //   })
+  // } 
+
   // for Trip invite view
   // <YesOrNoCard
   //   propmt={<View style={{paddingHorizontal: 5}}>
@@ -43,11 +45,7 @@ export default function Voting({ route }) {
         <Text style={[styles.status, globalStyles[item.status], {backgroundColor:0}]}>{status}</Text>
       </View>
     )
-  }
-
-
-  //Voting short view
-  // next to event 
+  } 
   //Voting detail view
   // if user Voted show voting status of who voted yes/no
   // else also show user to vote
