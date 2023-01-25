@@ -9,6 +9,7 @@ import Calendar from '../screens/Calendar';
 import TimeLine from '../screens/TimeLine';
 import Invite from '../screens/Invite';
 import { ExpenseTable } from '../screens/Expenses';
+import TimelineStack from './TimelineStack';
 
 const Tab = createBottomTabNavigator();
 
@@ -45,7 +46,7 @@ export default function TripTabNav() {
         
       })}
     >
-      <Tab.Screen name="TimeLine" component={TimeLine} />
+      <Tab.Screen name="TimeLine" component={TimelineStack} />
       <Tab.Screen name="Calendar" component={Calendar} />
       <Tab.Screen name="Expenses" component={ExpenseTable} />
       <Tab.Screen name="Invite" component={Invite} />
