@@ -12,8 +12,6 @@ import EditTimeline from './EditTimeline';
 
 import Dialog from "react-native-dialog";//New
 
-import Dialog from "react-native-dialog";//New
-
 export default function TimeLine({ navigation }) {
   const { tripEvents, tripid } = useContext(EventContext)
 
