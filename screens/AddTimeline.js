@@ -1,25 +1,56 @@
-import React, { useState, useContext } from 'react';
-import { View } from 'react-native';
+import React, { useState, useContext} from 'react';
+import { View, Alert, Text, StyleSheet } from 'react-native';//change
 import { Formik } from 'formik';
 import { MyTextInput, StyledDTPicker, BlueButton } from "../styles/globalStyles";
 import DateTimePicker from '@react-native-community/datetimepicker';
 
 import { EventContext } from '../context/EventContext';
+import { TripContext } from '../context/TripContext';//add
 
 import moment from 'moment';
 
 export default function AddTimeline({ setModalOpen }) {
-  const { postTripEvents } = useContext(EventContext)
+  const { postTripEvents, tripid } = useContext(EventContext)//change
+  const { trips } = useContext(TripContext)//add
+  
   
   // for time date picker
-  const [date, setDate] = useState(new Date())
+  const [date, setDate] = useState(new Date());
   const [mode, setMode] = useState('date');
   const [show, setShow] = useState(false);
+  
+  //get trip info(id, name, duration)
+  function getID(arr) {
+    return arr.id === tripid;
+  }
+  const getTripInfo = trips.find(getID);
+  const startDate = new Date(getTripInfo.start_date);
+  const endDate = new Date(getTripInfo.end_date);
+  // const adjustEndDate = new Date(getTripInfo.end_date);
+  // adjustEndDate.setDate(adjustEndDate.getDate()+1);
+  // console.log(getTripInfo);
+  // console.log(startDate)
+  // console.log(endDate)
+  // console.log(adjustEndDate)
 
+  //change
   const onChange = (event, selectedDate) => {
     const currentDate = selectedDate;
-    setShow(false);
-    setDate(currentDate);
+    console.log(currentDate);
+    if(currentDate.getTime() < startDate.getTime()  || currentDate.getTime() > endDate) {
+      setShow(false);
+      Alert.alert('Wrong date!', 'Please choose a date between ' + 
+        moment(startDate).format('dddd, MMMM Do') + ' and ' + 
+        moment(endDate).format('dddd, MMMM Do') + ' !' , 
+        [
+        {text: 'OK', onPress: () => console.log('OK Pressed')},
+      ]);
+  
+    }else {
+      setShow(false);
+      setDate(currentDate);
+    }
+    
   };
 
   const showMode = (currentMode) => {
@@ -32,6 +63,7 @@ export default function AddTimeline({ setModalOpen }) {
 
   const showDatepicker = () => {
     showMode('date');
+    setDate(startDate);//add
   };
 
   const showTimepicker = () => {
@@ -56,6 +88,11 @@ export default function AddTimeline({ setModalOpen }) {
               onChangeText={props.handleChange('eventName')}
               value={props.values.eventName}
             />
+
+            <Text>Please choose a day between</Text>
+            <Text style={styles.date}>
+              {moment(startDate).format('MMMM Do')} and {moment(endDate).format('MMMM Do')}!
+            </Text>
             <StyledDTPicker
               label="Event Date"
               onPress={showDatepicker}
@@ -104,3 +141,13 @@ export default function AddTimeline({ setModalOpen }) {
     </>
   )
 };
+
+//add
+const styles = StyleSheet.create({
+  date: {
+      fontWeight: "bold",
+      fontSize: 17,
+      color: "green"
+  },
+  
+})
