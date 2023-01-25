@@ -126,9 +126,21 @@ export const globalStyles = StyleSheet.create({
     margin:5,
     color:'black'
   },
+  line:{
+    height:0.7,
+    backgroundColor:greyBlue,
+    marginVertical:10,
+  },
 });
 
-const darkLight = "#9CA3AF"
+export const Line = ({ style }) => {
+  // console.log(style);
+  return (
+    <View style={[globalStyles.line, style]}></View>
+  )
+}
+
+const darkLight = "#9CA3AF";
 
 export const MyTextInput = ( { label, icon, ...props }) => {
   const touchRef = useRef();
