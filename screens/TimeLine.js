@@ -10,9 +10,8 @@ import moment from 'moment';
 import AddTimeline from './AddTimeline';
 import EditTimeline from './EditTimeline';
 
-export default function TimeLine({ route }) {
-  const { id } = route.params;
-  const { tripEvents, getTripEvents } = useContext(EventContext)
+export default function TimeLine() {
+  const { tripEvents, tripid } = useContext(EventContext)
 
   const [modalOpen, setModalOpen] = useState(false);
   const [dateSortEvents, setDateSortEvents] = useState({})
@@ -20,12 +19,7 @@ export default function TimeLine({ route }) {
   const [eventEditData, setEventEditData] = useState({}) // Set the event I want to send to Edit Timeline component
 
   //fetch one trip detail with trip id 
-
-  useEffect(() => {
-    setDateSortEvents({});// don't know if I need it, will look into later
-    getTripEvents(id);
-  }, [id])
-
+  
   useEffect(() => {
     if (tripEvents !== null) {
       // setDateSortEvents({});
@@ -34,7 +28,7 @@ export default function TimeLine({ route }) {
         let date = moment(item.event_date).format("dddd, MMM DD, YYYY");
         let time = moment(item.event_date).format("HH:mm A");
 
-        if (item.trip_id !== id) {
+        if (item.trip_id !== tripid) {
           return
         }
 
