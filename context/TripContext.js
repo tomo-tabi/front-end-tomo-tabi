@@ -1,7 +1,6 @@
 import React, { createContext, useContext, useState, useEffect } from "react";
-import { Alert } from "react-native";
 import { AuthContext } from "./AuthContext";
-import { checkStatus } from "../utils/fetchUtils";
+import { sendStatus } from "../utils/fetchUtils";
 import API_URL from "../config";
 import moment from 'moment';
 
@@ -73,12 +72,7 @@ export function TripProvider({children}) {
         body:JSON.stringify(newTripInput)
       })
 
-      const res = await postTrip.json();
-
-      checkStatus(res, postTrip, (res) => {
-        getTrips();
-        return console.log(res);
-      })
+      sendStatus(postTrip, getTrips);
 
     }catch(e) {
       console.log(`Post Trip Error: ${e}`);
@@ -95,12 +89,7 @@ export function TripProvider({children}) {
         body:JSON.stringify(TripInput)
       })
 
-      const res = await editTrip.json();
-
-      checkStatus(res, editTrip, (res) => {
-        getTrips();
-        return console.log(res);
-      })
+      sendStatus(editTrip, getTrips);
 
     }catch(e) {
       console.log(`Edit Trip Error: ${e}`);
@@ -117,12 +106,7 @@ export function TripProvider({children}) {
         body:JSON.stringify(TripInput)
       })
 
-      const res = await deleteTrip.json();
-
-      checkStatus(res, deleteTrip, (res) => {
-        getTrips();
-        return console.log(res);
-      })
+      sendStatus(deleteTrip, getTrips);
 
     }catch(e) {
       console.log(`Delete Trip Error: ${e}`);

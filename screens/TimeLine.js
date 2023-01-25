@@ -1,10 +1,14 @@
 import React, { useState, useEffect, useContext } from 'react';
+<<<<<<< HEAD
 import { StyleSheet, Text, FlatList, View} from 'react-native';
 import { globalStyles, AddButton, StyledModal, EditModal } from "../styles/globalStyles";
+=======
+import { StyleSheet, Text, FlatList, View } from 'react-native';
+import { globalStyles, colors, AddButton, StyledModal, EditModal, EditButton } from "../styles/globalStyles";
+const {primary, blue, grey} = colors
+>>>>>>> 6108653d3580a6d3a27e581ba36e1e92a42cb006
 
 import { EventContext } from '../context/EventContext';
-
-import { Ionicons } from '@expo/vector-icons';
 
 import moment from 'moment';
 
@@ -84,28 +88,39 @@ export default function TimeLine({ route }) {
   const renderItem = ({ item }) => {
     let eventArr = item.info;
     return (
-      <>
+      <View style={styles.dayAndEvent}>
         <Text style={styles.date}>{item.date}</Text>
-        {eventArr.map((eventObj) => {
+        {eventArr.map((eventObj, i) => {
           const objToSend = {}
           objToSend["date"] = moment(item["date"] + " " + eventObj["time"], "dddd, MMMM Do YYYY HH:mm A")
           objToSend["event_name"] = eventObj["event_name"]
           objToSend["event_id"] = eventObj["id"]
+          
+          let viewStyle = styles.dayContainer;
+
+          if (eventArr.length - 1 !== i ){
+            viewStyle=[styles.dayContainer, {
+              borderBottomColor:grey,
+              borderBottomWidth:1,
+            }];
+          }
+
           return (
-            <View key={eventObj.id} style={styles.dayContainer}>
-              <View>
-                <Text style={styles.dayTime}>{eventObj.time}</Text>
-                <Ionicons 
-                name="ellipsis-horizontal-sharp" 
-                style={{ position: 'absolute', right: 20 }} 
-                size={24} color="black" 
-                onPress={() => { setEventEditData(objToSend); setModalEditOpen(true) }}/>
+            <View key={eventObj.id} style={viewStyle}>
+              <View style={{flexDirection:'column'}}>
+                {/* <Text style={styles.dayTime}>{eventObj.time}</Text> */}
+                <Text style={styles.dayEvent}>▪︎ {eventObj.event_name}</Text>
               </View>
-              <Text style={styles.dayEvent}>{eventObj.event_name}</Text>
+              
+              <EditButton
+                  setModalOpen={setModalEditOpen}
+                  setEditData={setEventEditData}
+                  editData={objToSend}
+                />
             </View>
           )
         })}
-      </>
+      </View>
     )
   }
   
@@ -142,13 +157,19 @@ export default function TimeLine({ route }) {
           setModalOpen={setModalOpen}
           AddComponent={AddTimeline}
         />
+        <StyledModal
+          modalOpen={modalEditOpen}
+          setModalOpen={setModalEditOpen}
+          AddComponent={EditTimeline}
+          EditData={eventEditData}
+        />
 
-        <EditModal
+        {/* <EditModal
           modalEditOpen={modalEditOpen}
           setModalEditOpen={setModalEditOpen}
           EditComponent={EditTimeline}
           EditData={eventEditData}
-        />
+        /> */}
 
         <AddButton
           setModalOpen={setModalOpen}
@@ -159,19 +180,27 @@ export default function TimeLine({ route }) {
 }
 
 const styles = StyleSheet.create({
+  dayAndEvent:{
+    backgroundColor:primary, 
+    marginVertical:10,
+    borderRadius: 6,
+    overflow:'hidden'
+  },
 
   date: {
     fontWeight: "bold",
     fontSize: 24,
     padding: 20,
-    marginTop: 10,
     borderRadius: 6,
-    backgroundColor: '#9CCAEC'
+    backgroundColor: blue
   },
 
   dayContainer: {
-    marginTop: 7,
-    marginLeft: 7
+    backgroundColor: primary,
+    paddingTop: 5,
+    paddingRight: 5,
+    flexDirection:'row', 
+    justifyContent:'space-between',
   },
 
   dayTime: {

@@ -3,7 +3,7 @@ import { Alert } from "react-native";
 import { AuthContext } from "./AuthContext";
 import { TripContext } from "./TripContext"
 import { EventContext } from "./EventContext";
-import { checkStatus } from "../utils/fetchUtils";
+import { checkStatus, sendStatus } from "../utils/fetchUtils";
 import API_URL from "../config";
 
 export const InviteContext = createContext();
@@ -28,9 +28,8 @@ export function InviteProvider({children}) {
         setInvites(null);
         return
       }
-      const res = await getInvites.json();
 
-      checkStatus(res,getInvites,setInvites)
+      checkStatus(getInvites,setInvites)
 
     } catch (e) {
       console.log(`Invite Error: ${e}`);
@@ -46,13 +45,11 @@ export function InviteProvider({children}) {
         headers: authHeader
       })
 
-      const res = await acceptInvites.json();
-
-      checkStatus(res, acceptInvites, (res) => {
+      sendStatus(acceptInvites,() => {
         getInvites();
-        getTrips()
-        return console.log(res);
+        getTrips();
       })
+
     } catch (e) {
         console.log(`Accept Invite Error: ${e}`);
     } 
@@ -63,14 +60,12 @@ export function InviteProvider({children}) {
         method:"PUT",
         headers: authHeader
       })
-      
-      const res = await rejectInvites.json();
 
-      checkStatus(res, rejectInvites, (res) => {
+      sendStatus(rejectInvites,() => {
         getInvites();
         getTrips();
-        return console.log(res);
       })
+
     } catch (e) {
       console.log(`Reject Invite Error: ${e}`);
     } 
@@ -87,11 +82,10 @@ export function InviteProvider({children}) {
         body:JSON.stringify(userEmail)
     });
 
-    const postInviteRes = await postInviteReq.json();
-
-    checkStatus(postInviteRes, postInviteReq, (res) => {
-      return Alert.alert(res.message)
+    sendStatus(postInviteReq, () => {
+      return Alert.alert("Invite Created")
     })
+
   }
 
   useEffect(() => {

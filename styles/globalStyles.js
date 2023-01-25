@@ -1,6 +1,6 @@
 import styled from 'styled-components';
 import { StyleSheet, TouchableOpacity, Text, View, TextInput, Modal } from "react-native";
-import { MaterialCommunityIcons } from '@expo/vector-icons';
+import { MaterialCommunityIcons, Ionicons } from '@expo/vector-icons';
 import { useRef } from 'react';
 
 export const colors = {
@@ -186,6 +186,18 @@ export const PasswordTextInput = ( { hidePassword, setHidePassword, ...props }) 
   );
 };
 
+export const EditButton = ({ setModalOpen, setEditData, editData, style }) => {
+  return (
+    <TouchableOpacity onPress={() => {setEditData(editData); setModalOpen(true);}}>
+      <Ionicons
+        name='ellipsis-horizontal-sharp'
+        size={24} 
+        color="black"
+        style={style}
+      />
+    </TouchableOpacity>
+  )
+};
 export const AddButton = ({ setModalOpen }) => {
   return (
     <TouchableOpacity onPress={() => setModalOpen(true)} style={globalStyles.addIconButton}>
@@ -215,7 +227,7 @@ export const EditModal = ({ modalEditOpen, setModalEditOpen, EditComponent, Edit
   )
 };
 
-export const StyledModal = ({ modalOpen, setModalOpen, AddComponent }) => {
+export const StyledModal = ({ modalOpen, setModalOpen, AddComponent, ...props }) => {
   // console.log("Trig");
   return (
     <Modal visible={modalOpen} animationType="slide">
@@ -226,7 +238,7 @@ export const StyledModal = ({ modalOpen, setModalOpen, AddComponent }) => {
           style={{...globalStyles.modalToggle, ...globalStyles.modalClose}}
           onPress={() => setModalOpen(false)}
         />
-        <AddComponent setModalOpen={setModalOpen}/>
+        <AddComponent setModalOpen={setModalOpen} {...props}/>
       </View>
     </Modal>
   )
