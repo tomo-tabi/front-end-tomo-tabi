@@ -1,6 +1,6 @@
 import React, { createContext, useContext, useState, useEffect } from "react";
 import { AuthContext } from "./AuthContext";
-import { sendStatus } from "../utils/fetchUtils";
+import { checkStatus, sendStatus } from "../utils/fetchUtils";
 import API_URL from "../config";
 import moment from 'moment';
 
@@ -45,18 +45,27 @@ export function TripProvider({children}) {
   }
 
   const getUsersInTrip = async (tripID) => {
+    //maybe move to event context
     try{
       const getUsersInTrip = await fetch(`http://${API_URL}:8080/trip/users/${tripID}`,{
         method:"GET",
         headers: authHeader
       })
+      // console.log(getUsersInTrip.status);
 
-      const res = await getUsersInTrip.json();
-      const usersTrip=[]
-      res.forEach(user => {
-        usersTrip.push(user.username)
-      });
-      setUsersInTrip(usersTrip)
+      if(getUsersInTrip.status === 404){ //need to reset for calendar
+        return setUsersInTrip(null);
+      }
+
+      checkStatus(getUsersInTrip, setUsersInTrip);
+
+      // const res = await getUsersInTrip.json();
+      // // console.log(res);
+      // const usersTrip=[]
+      // res.forEach(user => {
+      //   usersTrip.push(user.username)
+      // });
+      // setUsersInTrip(usersTrip)
     } catch (e) {
       console.log(`Get Users in Trip Error: ${e}`);
     } 

@@ -14,6 +14,7 @@ import Dialog from "react-native-dialog";//New
 
 import AddTrip from './AddTrip';
 import EditTrip from './EditTrip';
+import { EventContext } from '../context/EventContext';
 
 // import { enableExpoCliLogging } from 'expo/build/logs/Logs';
 
@@ -21,6 +22,7 @@ export default function Trips({ navigation }) {
   const { logout } = useContext(AuthContext);
   const { trips } = useContext(TripContext);
   const { invites, rejectInvites, acceptInvites } = useContext(InviteContext)
+  const { getTripEvents } = useContext(EventContext)
 
   const [modalOpen, setModalOpen] = useState(false);
   const [inviteStatus, setInviteStatus] = useState(false);
@@ -31,10 +33,12 @@ export default function Trips({ navigation }) {
   // console.log(invites, trips);
 
   const pressHandler = (item) => {
+    getTripEvents(item.id);
+
     navigation.navigate('TripTabNav', {
       screen: 'TimeLine',
       // need to wrap it in obj to pass to nested nav
-      params: { id: item.id, name: item.name },
+      params: { name: item.name },
     })
   }
 

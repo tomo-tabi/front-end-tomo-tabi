@@ -69,6 +69,7 @@ export default function Login ( { navigation } ) {
           </>
         )}
         </Formik>
+        
       </View>
     </KeyboardAvoidingWrapper>
   );

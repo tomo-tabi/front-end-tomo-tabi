@@ -11,10 +11,24 @@ export const colors = {
   lightBlue:"#E5EFF9",
   navy:"#1F2937",
   grey:"#E5E7EB",
-  greyBlue:"#6692B3"
+  greyBlue:"#6692B3",
 }
 
+export const accOrRej = {
+  accepted:'rgba(35, 136, 35, 0.8)',
+  rejected:'rgba(210, 34, 45, 0.8)',
+}
+
+export const status = {
+  pending:'rgb(255, 191, 0)',
+  pendingLight:`rgba(255, 191, 0, 0.2)`,
+  rejected:'rgb(210, 34, 45)',
+  rejectedLight:`rgba(210, 34, 45, 0.2)`
+}
+
+
 const { primary, pink, blue, yellow, lightBlue, navy, grey, greyBlue } = colors
+const { accepted, rejected } = accOrRej
 
 // import { globalStyles, SubmitText, MyTextInput } from "../styles/globalStyles";
 //globalStyles.addIconButton
@@ -126,9 +140,56 @@ export const globalStyles = StyleSheet.create({
     margin:5,
     color:'black'
   },
+
+  flexRow:{//align two items on each end of row
+    flexDirection:'row',
+    alignContent:'space-between', 
+    justifyContent:'space-between',
+  },
+
+  //for yes or no card
+  accepted:{
+    color:accepted,
+    borderColor:accepted,
+    backgroundColor:accepted,
+  },
+  rejected:{
+    color:rejected,
+    borderColor:rejected,
+    backgroundColor:rejected
+  },
+  button:{
+    margin:10,
+    flex:0.8,
+    borderRadius:20,
+    padding:2,
+    alignItems:'center'
+  },
+  card:{
+    backgroundColor:primary,
+    borderRadius:6,
+    overflow:'hidden',
+    marginBottom:10,
+    
+    padding: 5,
+    shadowColor: 'grey',
+    shadowOpacity: 0.8,
+    elevation: 7,
+  },
 });
 
-const darkLight = "#9CA3AF"
+
+export const Seperator = () => {
+  // console.log(style);
+  return (
+    <View style={{
+      backgroundColor:grey,
+      height:1
+    }}></View>
+  )
+}
+
+const darkLight = "#9CA3AF";
 
 export const MyTextInput = ( { label, icon, ...props }) => {
   const touchRef = useRef();
@@ -185,6 +246,36 @@ export const PasswordTextInput = ( { hidePassword, setHidePassword, ...props }) 
       </View>
   );
 };
+
+export const YesOrNoCard = ({ propmt, yesFunc, noFunc }) => {
+  // console.log(propmt);
+  return (
+    <View style={globalStyles.card}>
+      {propmt}
+      <View style={{flexDirection:'row'}}>
+        <TouchableOpacity style={[globalStyles.button, globalStyles.accepted]}
+          onPress={yesFunc}
+        >
+          <MaterialCommunityIcons
+            name='check'
+            size={30}
+            color='#fff'
+          />
+        </TouchableOpacity>
+        <TouchableOpacity style={[globalStyles.button, globalStyles.rejected]}
+          onPress={noFunc}
+        >
+
+          <MaterialCommunityIcons
+            name="window-close"
+            size={30}
+            color='#fff'
+          />
+        </TouchableOpacity>
+      </View>
+    </View>
+  )
+}
 
 export const EditButton = ({ setModalOpen, setEditData, editData, style }) => {
   return (
