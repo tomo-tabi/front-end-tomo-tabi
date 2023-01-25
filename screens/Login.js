@@ -1,7 +1,7 @@
 import React, { useState, useContext } from 'react';
 import { View, Text, TouchableOpacity, StyleSheet, Image } from "react-native";
 import {Formik} from 'formik';
-import { globalStyles, colors, BlueButton, MyTextInput, PasswordTextInput, Line } from "../styles/globalStyles";
+import { globalStyles, colors, BlueButton, MyTextInput, PasswordTextInput } from "../styles/globalStyles";
 const { primary, greyBlue } = colors
 
 import KeyboardAvoidingWrapper from '../styles/KeyboardAvoidingWrapper';
@@ -57,8 +57,8 @@ export default function Login ( { navigation } ) {
               onPress={props.handleSubmit}
               buttonText="Submit"
             />
-
-            <Line/>
+            
+            <View style={styles.line}></View>
 
             <View style={styles.centerView}>
               <Text>Don't have an account already?</Text>
@@ -69,6 +69,7 @@ export default function Login ( { navigation } ) {
           </>
         )}
         </Formik>
+        
       </View>
     </KeyboardAvoidingWrapper>
   );
