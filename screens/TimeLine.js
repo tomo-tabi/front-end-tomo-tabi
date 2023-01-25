@@ -1,12 +1,7 @@
 import React, { useState, useEffect, useContext } from 'react';
-<<<<<<< HEAD
-import { StyleSheet, Text, FlatList, View} from 'react-native';
-import { globalStyles, AddButton, StyledModal, EditModal } from "../styles/globalStyles";
-=======
 import { StyleSheet, Text, FlatList, View } from 'react-native';
 import { globalStyles, colors, AddButton, StyledModal, EditModal, EditButton } from "../styles/globalStyles";
 const {primary, blue, grey} = colors
->>>>>>> 6108653d3580a6d3a27e581ba36e1e92a42cb006
 
 import { EventContext } from '../context/EventContext';
 

@@ -9,12 +9,9 @@ import { InviteContext } from '../context/InviteContext';
 
 import moment from 'moment';
 
-<<<<<<< HEAD
 import { Ionicons } from '@expo/vector-icons';
 import Dialog from "react-native-dialog";//New
 
-=======
->>>>>>> 6108653d3580a6d3a27e581ba36e1e92a42cb006
 import AddTrip from './AddTrip';
 import EditTrip from './EditTrip';
 
