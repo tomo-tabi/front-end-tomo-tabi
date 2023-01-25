@@ -1,8 +1,9 @@
 import React, { useContext, useEffect, useState } from 'react';
 import { FlatList, View, Text, TouchableOpacity ,StyleSheet } from 'react-native';
 import { MaterialCommunityIcons } from '@expo/vector-icons';
-import { globalStyles, colors, MyTextInput, BlueButton, Seperator } from "../styles/globalStyles";
+import { globalStyles, colors, MyTextInput, BlueButton, Seperator, status } from "../styles/globalStyles";
 const { primary, lightBlue, grey } = colors;
+const { pending, pendingLight, rejected, rejectedLight } = status
 
 
 import { Formik } from 'formik';
@@ -138,12 +139,7 @@ export default function Invite() {
 
 const opacity = 0.2;
 
-const statColor = {
-  pending:'rgb(255, 191, 0)',
-  pendingLight:`rgba(255, 191, 0, ${opacity})`,
-  rejected:'rgb(210, 34, 45)',
-  rejectedLight:`rgba(210, 34, 45, ${opacity})`
-}
+
 
 const styles = StyleSheet.create({
   headerExtra: {
@@ -177,13 +173,13 @@ const styles = StyleSheet.create({
     height:27,
   },
   pending:{
-    color:statColor.pending,
-    borderColor:statColor.pending,
-    backgroundColor:statColor.pendingLight
+    color: pending,
+    borderColor: pending,
+    backgroundColor: pendingLight
   },
   rejected:{
-    color:statColor.rejected,
-    borderColor:statColor.rejected,
-    backgroundColor:statColor.rejectedLight
+    color: rejected,
+    borderColor: rejected,
+    backgroundColor: rejectedLight
   }
 });

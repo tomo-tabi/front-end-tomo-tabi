@@ -12,12 +12,23 @@ export const colors = {
   navy:"#1F2937",
   grey:"#E5E7EB",
   greyBlue:"#6692B3",
+}
+
+export const accOrRej = {
   accepted:'rgba(35, 136, 35, 0.8)',
   rejected:'rgba(210, 34, 45, 0.8)',
 }
 
+export const status = {
+  pending:'rgb(255, 191, 0)',
+  pendingLight:`rgba(255, 191, 0, 0.2)`,
+  rejected:'rgb(210, 34, 45)',
+  rejectedLight:`rgba(210, 34, 45, 0.2)`
+}
 
-const { primary, pink, blue, yellow, lightBlue, navy, grey, greyBlue, accepted, rejected } = colors
+
+const { primary, pink, blue, yellow, lightBlue, navy, grey, greyBlue } = colors
+const { accepted, rejected } = accOrRej
 
 // import { globalStyles, SubmitText, MyTextInput } from "../styles/globalStyles";
 //globalStyles.addIconButton
