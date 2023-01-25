@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useContext } from 'react';
-import { StyleSheet, Text, FlatList, View } from 'react-native';
+import { StyleSheet, Text, FlatList, View, TouchableOpacity } from 'react-native';
 import { globalStyles, colors, AddButton, StyledModal, EditModal, EditButton } from "../styles/globalStyles";
 const {primary, blue, grey} = colors
 
@@ -10,7 +10,7 @@ import moment from 'moment';
 import AddTimeline from './AddTimeline';
 import EditTimeline from './EditTimeline';
 
-export default function TimeLine() {
+export default function TimeLine({ navigation}) {
   const { tripEvents, tripid } = useContext(EventContext)
 
   const [modalOpen, setModalOpen] = useState(false);
@@ -71,6 +71,12 @@ export default function TimeLine() {
 
   }, [tripEvents])
 
+  const pressHandler = (eventName) => {
+    navigation.navigate('Voting',{
+      eventName: eventName
+    })
+  } 
+
 
   const renderItem = ({ item }) => {
     let eventArr = item.info;
@@ -96,7 +102,9 @@ export default function TimeLine() {
             <View key={eventObj.id} style={viewStyle}>
               <View style={{flexDirection:'column'}}>
                 {/* <Text style={styles.dayTime}>{eventObj.time}</Text> */}
+                <TouchableOpacity onPress={()=>pressHandler(eventObj.event_name)}>
                 <Text style={styles.dayEvent}>▪︎ {eventObj.event_name}</Text>
+                </TouchableOpacity>
               </View>
               
               <EditButton
