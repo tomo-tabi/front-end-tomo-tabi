@@ -14,6 +14,7 @@ export function InviteProvider({children}) {
   const { tripid } = useContext(EventContext);
   
   const [invites, setInvites] = useState(null);//all pending invites for user
+  const [invitesSent, setInvitesSent] = useState(null);
   // console.log(tripid);
  
   const getInvites = async () => {
@@ -35,6 +36,24 @@ export function InviteProvider({children}) {
       console.log(`Invite Error: ${e}`);
     } 
   };
+
+  const getInvitesSent = async () => {
+    try{
+      const getInvitesSent = await fetch(`http://${API_URL}:8080/invite/sent/${tripid}`, {
+        method:"GET",
+        headers: authHeader,
+      });
+
+      if(getInvitesSent.status === 404){ //need?
+        return setInvitesSent(null);
+      };
+
+      checkStatus(getInvitesSent, setInvitesSent);
+
+    } catch (e) {
+      console.log(`Get Invite Sent Error: ${e}`);
+    }
+  }
 
   const acceptInvites = async (inviteID) => {
     try{
@@ -98,7 +117,7 @@ export function InviteProvider({children}) {
   
 
   return (
-    <InviteContext.Provider value={{ invites, rejectInvites, acceptInvites, getInvites, postInvite}}>
+    <InviteContext.Provider value={{ invites, invitesSent, rejectInvites, acceptInvites, getInvites, getInvitesSent, postInvite}}>
       {children}
     </InviteContext.Provider>
   )
