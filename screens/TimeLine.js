@@ -10,13 +10,18 @@ import moment from 'moment';
 import AddTimeline from './AddTimeline';
 import EditTimeline from './EditTimeline';
 
-export default function TimeLine({ navigation}) {
+import Dialog from "react-native-dialog";//New
+
+import Dialog from "react-native-dialog";//New
+
+export default function TimeLine({ navigation }) {
   const { tripEvents, tripid } = useContext(EventContext)
 
   const [modalOpen, setModalOpen] = useState(false);
   const [dateSortEvents, setDateSortEvents] = useState({})
   const [modalEditOpen, setModalEditOpen] = useState(false)
   const [eventEditData, setEventEditData] = useState({}) // Set the event I want to send to Edit Timeline component
+  const [visible, setVisible] = useState(true);
 
   //fetch one trip detail with trip id 
   
@@ -67,8 +72,7 @@ export default function TimeLine({ navigation}) {
         // console.log("🍏", JSON.stringify(res));
         setDateSortEvents(res)
       }
-    }
-
+    } 
   }, [tripEvents])
 
   const pressHandler = (eventName) => {
@@ -118,9 +122,16 @@ export default function TimeLine({ navigation}) {
       </View>
     )
   }
+  
+
+  // handle pop up message
+  const hideDialog = () => {
+    setVisible(false);
+  };
 
   return (
     <>
+    
       <View style={globalStyles.container}>
         {Array.isArray(dateSortEvents) &&
           <FlatList
@@ -128,6 +139,17 @@ export default function TimeLine({ navigation}) {
             data={dateSortEvents}
             renderItem={renderItem}
           />
+        }
+        {tripEvents === null &&
+          <View>
+            <Dialog.Container visible={visible}>
+              <Dialog.Title style={styles.dialogTitle}>There is no event now!</Dialog.Title>
+              <Dialog.Description style={styles.dialogDescription}>
+              Create new events to enhance your travels!
+              </Dialog.Description>
+              <Dialog.Button label="OK" style={styles.dialogButton} onPress={hideDialog}/>
+            </Dialog.Container>
+          </View>
         }
         <StyledModal
           modalOpen={modalOpen}
@@ -188,5 +210,19 @@ const styles = StyleSheet.create({
     fontSize: 24,
     paddingLeft: 20,
     paddingBottom: 10,
+  },
+
+  dialogTitle: {
+    fontSize: 25,
+    color: "darkcyan"
+  },
+
+  dialogDescription: {
+    fontWeight: 'bold', 
+    color: 'goldenrod'
+  },
+  
+  dialogButton: {
+    fontWeight: 'bold'
   },
 })
