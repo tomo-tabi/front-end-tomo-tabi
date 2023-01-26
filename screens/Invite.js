@@ -38,17 +38,11 @@ export default function Invite() {
     }
     // what should I do if user never sent invite but there is more than 1 member in trip?
 
-  useEffect(() => {
-    console.log("💄",!invitesSent, show);
-    if (!invitesSent && show) {// no invites sent & no members
-      setNoInvitesSent(true);
-    } else {
-      setNoInvitesSent(false);
+    if (Array.isArray(invitesSent)) { 
+      let pending = invitesSent.filter((invite) => invite.status !== 'accepted');
+      setPendingInvites(pending);
     }
-  },[invitesSent, show])
-  console.log(noInvitesSent);
 
-  
   },[invitesSent])
 
   const renderMember = ({ item }) => {
