@@ -26,11 +26,7 @@ export default function TimeLine({ navigation }) {
 
   const [dayViewData, setDayViewData] = useState([])
 
-
   const [visible, setVisible] = useState(true);
-
-
-
 
   //fetch one trip detail with trip id 
   
@@ -50,7 +46,8 @@ export default function TimeLine({ navigation }) {
           trip_id: item.trip_id,
           event_name: item.event_name,
           time: time,
-          id: item.id
+          id: item.id,
+          description: item.description
         }
 
         if (Obj[date]) {
@@ -99,6 +96,7 @@ export default function TimeLine({ navigation }) {
       objToSendToEdit["date"] = moment(date + " " + event["time"], "dddd, MMMM Do YYYY HH:mm A")
       objToSendToEdit["event_name"] = event["event_name"]
       objToSendToEdit["event_id"] = event["id"]
+      objToSendToEdit["description"] = event["description"]
 
 
       eventObject["time"] = <Text> {event["time"]} </Text>
@@ -112,7 +110,7 @@ export default function TimeLine({ navigation }) {
             editData={objToSendToEdit}
           />
         </View>)
-      eventObject["description"] = <Text> Description... </Text>
+      eventObject["description"] = <Text> {event["description"] ? event["description"] : "There is no description yet" }</Text>
 
       eventArr.push(eventObject)
     })
