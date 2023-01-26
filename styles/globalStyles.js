@@ -71,16 +71,6 @@ export const globalStyles = StyleSheet.create({
     paddingHorizontal: 10,
     // flex:1,
   },
-  yellow:{// yellow button for invite
-    backgroundColor:'none',
-    flex:1,
-    marginVertical:0,
-    // borderWidth:1,
-    // borderColor:'black',
-    // justifyContent:"flex-end",
-    borderRadius:0,
-    padding:5,
-  },
   temp:{
     backgroundColor: yellow,
     borderRadius: 6,
@@ -301,23 +291,6 @@ export const AddButton = ({ setModalOpen }) => {
   )
 };
 
-export const EditModal = ({ modalEditOpen, setModalEditOpen, EditComponent, EditData }) => {
-  // console.log("Trig");
-  return (
-    <Modal visible={modalEditOpen} animationType="slide">
-      <View style={[globalStyles.container, globalStyles.modalContent]}>
-        <MaterialCommunityIcons
-          name='window-close'
-          size={24}
-          style={{...globalStyles.modalToggle, ...globalStyles.modalClose}}
-          onPress={() => setModalEditOpen(false)}
-        />
-        <EditComponent EditData={EditData} setModalEditOpen={setModalEditOpen}/>
-      </View>
-    </Modal>
-  )
-};
-
 export const StyledModal = ({ modalOpen, setModalOpen, AddComponent, ...props }) => {
   // console.log("Trig");
   return (
@@ -359,19 +332,6 @@ export const BlueButton = ({ onPress, buttonText }) => {
   return (
     <TouchableOpacity onPress={onPress} style={globalStyles.buttonStyle}>
       <Text style={globalStyles.buttonText}>{buttonText}</Text>
-    </TouchableOpacity>
-  )
-}
-
-export const YellowButton = ({ onPress, iconName, buttonText }) => {
-  // yellow button for invite
-
-  return (
-    <TouchableOpacity onPress={onPress} style={[globalStyles.buttonStyle, globalStyles.yellow]}>
-      <MaterialCommunityIcons name={iconName} size={30}/>
-      {buttonText ? 
-      <Text style={globalStyles.buttonText}>{buttonText}</Text>
-      :""}
     </TouchableOpacity>
   )
 }
