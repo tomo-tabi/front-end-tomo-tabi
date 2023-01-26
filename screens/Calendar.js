@@ -170,12 +170,19 @@ export default function CalendarView(params) {
         }
     }
 
+     //get trip info(id, name, duration)
+    function getID(arr) {
+      return arr.id === tripid;
+    }
+    const getTripInfo = trips.find(getID);
+    const startDate = new Date(getTripInfo.start_date);
+    // console.log(startDate);
 
     return (
         <>
             <Calendar
                 // Initially visible month. Default = now
-                initialDate={`${dateFormat()}`}
+                initialDate={`${startDate}`}
                 // Handler which gets executed on day press. Default = undefined
                 onDayPress={(day) => {checkDate(day.dateString)}}
                 // Month format in calendar title. Formatting values: http://arshaw.com/xdate/#Formatting
