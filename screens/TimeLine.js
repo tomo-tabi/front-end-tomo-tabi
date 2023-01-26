@@ -10,9 +10,7 @@ import moment from 'moment';
 import AddTimeline from './AddTimeline';
 import EditTimeline from './EditTimeline';
 
-
 import Timeline from 'react-native-timeline-flatlist'
-
 
 import Dialog from "react-native-dialog";//New
 

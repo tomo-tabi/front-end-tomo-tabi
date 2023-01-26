@@ -99,11 +99,12 @@ export default function EditTimeline({ setModalOpen, EditData }) {
 
             <MyTextInput
               label="Event Description"
-              icon="account-outline"
+              icon="text"
               placeholder="Add a description for this event"
               value={props.values.description}
               onChangeText={props.handleChange('description')}
               multiline={true}
+              numberOfLines={4}
             />
             <BlueButton
               onPress={() => { editEvent(props.values) }}
