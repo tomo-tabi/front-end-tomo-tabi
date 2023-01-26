@@ -87,7 +87,12 @@ export function AuthProvider({children}) {
             'Authorization': `Bearer ${userTokenStored}`
           }
         });
-        
+
+        if(isLoggedInReq.status === 401) {
+          await AsyncStorage.removeItem('userToken');
+          setIsLoading(false);
+          return
+        }
         
         // console.log("???", isLoggedInReq);
         const isLoggedInRes = await isLoggedInReq.json();
