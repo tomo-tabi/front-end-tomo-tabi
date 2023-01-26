@@ -16,7 +16,7 @@ import Timeline from 'react-native-timeline-flatlist'
 
 import Dialog from "react-native-dialog";//New
 
-export default function TimeLine() {
+export default function TimeLine({ navigation }) {
   const { tripEvents, tripid } = useContext(EventContext)
 
   const [modalOpen, setModalOpen] = useState(false);
@@ -80,6 +80,12 @@ export default function TimeLine() {
       }
     } 
   }, [tripEvents])
+
+  // const pressHandler = (eventName) => {
+  //   navigation.navigate('Voting',{
+  //     eventName: eventName
+  //   })
+  // } 
 
   const setDayData = (date, events) => {
     const eventArr = []

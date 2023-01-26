@@ -26,8 +26,6 @@ export default function Invite() {
     getInvitesSent();
   },[])
 
-
-
   useEffect(() => {
     // console.log("💄",invitesSent, show, noInvitesSent);
     if (invitesSent) {// user sent invite before
@@ -43,8 +41,9 @@ export default function Invite() {
       let pending = invitesSent.filter((invite) => invite.status !== 'accepted');
       setPendingInvites(pending);
     }
-
   },[invitesSent])
+
+  
 
   const renderMember = ({ item }) => {
     return (
@@ -146,10 +145,6 @@ export default function Invite() {
     </View>
   )
 };
-
-const opacity = 0.2;
-
-
 
 const styles = StyleSheet.create({
   headerExtra: {
