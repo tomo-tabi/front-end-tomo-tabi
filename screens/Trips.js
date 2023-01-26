@@ -1,7 +1,7 @@
 import React, { useState, useContext, useEffect } from 'react'
 import { StyleSheet, Text, FlatList, View, TouchableOpacity, SectionList } from 'react-native';
-import { globalStyles, colors, AddButton, StyledModal, BlueButton, YellowButton, EditModal, EditButton, YesOrNoCard, Seperator } from "../styles/globalStyles";
-const { primary, blue, yellow } = colors
+import { globalStyles, colors, AddButton, StyledModal, BlueButton, EditButton, YesOrNoCard, Seperator } from "../styles/globalStyles";
+const { primary } = colors
 
 import { AuthContext } from '../context/AuthContext';
 import { TripContext } from '../context/TripContext';
@@ -154,13 +154,6 @@ export default function Trips({ navigation }) {
         AddComponent={EditTrip}
         EditData={tripEditData}
       />
-
-      {/* <EditModal
-        modalEditOpen={modalEditOpen}
-        setModalEditOpen={setModalEditOpen}
-        EditComponent={EditTrip}
-        EditData={tripEditData}
-      /> */}
 
       <AddButton
         setModalOpen={setModalOpen}
