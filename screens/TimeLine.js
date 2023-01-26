@@ -23,9 +23,12 @@ export default function TimeLine() {
   const [dateSortEvents, setDateSortEvents] = useState({})
   const [modalEditOpen, setModalEditOpen] = useState(false)
   const [eventEditData, setEventEditData] = useState({}) // Set the event I want to send to Edit Timeline component
-  const [visible, setVisible] = useState(true);
 
   const [dayViewData, setDayViewData] = useState([])
+
+
+  const [visible, setVisible] = useState(true);
+
 
 
 
