@@ -21,7 +21,6 @@ export function AuthProvider({children}) {
     }
   }
 
-  // I think this is working???
   const authHeader = {
     'Accept': 'application/json, text/plain, */*', 
     'Content-Type': 'application/json',
