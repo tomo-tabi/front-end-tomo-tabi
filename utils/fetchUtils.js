@@ -50,7 +50,6 @@ export const sendStatus = async (req, getFunc, input) => {
     getFunc(input);
   } else {
     // 500
-    const res = await req.json();
-    checkStatus(res, req)
+    checkStatus(undefined, req)
   }
 }
