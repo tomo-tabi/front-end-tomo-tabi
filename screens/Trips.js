@@ -204,48 +204,13 @@ const styles = StyleSheet.create({
     fontSize: 16,
   },
   inviteView: {
-    // flex:1,
     marginBottom: 10,
-    // paddingHorizontal:10,    
-    // padding:10,
-    // backgroundColor: primary,
-    // borderRadius:6,
-
-  },
-  inviteTripCard: {
-    flex: 1,
-    margin: 5,
-    // padding:5,
-    // borderBottomWidth:1,
-    borderRadius: 6,
-    overflow: 'hidden',
-    // backgroundColor: "black"
-    shadowColor: 'grey',
-    shadowOpacity: 0.8,
-    elevation: 7,
-  },
-  inviteTripInfo: {
-    // flex:1,
-    padding: 5,
-    // borderRadius: 6,
-    backgroundColor: blue
   },
   inviteTripName: {
     flex: 1,
-    // width: 300,
     fontWeight: "bold",
     fontSize: 24,
-    // padding: 20,
-    // marginHorizontal: 10,
-    // borderRadius: 6,
-    // backgroundColor: blue
-  },
-  inviteBtnView: {
-    flex: 1,
-    flexDirection: 'row',
-    backgroundColor: yellow,
-    // borderWidth:1,
-    // borderColor:'black'
+    textAlign:'center',
   },
   dialogTitle: {
     fontSize: 25,
