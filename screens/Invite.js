@@ -124,13 +124,13 @@ export default function Invite() {
       </View>
       : ""
       }
-      { Array.isArray(invitesSent) && !invitesSent.find((item) => item.status === 'accepted') ? 
+      { Array.isArray(pendingInvites) ? 
         <>
           <Text style={[globalStyles.header,styles.headerExtra]}>Invite Status</Text>
           <View style={{maxHeight:"50%"}}>
             <FlatList
               keyExtractor={(item, index) => index}
-              data={invitesSent}
+              data={pendingInvites}
               renderItem={renderInvite}
               ItemSeparatorComponent={<Seperator/>}
             />
