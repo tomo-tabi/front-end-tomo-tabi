@@ -84,11 +84,11 @@ export default function TimeLine({ navigation }) {
     } 
   }, [tripEvents])
 
-  const pressHandler = (eventName) => {
-    navigation.navigate('Voting',{
-      eventName: eventName
-    })
-  } 
+  // const pressHandler = (eventName) => {
+  //   navigation.navigate('Voting',{
+  //     eventName: eventName
+  //   })
+  // } 
 
   const setDayData = (date, events) => {
     const eventArr = []
