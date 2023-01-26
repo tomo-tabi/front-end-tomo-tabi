@@ -119,7 +119,7 @@ export default function Invite() {
       </View>
       : ""
       }
-      { Array.isArray(pendingInvites) ? 
+      { Array.isArray(pendingInvites) && pendingInvites.length !== 0 ? 
         <>
           <Text style={[globalStyles.header,styles.headerExtra]}>Invite Status</Text>
           <View style={{maxHeight:"50%", marginBottom:5}}>
