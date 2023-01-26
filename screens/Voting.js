@@ -12,13 +12,6 @@ export default function Voting({ route, navigation }) {
   //   })
   // } 
 
-  // for Trip invite view
-  // <YesOrNoCard
-  //   propmt={<View style={{paddingHorizontal: 5}}>
-  //   <Text style={styles.inviteText}>User '{item.username}' has invited you trip:</Text>
-  //   <Text style={styles.inviteTripName}>{item.name}</Text>
-  // </View>}
-
   const eventName = route.eventName || "Randome Event";
 
   const dummyObj = [
