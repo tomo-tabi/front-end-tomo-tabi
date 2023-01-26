@@ -13,30 +13,38 @@ import { TripContext } from '../context/TripContext';
 import { EventContext } from '../context/EventContext';
 
 export default function Invite() {
-  const { postInvite } = useContext(InviteContext);
+  const { postInvite, getInvitesSent, invitesSent } = useContext(InviteContext);
   const { tripid } = useContext(EventContext);
   const { getUsersInTrip, usersInTrip } = useContext(TripContext);
 
   const [ show, setShow ] = useState(false);
+  const [ pendingInvites, setPendingInvites ] = useState(null);
+  const [ noInvitesSent, setNoInvitesSent ] = useState(true);//default: no invites sent
 
   useEffect(() => {
-    getUsersInTrip(tripid)
+    getUsersInTrip(tripid);
+    getInvitesSent();
   },[])
 
-  // console.log("💄",usersInTrip);
+
 
   useEffect(() => {
-    if (Array.isArray(usersInTrip)) {
-      if (usersInTrip.length <= 1) {
-        // console.log("true??",usersInTrip.length);
-        setShow(true);
-      } else if (usersInTrip.length > 1) {
-        setShow(false);
-      }
+    // console.log("💄",invitesSent, show, noInvitesSent);
+    if (invitesSent) {// user sent invite before
+      setShow(false);
+      setNoInvitesSent(false);
+    } else {
+      setShow(true);
+      setNoInvitesSent(true);
     }
-  },[usersInTrip])
+    // what should I do if user never sent invite but there is more than 1 member in trip?
 
-  
+    if (Array.isArray(invitesSent)) { 
+      let pending = invitesSent.filter((invite) => invite.status !== 'accepted');
+      setPendingInvites(pending);
+    }
+
+  },[invitesSent])
 
   const renderMember = ({ item }) => {
     return (
@@ -44,21 +52,15 @@ export default function Invite() {
     )
   }
 
-  const dummyObj = [
-    {"email": "user1@test.com", "username": "user1", "status": "pending"},
-    {"email": "user2@test.com", "username": "user2", "status": "rejected"}
-  ]
-
   const renderInvite = ({ item }) => {
-    
+
     let status;
     if (item.status === "pending") {
       status = <Text>  Pending  </Text>
     } else if (item.status === "rejected") {
       status = <Text>  Rejected  </Text>
-    } else {
-      return
     }
+    
     return (
       <View style={[globalStyles.flexRow,{alignItems:'center'}]}>
         <Text style={[styles.memberList]}>{item.username}</Text>
@@ -70,18 +72,21 @@ export default function Invite() {
   return (
     <View style={[globalStyles.container,{backgroundColor: primary}]}>
 
+      {
+        noInvitesSent ? 
+        <Text style={styles.noInviteText}>
+          You have not sent any invites yet! {'\n'}
+          Start sending invitations to plan the trip together
+        </Text> 
+        :""
+      }
+
       <View style={[globalStyles.header,styles.headerExtra,globalStyles.flexRow]}>
         <Text style={[globalStyles.header, {paddingVertical:0}]}>Send Invite</Text>
         <TouchableOpacity onPress={()=> setShow(!show)}>
           <MaterialCommunityIcons name={show ? 'chevron-up' : 'chevron-down'} size={30}/>
         </TouchableOpacity>
       </View>
-
-      {/* if invitesSent.length === 0 && only 1 trip member don't display Invite Status, display message */}
-      {/* <Text>
-        You have not sent any invites yet! 
-        Start sending invitations to plan the trip together
-      </Text> */}
 
       {show ? 
 
@@ -114,15 +119,20 @@ export default function Invite() {
       </View>
       : ""
       }
-      <Text style={[globalStyles.header,styles.headerExtra]}>Invite Status</Text>
-      <View style={{maxHeight:"50%"}}>
-        <FlatList
-          keyExtractor={(item) => item.email}
-          data={dummyObj}
-          renderItem={renderInvite}
-          ItemSeparatorComponent={<Seperator/>}
-        />
-      </View>
+      { Array.isArray(pendingInvites) && pendingInvites.length !== 0 ? 
+        <>
+          <Text style={[globalStyles.header,styles.headerExtra]}>Invite Status</Text>
+          <View style={{maxHeight:"50%", marginBottom:5}}>
+            <FlatList
+              keyExtractor={(item, index) => index}
+              data={pendingInvites}
+              renderItem={renderInvite}
+              ItemSeparatorComponent={<Seperator/>}
+            />
+          </View>
+        </>
+        :''
+      }
 
       <Text style={[globalStyles.header,styles.headerExtra]}>Members</Text>
       <FlatList
@@ -150,6 +160,12 @@ const styles = StyleSheet.create({
   formik:{
     marginBottom:10,
     paddingHorizontal:10,
+  },
+  noInviteText:{
+    textAlign:'center', 
+    fontSize:15, 
+    marginVertical:10,
+    marginBottom:20
   },
 
   memberList: {//almost same as voteing.js
