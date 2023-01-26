@@ -1,6 +1,6 @@
 import React, { useState, useContext, useEffect } from 'react'
 import { StyleSheet, Text, FlatList, View, TouchableOpacity, SectionList } from 'react-native';
-import { globalStyles, colors, AddButton, StyledModal, BlueButton, YellowButton, EditModal, EditButton, YesOrNoCard } from "../styles/globalStyles";
+import { globalStyles, colors, AddButton, StyledModal, BlueButton, YellowButton, EditModal, EditButton, YesOrNoCard, Seperator } from "../styles/globalStyles";
 const { primary, blue, yellow } = colors
 
 import { AuthContext } from '../context/AuthContext';
@@ -108,6 +108,7 @@ export default function Trips({ navigation }) {
           data={trips}
           // numColumns={2}
           // columnWrapperStyle={styles.row}
+          ItemSeparatorComponent={<Seperator/>}
           renderItem={({ item }) => (
             <TouchableOpacity onPress={() => pressHandler(item)} style={styles.item}>
               <View style={styles.tripInnerView}>
@@ -172,35 +173,20 @@ const styles = StyleSheet.create({
   row: { //each row of flat list
     justifyContent: 'space-between',
   },
-  item: { // each trip file wrapper
-    backgroundColor: blue,
-    padding: 5,
-    marginBottom: 5,
-    height: 85, //Changed this from 100 to 85
-    // width: 179,
-    borderRadius: 6,
-    // alignItems: 'flex',
-
-
-
-    // flex:1,
-    // shadowColor: 'black',
-    // shadowOpacity: 0.8,
-    // elevation: 3,
-  },
   tripView: {
     flex: 2,
     shadowColor: 'grey',
     shadowOpacity: 0.8,
     elevation: 7,
 
-    padding: 5,
+    // padding: 5,
     borderTopLeftRadius: 6,
     borderTopRightRadius: 6,
     backgroundColor: primary
   },
   tripInnerView: {//inside each trip file
     flex: 1,
+    padding:10
   },
   tripName: {
     alignItems: 'center',
@@ -212,6 +198,7 @@ const styles = StyleSheet.create({
     fontSize: 16,
     paddingHorizontal: 5,
     paddingTop: 5,
+    color: '#9e9e9e'
   },
   inviteText: {
     fontSize: 16,
