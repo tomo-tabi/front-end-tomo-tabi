@@ -10,6 +10,7 @@ import TimeLine from '../screens/TimeLine';
 import Invite from '../screens/Invite';
 import { ExpenseTable } from '../screens/Expenses';
 import TimelineStack from './TimelineStack';
+import { View } from 'react-native';
 
 const Tab = createBottomTabNavigator();
 
@@ -19,31 +20,30 @@ export default function TripTabNav() {
     <Tab.Navigator initialRouteName='TimeLine'
       screenOptions={({ route }) => ({
         headerShown:false,
+        tabBarLabelStyle:{ fontSize: 12, },
         tabBarIcon: ({ focused }) => {
           let iconName;
 
           if (route.name === 'TimeLine') {
-            iconName = focused
-              ? 'timeline'
-              : 'timeline-outline';
+            iconName = 'timeline'
           } else if (route.name === 'Calendar') {
-            iconName = focused 
-            ? 'calendar-blank' 
-            : 'calendar-blank-outline';
+            iconName =  'calendar-blank' 
           } else if (route.name === 'Expenses'){
-            iconName = focused 
-            ? 'account-cash' 
-            : 'account-cash-outline';
+            iconName =  'account-cash' 
           } else if (route.name === 'Invite'){
-            iconName = focused 
-            ? 'account-plus'
-            : 'account-plus-outline';
+            iconName =  'account-plus'
           }
-
-          return <MaterialCommunityIcons name={iconName} size={30} />
+          return (
+            <View style={{ flex: 1 }}>
+              <MaterialCommunityIcons name={iconName} size={30} color={focused ? blue : '#9E9E9E'}/>
+            </View>
+          )
         },
         tabBarActiveTintColor:blue,
-        
+        // tabBarActiveBackgroundColor: blue,
+        tabBarInactiveTintColor:'#9E9E9E',
+        tabBarStyle:{ height:70 },
+        tabBarItemStyle:{ paddingVertical:10, },
       })}
     >
       <Tab.Screen name="TimeLine" component={TimelineStack} />
