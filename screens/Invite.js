@@ -18,7 +18,8 @@ export default function Invite() {
   const { getUsersInTrip, usersInTrip } = useContext(TripContext);
 
   const [ show, setShow ] = useState(false);
-  const [ noInvitesSent, setNoInvitesSent ] = useState(false);
+  const [ pendingInvites, setPendingInvites ] = useState(null);
+  const [ noInvitesSent, setNoInvitesSent ] = useState(true);//default: no invites sent
 
   useEffect(() => {
     getUsersInTrip(tripid);
