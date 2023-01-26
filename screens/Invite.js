@@ -52,21 +52,15 @@ export default function Invite() {
     )
   }
 
-  // const dummyObj = [
-  //   {"email": "user1@test.com", "username": "user1", "status": "pending"},
-  //   {"email": "user2@test.com", "username": "user2", "status": "rejected"}
-  // ]
-
   const renderInvite = ({ item }) => {
-    
+
     let status;
     if (item.status === "pending") {
       status = <Text>  Pending  </Text>
     } else if (item.status === "rejected") {
       status = <Text>  Rejected  </Text>
-    } else {
-      return
     }
+    
     return (
       <View style={[globalStyles.flexRow,{alignItems:'center'}]}>
         <Text style={[styles.memberList]}>{item.username}</Text>
@@ -128,7 +122,7 @@ export default function Invite() {
       { Array.isArray(pendingInvites) ? 
         <>
           <Text style={[globalStyles.header,styles.headerExtra]}>Invite Status</Text>
-          <View style={{maxHeight:"50%"}}>
+          <View style={{maxHeight:"50%", marginBottom:5}}>
             <FlatList
               keyExtractor={(item, index) => index}
               data={pendingInvites}
