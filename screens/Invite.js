@@ -28,15 +28,15 @@ export default function Invite() {
 
 
   useEffect(() => {
-    if (Array.isArray(usersInTrip)) {
-      if (usersInTrip.length <= 1) {
-        // console.log("true??",usersInTrip.length);
-        setShow(true);
-      } else if (usersInTrip.length > 1) {
-        setShow(false);
-      }
+    // console.log("💄",invitesSent, show, noInvitesSent);
+    if (invitesSent) {// user sent invite before
+      setShow(false);
+      setNoInvitesSent(false);
+    } else {
+      setShow(true);
+      setNoInvitesSent(true);
     }
-  },[usersInTrip])
+    // what should I do if user never sent invite but there is more than 1 member in trip?
 
   useEffect(() => {
     console.log("💄",!invitesSent, show);
@@ -49,6 +49,7 @@ export default function Invite() {
   console.log(noInvitesSent);
 
   
+  },[invitesSent])
 
   const renderMember = ({ item }) => {
     return (
