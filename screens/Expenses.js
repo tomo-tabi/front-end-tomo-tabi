@@ -1,7 +1,7 @@
 import React, { useState, useCallback, useContext, useEffect } from "react";
 import { Linking, StyleSheet, View, TouchableOpacity, Text, ScrollView } from "react-native";
 import { Table, TableWrapper, Row, Cell } from "react-native-table-component";
-import { globalStyles, colors, AddButton, StyledModal, TempButton, EditModal, EditButton } from "../styles/globalStyles";
+import { globalStyles, colors, AddButton, StyledModal, TempButton, EditButton } from "../styles/globalStyles";
 
 import { AuthContext } from "../context/AuthContext";
 import { ExpContext } from "../context/ExpContext";

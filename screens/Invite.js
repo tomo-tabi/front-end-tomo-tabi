@@ -18,33 +18,30 @@ export default function Invite() {
   const { getUsersInTrip, usersInTrip } = useContext(TripContext);
 
   const [ show, setShow ] = useState(false);
-  const [ noInvitesSent, setNoInvitesSent ] = useState(true);
+  const [ pendingInvites, setPendingInvites ] = useState(null);
+  const [ noInvitesSent, setNoInvitesSent ] = useState(true);//default: no invites sent
 
   useEffect(() => {
     getUsersInTrip(tripid);
     getInvitesSent();
   },[])
 
-  
-
   useEffect(() => {
-    if (Array.isArray(usersInTrip)) {
-      if (usersInTrip.length <= 1) {
-        // console.log("true??",usersInTrip.length);
-        setShow(true);
-      } else if (usersInTrip.length > 1) {
-        setShow(false);
-      }
-    }
-  },[usersInTrip])
-
-  useEffect(() => {
-    if (invitesSent && show) {// has invites
-      // console.log("💄",!invitesSent, show);
+    // console.log("💄",invitesSent, show, noInvitesSent);
+    if (invitesSent) {// user sent invite before
+      setShow(false);
       setNoInvitesSent(false);
+    } else {
+      setShow(true);
+      setNoInvitesSent(true);
     }
-  },[invitesSent, show])
-  console.log(noInvitesSent);
+    // what should I do if user never sent invite but there is more than 1 member in trip?
+
+    if (Array.isArray(invitesSent)) { 
+      let pending = invitesSent.filter((invite) => invite.status !== 'accepted');
+      setPendingInvites(pending);
+    }
+  },[invitesSent])
 
   
 
@@ -54,21 +51,15 @@ export default function Invite() {
     )
   }
 
-  // const dummyObj = [
-  //   {"email": "user1@test.com", "username": "user1", "status": "pending"},
-  //   {"email": "user2@test.com", "username": "user2", "status": "rejected"}
-  // ]
-
   const renderInvite = ({ item }) => {
-    
+
     let status;
     if (item.status === "pending") {
       status = <Text>  Pending  </Text>
     } else if (item.status === "rejected") {
       status = <Text>  Rejected  </Text>
-    } else {
-      return
     }
+    
     return (
       <View style={[globalStyles.flexRow,{alignItems:'center'}]}>
         <Text style={[styles.memberList]}>{item.username}</Text>
@@ -127,13 +118,13 @@ export default function Invite() {
       </View>
       : ""
       }
-      { invitesSent ? 
+      { Array.isArray(pendingInvites) && pendingInvites.length !== 0 ? 
         <>
           <Text style={[globalStyles.header,styles.headerExtra]}>Invite Status</Text>
-          <View style={{maxHeight:"50%"}}>
+          <View style={{maxHeight:"50%", marginBottom:5}}>
             <FlatList
               keyExtractor={(item, index) => index}
-              data={invitesSent}
+              data={pendingInvites}
               renderItem={renderInvite}
               ItemSeparatorComponent={<Seperator/>}
             />
