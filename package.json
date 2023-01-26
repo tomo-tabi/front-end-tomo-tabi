@@ -25,9 +25,11 @@
     "react-native": "0.70.5",
     "react-native-calendars": "^1.1275.0",
     "react-native-dialog": "^9.3.0",
+    "react-native-modal": "^13.0.1",
     "react-native-safe-area-context": "4.4.1",
     "react-native-screens": "~3.18.0",
     "react-native-table-component": "^1.2.2",
+    "react-native-timeline-flatlist": "^0.8.0",
     "styled-components": "^5.3.6"
   },
   "devDependencies": {

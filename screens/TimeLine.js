@@ -1,7 +1,7 @@
 import React, { useState, useEffect, useContext } from 'react';
-import { StyleSheet, Text, FlatList, View } from 'react-native';
-import { globalStyles, colors, AddButton, StyledModal, EditModal, EditButton } from "../styles/globalStyles";
-const {primary, blue, grey} = colors
+import { StyleSheet, Text, FlatList, View, TouchableOpacity } from 'react-native';
+import { globalStyles, colors, AddButton, StyledModal, EditButton } from "../styles/globalStyles";
+const { primary, blue, grey } = colors
 
 import { EventContext } from '../context/EventContext';
 
@@ -9,6 +9,10 @@ import moment from 'moment';
 
 import AddTimeline from './AddTimeline';
 import EditTimeline from './EditTimeline';
+
+
+import Timeline from 'react-native-timeline-flatlist'
+
 
 import Dialog from "react-native-dialog";//New
 
@@ -19,7 +23,14 @@ export default function TimeLine() {
   const [dateSortEvents, setDateSortEvents] = useState({})
   const [modalEditOpen, setModalEditOpen] = useState(false)
   const [eventEditData, setEventEditData] = useState({}) // Set the event I want to send to Edit Timeline component
+
+  const [dayViewData, setDayViewData] = useState([])
+
+
   const [visible, setVisible] = useState(true);
+
+
+
 
   //fetch one trip detail with trip id 
   
@@ -73,42 +84,54 @@ export default function TimeLine() {
     } 
   }, [tripEvents])
 
+  const setDayData = (date, events) => {
+    const eventArr = []
 
-  const renderItem = ({ item }) => {
+    events.forEach((event) => {
+      const eventObject = {}
+      const objToSendToEdit = {}
+      objToSendToEdit["date"] = moment(date + " " + event["time"], "dddd, MMMM Do YYYY HH:mm A")
+      objToSendToEdit["event_name"] = event["event_name"]
+      objToSendToEdit["event_id"] = event["id"]
+
+
+      eventObject["time"] = <Text> {event["time"]} </Text>
+      eventObject["title"] = (
+        //The width is set up by number. I really dont like this, but I dont know how to do it to make it look good
+        <View style={{ width:261, flexDirection: 'row', justifyContent: 'space-between' }}>
+          <Text>{event["event_name"]} </Text>
+          <EditButton
+            setModalOpen={setModalEditOpen}
+            setEditData={setEventEditData}
+            editData={objToSendToEdit}
+          />
+        </View>)
+      eventObject["description"] = <Text> Description... </Text>
+
+      eventArr.push(eventObject)
+    })
+
+    setDayViewData(eventArr)
+
+  }
+
+
+  const renderItem = ({ item, index }) => {
+    index++
     let eventArr = item.info;
     return (
-      <View style={styles.dayAndEvent}>
-        <Text style={styles.date}>{item.date}</Text>
-        {eventArr.map((eventObj, i) => {
-          const objToSend = {}
-          objToSend["date"] = moment(item["date"] + " " + eventObj["time"], "dddd, MMMM Do YYYY HH:mm A")
-          objToSend["event_name"] = eventObj["event_name"]
-          objToSend["event_id"] = eventObj["id"]
-          
-          let viewStyle = styles.dayContainer;
-
-          if (eventArr.length - 1 !== i ){
-            viewStyle=[styles.dayContainer, {
-              borderBottomColor:grey,
-              borderBottomWidth:1,
-            }];
-          }
-
-          return (
-            <View key={eventObj.id} style={viewStyle}>
-              <View style={{flexDirection:'column'}}>
-                {/* <Text style={styles.dayTime}>{eventObj.time}</Text> */}
-                <Text style={styles.dayEvent}>▪︎ {eventObj.event_name}</Text>
-              </View>
-              
-              <EditButton
-                  setModalOpen={setModalEditOpen}
-                  setEditData={setEventEditData}
-                  editData={objToSend}
-                />
-            </View>
-          )
-        })}
+      <View
+        // onPress={() => { console.log(eventArr); setDayData(item.date, eventArr); }}
+        style={styles.dateView}
+      >
+        {/*
+        We need to change the Day X or add all days of the trip.
+        Not all days have events.
+        Should we add all the empty days too and just say "No events today."?
+        Or do  we only want to show the days that have events?
+        */}
+        <Text style={styles.dateText} onPress={() => { setDayData(item.date, eventArr); }}> Day {index}</Text>
+        <Text>{item.date}</Text>
       </View>
     )
   }
@@ -124,11 +147,14 @@ export default function TimeLine() {
     
       <View style={globalStyles.container}>
         {Array.isArray(dateSortEvents) &&
-          <FlatList
-            keyExtractor={(item) => item.id}
-            data={dateSortEvents}
-            renderItem={renderItem}
-          />
+          <View style={{ height: 80 }}>
+            <FlatList
+              horizontal={true}
+              keyExtractor={(item) => item.id}
+              data={dateSortEvents}
+              renderItem={renderItem}
+            />
+          </View>
         }
         {tripEvents === null &&
           <View>
@@ -153,11 +179,38 @@ export default function TimeLine() {
           EditData={eventEditData}
         />
 
+        {dayViewData &&
+          <Timeline
+            style={styles2.list}
+            data={dayViewData}
+            circleSize={20}
+            circleColor='rgb(45,156,219)'
+            lineColor='rgb(45,156,219)'
+            timeContainerStyle={{ minWidth: 52 }}
+            timeStyle={{ textAlign: 'center', backgroundColor: '#ff9797', color: 'white', padding: 5, borderRadius: 13 }}
+            descriptionStyle={{ color: 'gray' }}
+            options={{
+              style: { paddingTop: 5 }
+            }}
+            innerCircle={'dot'}
+            separator={false}
+            detailContainerStyle={{ marginBottom: 20, paddingLeft: 5, paddingRight: 5, backgroundColor: "#BBDAFF", borderRadius: 10 }}
+            // columnFormat='two-column'
+            isUsingFlatlist={true}
+          />
+        }
+
         {/* <EditModal
           modalEditOpen={modalEditOpen}
           setModalEditOpen={setModalEditOpen}
           EditComponent={EditTimeline}
           EditData={eventEditData}
+        /> */}
+
+        {/* <DayView
+          setDayViewModal={setDayViewModal}
+          dayViewModal={dayViewModal}
+          dayViewData={dayViewData}
         /> */}
 
         <AddButton
@@ -168,28 +221,67 @@ export default function TimeLine() {
   )
 }
 
+
+const styles2 = StyleSheet.create({
+  container: {
+    flex: 1,
+
+    // height:0,
+  },
+  list: {
+    flex: 1,
+    // marginTop: 20,
+  },
+  title: {
+    fontSize: 16,
+    fontWeight: 'bold'
+  },
+  descriptionContainer: {
+    flexDirection: 'row',
+    paddingRight: 50
+  },
+  image: {
+    width: 50,
+    height: 50,
+    borderRadius: 25
+  },
+  textDescription: {
+    marginLeft: 10,
+    color: 'gray'
+  }
+});
+
 const styles = StyleSheet.create({
-  dayAndEvent:{
-    backgroundColor:primary, 
-    marginVertical:10,
+  dayAndEvent: {
+
+    backgroundColor: 'black',
+    // marginVertical: 10,
     borderRadius: 6,
-    overflow:'hidden'
+    // overflow: 'hidden',
+  },
+  dateView: {
+    padding: 20,
+    borderRadius: 6,
+    backgroundColor: blue,
+    textAlign: 'center'
+  },
+  dateText: {
+    fontSize: 24,
   },
 
   date: {
     fontWeight: "bold",
     fontSize: 24,
-    padding: 20,
-    borderRadius: 6,
-    backgroundColor: blue
+
+    // height: 80,
   },
 
   dayContainer: {
     backgroundColor: primary,
     paddingTop: 5,
     paddingRight: 5,
-    flexDirection:'row', 
-    justifyContent:'space-between',
+    flexDirection: 'row',
+    justifyContent: 'space-between',
   },
 
   dayTime: {
