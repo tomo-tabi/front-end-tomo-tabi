@@ -184,16 +184,21 @@ export const Seperator = () => {
 const darkLight = "#9CA3AF";
 
 export const MyTextInput = ( { label, icon, ...props }) => {
+  
+  let containerStyles = props.multiline ? [globalStyles.textInput,{alignItems:'flex-start', height:undefined}] : globalStyles.textInput;
+  
+  let textStyles = props.multiline ? [globalStyles.textInputText,{textAlignVertical:"top", paddingTop: 5, width: 310 }] : globalStyles.textInputText;
+
   const touchRef = useRef();
   return (
       <View>
         <Text>{label}</Text>
         <TouchableOpacity 
           onPress={() => {touchRef.current.focus()}}
-          style={globalStyles.textInput}
+          style={containerStyles}
         >
           <MaterialCommunityIcons name={icon} size={30}/>
-          <TextInput ref={touchRef} style={globalStyles.textInputText} 
+          <TextInput ref={touchRef} style={textStyles} 
             placeholderTextColor={darkLight}
             {...props}
           />
