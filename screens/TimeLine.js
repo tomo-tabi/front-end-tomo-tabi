@@ -28,9 +28,11 @@ export default function TimeLine({ navigation }) {
 
   const [visible, setVisible] = useState(true);
 
+
   //fetch one trip detail with trip id 
   
   useEffect(() => {
+    setDayViewData([])
     if (tripEvents !== null) {
       // setDateSortEvents({});
       const Obj = {}
