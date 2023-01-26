@@ -1,6 +1,6 @@
 import React, { useState, useContext, useEffect } from 'react'
 import { StyleSheet, Text, FlatList, View, TouchableOpacity, SectionList } from 'react-native';
-import { globalStyles, colors, AddButton, StyledModal, BlueButton, YellowButton, EditModal, EditButton } from "../styles/globalStyles";
+import { globalStyles, colors, AddButton, StyledModal, BlueButton, YellowButton, EditModal, EditButton, YesOrNoCard } from "../styles/globalStyles";
 const { primary, blue, yellow } = colors
 
 import { AuthContext } from '../context/AuthContext';
@@ -85,24 +85,16 @@ export default function Trips({ navigation }) {
             }}
             data={invites}
             renderItem={({ item }) => (
-              <View style={styles.inviteTripCard}>
-                
-                <View style={styles.inviteTripInfo}>
-                  <Text style={styles.inviteText}>User '{item.username}' has invited you trip:</Text>
-                  <Text style={styles.inviteTripName}>{item.name}</Text>
-                </View>
-
-                <View style={styles.inviteBtnView}>
-                  <YellowButton
-                    onPress={() => acceptInvites(item.id)}
-                    iconName='check'
-                  />
-                  <YellowButton
-                    onPress={() => rejectInvites(item.id)}
-                    iconName='window-close'
-                  />
-                </View>
-              </View>
+              <YesOrNoCard
+                propmt={
+                  <View style={{paddingHorizontal: 5}}>
+                    <Text style={styles.inviteText}>User '{item.username}' has invited you trip:</Text>
+                    <Text style={styles.inviteTripName}>{item.name}</Text>
+                  </View>
+                }
+                yesFunc={() => acceptInvites(item.id)}
+                noFunc={() => rejectInvites(item.id)}
+              />
             )}
           />
         </View>
