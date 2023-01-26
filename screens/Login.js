@@ -1,5 +1,5 @@
 import React, { useState, useContext } from 'react';
-import { View, Text, TouchableOpacity, StyleSheet, Image } from "react-native";
+import { View, Text, TouchableOpacity, StyleSheet, Image, Alert } from "react-native";
 import {Formik} from 'formik';
 import { globalStyles, colors, BlueButton, MyTextInput, PasswordTextInput } from "../styles/globalStyles";
 const { primary, greyBlue } = colors
@@ -29,7 +29,17 @@ export default function Login ( { navigation } ) {
         <Formik
           initialValues={{ email: '', password: ''}}
           onSubmit={(values) => {
-            login(values);
+            if(values.email == "" || values.password == "") {
+              return Alert.alert(
+                  "Blank spot!",
+                  "Please fill all of the fields",
+                  [
+                    { text: "OK", onPress: () => console.log("OK Pressed") }
+                  ]
+                );
+            }else {
+              login(values);
+            }
           }}
         >
         {(props) => (

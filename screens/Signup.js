@@ -38,7 +38,25 @@ export default function Signup () {
         <Formik
           initialValues={{ username: '', email: '', password: '', confirmpassword: ''}}
           onSubmit={(values) => {
-            pressHandler(values);
+            if(values.username == "" || values.email == "" || values.password == "" || values.confirmpassword == "") {
+              return Alert.alert(
+                  "Blank spot!",
+                  "Please fill all of the fields",
+                  [
+                    { text: "OK", onPress: () => console.log("OK Pressed") }
+                  ]
+                );
+            }else if(values.password !== values.confirmpassword) {
+              return Alert.alert(
+                "Wrong Password",
+                "comfirmation Password is wrong",
+                [
+                  { text: "OK", onPress: () => console.log("OK Pressed") }
+                ]
+              );
+            }else {
+              pressHandler(values);
+            }
           }}
         >
         {(props) => (
