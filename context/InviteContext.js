@@ -55,24 +55,6 @@ export function InviteProvider({children}) {
     }
   }
 
-  const getInvitesSent = async () => {
-    try{
-      const getInvitesSent = await fetch(`http://${API_URL}:8080/invite/sent/${tripid}`, {
-        method:"GET",
-        headers: authHeader,
-      });
-
-      if(getInvitesSent.status === 404){ //need?
-        return setInvitesSent(null);
-      };
-
-      checkStatus(getInvitesSent, setInvitesSent);
-
-    } catch (e) {
-      console.log(`Get Invite Sent Error: ${e}`);
-    }
-  }
-
   const acceptInvites = async (inviteID) => {
     try{
       const acceptInvites = await fetch(`http://${API_URL}:8080/invite/accept/${inviteID}`,{
