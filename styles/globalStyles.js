@@ -335,9 +335,9 @@ export const StyledDTPicker = ({ label, onPress, iconName, ...textInputProps }) 
   )
 };
 
-export const BlueButton = ({ onPress, buttonText }) => {
+export const BlueButton = ({ onPress, buttonText, style }) => {
   return (
-    <TouchableOpacity onPress={onPress} style={globalStyles.buttonStyle}>
+    <TouchableOpacity onPress={onPress} style={[globalStyles.buttonStyle, style]}>
       <Text style={globalStyles.buttonText}>{buttonText}</Text>
     </TouchableOpacity>
   )
