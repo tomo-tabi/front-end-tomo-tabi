@@ -10,7 +10,7 @@ import moment from 'moment';
 
 export default function EditTimeline({ setModalOpen, EditData }) {
   const { editTripEvents, deleteTripEvents } = useContext(EventContext)
-  
+
   // for time date picker
   const [date, setDate] = useState(EditData["date"])
   const [mode, setMode] = useState('date');
@@ -51,14 +51,15 @@ export default function EditTimeline({ setModalOpen, EditData }) {
     setModalOpen(false)
   }
 
-  return(
+  return (
     <>
       <Formik
-        initialValues={{ 
-            eventName: EditData["event_name"], 
-            eventDate: date,
-            event_id: EditData["event_id"],
-        }}     
+        initialValues={{
+          eventName: EditData["event_name"],
+          eventDate: date,
+          event_id: EditData["event_id"],
+          description: EditData["description"]
+        }}
       >
         {(props) => (
           <View>
@@ -89,14 +90,23 @@ export default function EditTimeline({ setModalOpen, EditData }) {
                 mode={mode}
                 is24Hour={false}
                 display="default"
-                onChange={(event, selectedDate)=> {
-                  onChange(undefined,selectedDate)
-                  props.setFieldValue('eventDate',selectedDate)
+                onChange={(event, selectedDate) => {
+                  onChange(undefined, selectedDate)
+                  props.setFieldValue('eventDate', selectedDate)
                 }}
               />
             )}
+
+            <MyTextInput
+              label="Event Description"
+              icon="account-outline"
+              placeholder="Add a description for this event"
+              value={props.values.description}
+              onChangeText={props.handleChange('description')}
+              multiline={true}
+            />
             <BlueButton
-            onPress={() => {editEvent(props.values)}}
+              onPress={() => { editEvent(props.values) }}
               buttonText="Submit Edit"
             />
             <BlueButton
