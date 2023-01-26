@@ -1,4 +1,5 @@
 import React, { useContext, useEffect, useState } from 'react';
+import Dialog from "react-native-dialog";
 import { FlatList, View, Text, TouchableOpacity ,StyleSheet } from 'react-native';
 import { MaterialCommunityIcons } from '@expo/vector-icons';
 import { globalStyles, colors, MyTextInput, BlueButton, Seperator, status } from "../styles/globalStyles";
@@ -13,13 +14,15 @@ import { TripContext } from '../context/TripContext';
 import { EventContext } from '../context/EventContext';
 
 export default function Invite() {
-  const { postInvite, getInvitesSent, invitesSent } = useContext(InviteContext);
+  const { postInvite, getInvitesSent, invitesSent, deleteInviteSent } = useContext(InviteContext);
   const { tripid } = useContext(EventContext);
   const { getUsersInTrip, usersInTrip } = useContext(TripContext);
 
   const [ show, setShow ] = useState(false);
   const [ pendingInvites, setPendingInvites ] = useState(null);
   const [ noInvitesSent, setNoInvitesSent ] = useState(true);//default: no invites sent
+  const [ showDialog, setShowDialog ] = useState(false);
+  const [ inviteid, setInviteid] = useState(null);
 
   useEffect(() => {
     getUsersInTrip(tripid);
@@ -51,6 +54,17 @@ export default function Invite() {
     )
   }
 
+  const handleCancel = () => {
+    setShowDialog(false);
+  };
+
+  const handleDelete = () => {
+    // console.log(deleteInviteSent);
+    deleteInviteSent(inviteid);
+    setShowDialog(false);
+  };
+
+
   const renderInvite = ({ item }) => {
 
     let status;
@@ -63,13 +77,27 @@ export default function Invite() {
     return (
       <View style={[globalStyles.flexRow,{alignItems:'center'}]}>
         <Text style={[styles.memberList]}>{item.username}</Text>
-        <Text style={[styles.status, styles[item.status]]}>{status}</Text>
+        { item.status === "rejected" ?
+          <TouchableOpacity onPress={() => { setInviteid(item.id); setShowDialog(true); }}>
+            <Text style={[styles.status, styles[item.status]]}>{status}</Text>
+          </TouchableOpacity>
+          :<Text style={[styles.status, styles[item.status]]}>{status}</Text>
+        }
       </View>
     )
   }
 
   return (
     <View style={[globalStyles.container,{backgroundColor: primary}]}>
+
+      <Dialog.Container visible={showDialog}>
+        <Dialog.Title>Delete Invite Sent</Dialog.Title>
+        <Dialog.Description>
+          Do you want to delete this invite? You cannot undo this action.
+        </Dialog.Description>
+        <Dialog.Button label="Cancel" onPress={handleCancel}/>
+        <Dialog.Button label="Delete" onPress={handleDelete}/>
+      </Dialog.Container>
 
       {
         noInvitesSent ? 
