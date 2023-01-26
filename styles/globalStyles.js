@@ -20,6 +20,8 @@ export const accOrRej = {
 }
 
 export const status = {
+  accepted:'rgb(35, 136, 35)',
+  acceptedLight:'rgba(35, 136, 35, 0.8)',
   pending:'rgb(255, 191, 0)',
   pendingLight:`rgba(255, 191, 0, 0.2)`,
   rejected:'rgb(210, 34, 45)',
