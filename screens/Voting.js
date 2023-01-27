@@ -1,24 +1,53 @@
+import { useContext, useEffect, useState } from "react";
 import { View, Text, StyleSheet, TouchableOpacity, FlatList } from "react-native"
 import { MaterialCommunityIcons } from '@expo/vector-icons';
 import { globalStyles, colors, Seperator, YesOrNoCard } from "../styles/globalStyles"
 const { primary, grey } = colors
 
+import { VoteContext } from "../context/VoteContext";
+import { TripContext } from '../context/TripContext';
+import { AuthContext } from "../context/AuthContext";
+
 export default function Voting({ route, navigation }) {
-  // fucntion to naviagte to Voting (from timeline?)
+  const { userData } = useContext(AuthContext);
+  const { votes, userVote, getVotes, getUserVote, postYesVote, postNoVote, updateYesVote, updateNoVote } = useContext(VoteContext);
+  const { usersInTrip } = useContext(TripContext);
 
-  // const pressHandler = (eventName) => {
-  //   navigation.navigate('Voting',{
-  //     eventName: eventName
-  //   })
-  // } 
+  const [ voteInfo, setVoteInfo ] = useState(null);
+  const [ editOpen, seteditOpen ] = useState(false);
 
-  const eventName = route.eventName || "Randome Event";
+  const eventName = route.params.eventName || "Random Event";
+  const eventid = route.params.eventid;
 
-  const dummyObj = [
-    {"username": "user1", "status": "accepted"},
-    {"username": "user2", "status": "rejected"},
-    {"username": "user3", "status": "rejected"},
-  ]
+  useEffect(() => {
+    getVotes(eventid);
+    getUserVote(eventid);
+  },[])
+  // console.log(userVote[0]);
+
+  useEffect(() => {
+    
+    if (votes !== null) {
+      let voteArr = votes.voteArray
+      
+      let notVote = usersInTrip.filter((obj) => {
+        // console.log(obj.username);
+        for ( let i = 0 ; i < votes.voteArray.length ; i ++) {
+          return obj.username !== votes.voteArray[i].username
+        }
+      })
+      // console.log(voteArr);
+      let res = [...voteArr, ...notVote];
+      setVoteInfo(res);
+      // console.log(notVote);
+      
+    } else {//no votes at all
+      setVoteInfo(usersInTrip);
+    }
+
+    
+  },[votes, userVote])
+
 
   // API_URL/vote/yes/:eventid
   // API_URL/vote/no/:eventid
@@ -26,39 +55,92 @@ export default function Voting({ route, navigation }) {
   // this screen is voting detail view
   const renderItem = ({ item }) => {
     
-    let status;
-    if (item.status === "accepted") {
-      status = <MaterialCommunityIcons name="check" size={20}/>;
-    } else {
-      status = <MaterialCommunityIcons name="window-close" size={20}/>
+    let status, vote;
+    // console.log(item);
+
+    if(item.vote === undefined) {
+      vote = <MaterialCommunityIcons name="dots-horizontal" size={20}/>;
+      status = "pending";
     }
+
+    if (item.vote) {
+      vote = <MaterialCommunityIcons name="check" size={20}/>;
+      status = "accepted";
+    } else if (item.vote === false) {
+      vote = <MaterialCommunityIcons name="window-close" size={20}/>
+      status = "rejected";
+    } 
+
     return (
       <View style={[globalStyles.flexRow,{alignItems:'center',}]}>
         <Text style={[styles.memberList]}>{item.username}</Text>
-        <Text style={[styles.status, globalStyles[item.status], {backgroundColor:0}]}>{status}</Text>
+        { item.username === userData.username ? 
+          <TouchableOpacity 
+            style={[styles.status, globalStyles[status], {backgroundColor:0}]}
+            onPress={() => seteditOpen(true)}
+          >
+            <Text style={[globalStyles[status],{backgroundColor:0}]}>
+            {vote}
+            </Text>
+          </TouchableOpacity>
+
+          :<Text style={[styles.status, globalStyles[status], {backgroundColor:0}]}>{vote}</Text>
+        }
       </View>
     )
   } 
-  //Voting detail view
-  // if user Voted show voting status of who voted yes/no
-  // else also show user to vote
+
   return (
     <View style={globalStyles.container}>
+
+      {
+        (userVote && userVote[0]["vote"] !== null) ? 
+        ""
+        : 
       <YesOrNoCard
         propmt={
           <Text style={styles.questionText}>Will you be attending {eventName}?</Text>
         }
+        yesFunc={() => postYesVote(eventid)}
+        noFunc={() => postNoVote(eventid)}
         //need to add yesFunc, noFunc
       />
+      }
+      {
+        editOpen ? 
+        <YesOrNoCard
+        propmt={
+          <Text style={styles.questionText}>Will you be attending {eventName}?</Text>
+        }
+        yesFunc={() => { 
+          if(!userVote[0]['vote']){
+            updateYesVote(eventid, userVote[0]['id']); 
+          }
+          seteditOpen(false); 
+        }}
+        noFunc={() => { 
+          if(userVote[0]['vote']){
+            updateNoVote(eventid, userVote[0]['id']); 
+          }
+          seteditOpen(false); 
+        }}
+        //need to add yesFunc, noFunc
+      />
+      :''
+      }
+
 
       <View>
+        {voteInfo ?
         <FlatList
           keyExtractor={(item, i) => i}
-          data={dummyObj}
+          data={voteInfo}
           renderItem={renderItem}
           style={globalStyles.card}
           ItemSeparatorComponent={()=><Seperator/>}
         />
+        :""
+        }
       </View>
 
     </View>

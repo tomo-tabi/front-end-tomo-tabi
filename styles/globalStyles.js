@@ -15,6 +15,7 @@ export const colors = {
 }
 
 export const accOrRej = {
+  pending:'rgb(255, 191, 0)',
   accepted:'rgba(35, 136, 35, 0.8)',
   rejected:'rgba(210, 34, 45, 0.8)',
 }
@@ -30,7 +31,7 @@ export const status = {
 
 
 const { primary, pink, blue, yellow, lightBlue, navy, grey, greyBlue } = colors
-const { accepted, rejected } = accOrRej
+const { accepted, rejected, pending } = accOrRej
 
 // import { globalStyles, SubmitText, MyTextInput } from "../styles/globalStyles";
 //globalStyles.addIconButton
@@ -45,7 +46,7 @@ export const globalStyles = StyleSheet.create({
   addIconButton:{//iconContainer
     alignItems:"center",
     alignSelf:"flex-end",
-    backgroundColor: pink,
+    backgroundColor: yellow,
     borderRadius: 40,
     justiftyContent:"center",
     margin:5,
@@ -149,6 +150,11 @@ export const globalStyles = StyleSheet.create({
     color:rejected,
     borderColor:rejected,
     backgroundColor:rejected
+  },
+  pending:{
+    color:pending,
+    borderColor:pending,
+    backgroundColor:pending
   },
   button:{
     margin:10,
@@ -335,10 +341,10 @@ export const StyledDTPicker = ({ label, onPress, iconName, ...textInputProps }) 
   )
 };
 
-export const BlueButton = ({ onPress, buttonText, style }) => {
+export const BlueButton = ({ onPress, buttonText, style, textStyle }) => {
   return (
     <TouchableOpacity onPress={onPress} style={[globalStyles.buttonStyle, style]}>
-      <Text style={globalStyles.buttonText}>{buttonText}</Text>
+      <Text style={[globalStyles.buttonText, textStyle]}>{buttonText}</Text>
     </TouchableOpacity>
   )
 }

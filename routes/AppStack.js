@@ -8,13 +8,14 @@ import { EventProvider } from "../context/EventContext";
 import { ExpProvider } from "../context/ExpContext";
 import { InviteProvider } from "../context/InviteContext";
 import { TripProvider } from '../context/TripContext';
+import { VoteProvider } from '../context/VoteContext';
 
 // import getHeaderTitle from '../utils/getHeaderTitle';
 const Stack = createNativeStackNavigator();
 
 export default function AppStack() {
   return (
-    <Compose components={[TripProvider, EventProvider, InviteProvider, ExpProvider]}>
+    <Compose components={[TripProvider, EventProvider, InviteProvider, ExpProvider, VoteProvider]}>
       <Stack.Navigator>
         <Stack.Screen name='Trips' component={Trips} 
           options={({route}) => ({
