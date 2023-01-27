@@ -15,7 +15,6 @@ import EditTimeline from './EditTimeline';
 
 import Timeline from 'react-native-timeline-flatlist'
 
-
 import Dialog from "react-native-dialog";//New
 
 export default function TimeLine({ }) {
