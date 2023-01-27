@@ -23,7 +23,7 @@ export default function Voting({ route, navigation }) {
     getVotes(eventid);
     getUserVote(eventid);
   },[])
-  console.log(userVote[0]);
+  // console.log(userVote[0]);
 
   useEffect(() => {
     
