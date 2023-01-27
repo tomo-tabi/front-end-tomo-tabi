@@ -23,7 +23,7 @@ export default function Voting({ route, navigation }) {
     getVotes(eventid);
     getUserVote(eventid);
   },[])
-  // console.log(userVote[0]['id']);
+  console.log(userVote[0]);
 
   useEffect(() => {
     
@@ -94,7 +94,7 @@ export default function Voting({ route, navigation }) {
     <View style={globalStyles.container}>
 
       {
-        (userVote && userVote[0]["vote"] !== undefined) ? 
+        (userVote && userVote[0]["vote"] !== null) ? 
         ""
         : 
       <YesOrNoCard
