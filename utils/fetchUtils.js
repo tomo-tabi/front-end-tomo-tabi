@@ -11,15 +11,6 @@ export const userPostOpt = (input) => {
   }
 }
 
-export const userCheckStatus = (res, req, setFunc) => {
-  // console.log("user status",req.status);
-  if (req.status === 200 || req.status === 201) {
-    setFunc(res)
-  } else {
-    Alert.alert(res.message)
-  }
-}
-
 // for post requests status will be 201 reflect that in code
 // -> get rid of anonymous functions in: postTripEvents, postExp, acceptInvites, 
 // rejectInvites, postInvite, postTrip
@@ -35,7 +26,7 @@ export const checkStatus = async (req, setFunc) => {
 
   const res = await req.json();
 
-  if (req.status === 200) {
+  if (req.status === 200 || req.status === 201) {
     setFunc(res);
   } else {
     // 500 & 201
@@ -50,7 +41,6 @@ export const sendStatus = async (req, getFunc, input) => {
     getFunc(input);
   } else {
     // 500
-    const res = await req.json();
-    checkStatus(res, req)
+    checkStatus(undefined, req)
   }
 }

@@ -109,6 +109,26 @@ export function InviteProvider({children}) {
     }
   };
 
+  const deleteInviteSent = async (inviteid) => {
+    const body = {
+      tripid:tripid
+    }
+    try {
+      const deleteInviteSent = await fetch(`http://${API_URL}:8080/invite/${inviteid}`, {
+        method:"DELETE",
+        headers: authHeader,
+        body:JSON.stringify(body)
+      });
+
+      sendStatus(deleteInviteSent, () => {
+        getInvitesSent();
+      });
+
+    } catch (e) {
+      console.log(`Delete Invite Error: ${e}`);
+    }
+  };
+
   useEffect(() => {
     if(userData){
       getInvites();
@@ -117,7 +137,7 @@ export function InviteProvider({children}) {
   
 
   return (
-    <InviteContext.Provider value={{ invites, invitesSent, rejectInvites, acceptInvites, getInvites, getInvitesSent, postInvite}}>
+    <InviteContext.Provider value={{ invites, invitesSent, rejectInvites, acceptInvites, getInvites, getInvitesSent, postInvite, deleteInviteSent}}>
       {children}
     </InviteContext.Provider>
   )

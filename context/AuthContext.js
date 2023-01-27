@@ -1,7 +1,7 @@
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import React, { createContext, useEffect, useState } from "react";
 import API_URL from "../config";
-import { userCheckStatus, userPostOpt } from "../utils/fetchUtils";
+import { userPostOpt, checkStatus } from "../utils/fetchUtils";
 
 export const AuthContext = createContext();
 
@@ -21,7 +21,6 @@ export function AuthProvider({children}) {
     }
   }
 
-  // I think this is working???
   const authHeader = {
     'Accept': 'application/json, text/plain, */*', 
     'Content-Type': 'application/json',
@@ -30,12 +29,14 @@ export function AuthProvider({children}) {
 
   const signup = async (userInput) => {
     try {
-      const signupReq = await fetch(`http://${API_URL}:8080/user/signup`,
+      const signup = await fetch(`http://${API_URL}:8080/user/signup`,
         userPostOpt(userInput)
-      )
+      );
+
+      checkStatus(signup, setData);
       
-      const signupRes = await signupReq.json();
-      userCheckStatus(signupRes, signupReq, setData)
+      // const signupRes = await signupReq.json();
+      // userCheckStatus(signupRes, signupReq, setData)
       // setData(signupRes);
 
     } catch (error) {
@@ -45,12 +46,15 @@ export function AuthProvider({children}) {
 
   const login = async (userInput) => {
     try {
-      const loginReq = await fetch(`http://${API_URL}:8080/user/login`,
+      const login = await fetch(`http://${API_URL}:8080/user/login`,
         userPostOpt(userInput)
-      )
+      );
 
-      const loginRes = await loginReq.json();
-      userCheckStatus(loginRes, loginReq, setData)
+      //can't see email not found becasue it's a 404
+      checkStatus(login, setData);
+
+      // const loginRes = await loginReq.json();
+      // userCheckStatus(loginRes, loginReq, setData)
 
     } catch (error) {
       console.error(error)
@@ -79,7 +83,7 @@ export function AuthProvider({children}) {
         setUserToken(userTokenStored);
         
         
-        const isLoggedInReq = await fetch(`http://${API_URL}:8080/user/`, {
+        const isLoggedIn = await fetch(`http://${API_URL}:8080/user/`, {
           method:"GET",
           headers: {
             'Accept': 'application/json, text/plain, */*', 
@@ -87,11 +91,17 @@ export function AuthProvider({children}) {
             'Authorization': `Bearer ${userTokenStored}`
           }
         });
+
+        if(isLoggedIn.status === 401) {
+          await AsyncStorage.removeItem('userToken');
+          setIsLoading(false);
+          return
+        }
         
-        
+        checkStatus(isLoggedIn,setUserData)
         // console.log("???", isLoggedInReq);
-        const isLoggedInRes = await isLoggedInReq.json();
-        userCheckStatus(isLoggedInRes, isLoggedInReq, setUserData)
+        // const isLoggedInRes = await isLoggedInReq.json();
+        // userCheckStatus(isLoggedInRes, isLoggedInReq, setUserData)
         setIsLoading(false);
       }
     } catch (e) {

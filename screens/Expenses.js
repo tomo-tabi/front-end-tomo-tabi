@@ -108,11 +108,11 @@ export const ExpenseTable = () => {
       sortedValuesPaid[j] -= debt;
 
       if (sortedPeople[i] === userData.username) {
-        someoneOwnsYou.push(<Text style={styles.oweCalc}>You owe {sortedPeople[j]} ¥{debt.toFixed(2)}</Text>);
+        someoneOwnsYou.push(<Text style={styles.oweCalc} key={i}>You owe {sortedPeople[j]} ¥{debt.toFixed(2)}</Text>);
       }
 
       if (sortedPeople[j] === userData.username) {
-        oweYou.push(<Text style={styles.oweCalc}>{sortedPeople[i]} owes you ¥ {debt.toFixed(2)}</Text>)
+        oweYou.push(<Text style={styles.oweCalc} key={j}>{sortedPeople[i]} owes you ¥ {debt.toFixed(2)}</Text>)
       }
 
 
@@ -173,7 +173,7 @@ export const ExpenseTable = () => {
             <Row data={tableHead} style={styles.head} textStyle={styles.text} />
             {
               tableData.map((data, i) => (
-                <TableWrapper style={styles.wrapper}>
+                <TableWrapper style={styles.wrapper} key={i}>
                     {
                       data.map((cell, j) => (
                         <Cell onPress={() => console.log(j)} key={j} data={cell} textStyle={styles.text} borderStyle={styles.cellBorderStyle} />
