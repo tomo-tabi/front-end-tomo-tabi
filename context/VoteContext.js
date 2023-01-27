@@ -36,7 +36,7 @@ export function VoteProvider({children}) {
     }
   };
 
-  const getUserVote = async (eventid) => {//all votes
+  const getUserVote = async (eventid) => {
     try{
 
       const getUserVote = await fetch(`http://${API_URL}:8080/vote/${eventid}/user`,{
@@ -56,7 +56,7 @@ export function VoteProvider({children}) {
     }
   };
 
-  const postYesVote = async (eventid) => {//all votes
+  const postYesVote = async (eventid) => {
     try{
 
       const postYesVote = await fetch(`http://${API_URL}:8080/vote/yes/${eventid}`,{
@@ -75,7 +75,7 @@ export function VoteProvider({children}) {
     }
   };
 
-  const postNoVote = async (eventid) => {//all votes
+  const postNoVote = async (eventid) => {
     try{
 
       const postNoVote = await fetch(`http://${API_URL}:8080/vote/no/${eventid}`,{
@@ -94,8 +94,46 @@ export function VoteProvider({children}) {
     }
   };
 
+  const updateYesVote = async (eventid, voteid) => {//all votes
+    try{
+
+      const updateYesVote = await fetch(`http://${API_URL}:8080/vote/yes/${voteid}`,{
+        method:"PUT",
+        headers: authHeader,
+      });
+
+      sendStatus(updateYesVote, () => {
+        getVotes(eventid);
+        getUserVote(eventid);
+        return
+      });
+
+    } catch (e) {
+      console.log(`Update Yes Votes Error: ${e}`);
+    }
+  };
+
+  const updateNoVote = async (eventid, voteid) => {
+    try{
+
+      const updateNoVote = await fetch(`http://${API_URL}:8080/vote/no/${voteid}`,{
+        method:"PUT",
+        headers: authHeader,
+      });
+
+      sendStatus(updateNoVote, () => {
+        getVotes(eventid);
+        getUserVote(eventid);
+        return
+      });
+
+    } catch (e) {
+      console.log(`Update No Votes Error: ${e}`);
+    }
+  };
+
   return (
-    <VoteContext.Provider value={{ votes, userVote, getVotes, getUserVote, postYesVote, postNoVote }}>
+    <VoteContext.Provider value={{ votes, userVote, getVotes, getUserVote, postYesVote, postNoVote, updateYesVote, updateNoVote }}>
       {children}
     </VoteContext.Provider>
   )
