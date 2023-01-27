@@ -46,7 +46,7 @@ export const globalStyles = StyleSheet.create({
   addIconButton:{//iconContainer
     alignItems:"center",
     alignSelf:"flex-end",
-    backgroundColor: pink,
+    backgroundColor: yellow,
     borderRadius: 40,
     justiftyContent:"center",
     margin:5,
