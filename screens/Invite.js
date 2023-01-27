@@ -15,8 +15,8 @@ import { EventContext } from '../context/EventContext';
 
 export default function Invite() {
   const { postInvite, getInvitesSent, invitesSent, deleteInviteSent } = useContext(InviteContext);
-  const { tripid } = useContext(EventContext);
-  const { getUsersInTrip, usersInTrip } = useContext(TripContext);
+  // const { tripid } = useContext(EventContext);
+  const { usersInTrip } = useContext(TripContext);
 
   const [ show, setShow ] = useState(false);
   const [ pendingInvites, setPendingInvites ] = useState(null);
@@ -25,7 +25,6 @@ export default function Invite() {
   const [ inviteid, setInviteid] = useState(null);
 
   useEffect(() => {
-    getUsersInTrip(tripid);
     getInvitesSent();
   },[])
 

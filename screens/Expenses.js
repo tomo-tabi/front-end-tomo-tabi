@@ -15,9 +15,9 @@ const { primary, blue } = colors;
 
 export const ExpenseTable = () => {
   const { userData } = useContext(AuthContext);//to extract username?
-  const { getUsersInTrip, usersInTrip } = useContext(TripContext);
+  const { usersInTrip } = useContext(TripContext);
   const { getExp, expData } = useContext(ExpContext);
-  const { tripid } = useContext(EventContext)
+  // const { tripid } = useContext(EventContext)
 
   const [modalOpen, setModalOpen] = useState(false);
   const [splitPaymentsData, setSplitPaymentData] = useState([[], []]);
@@ -28,7 +28,6 @@ export const ExpenseTable = () => {
 
   useEffect(() => {
     getExp();
-    getUsersInTrip(tripid);
   }, [])
 
   //format data for table
