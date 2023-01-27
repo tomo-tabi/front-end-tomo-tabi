@@ -69,12 +69,19 @@ export default function Trips({ navigation }) {
         setModalOpen={setModalOpen}
         AddComponent={AddTrip}
       />
-      <Text style={globalStyles.header}>
-        {inviteStatus ?
-          "Pending Invites"
-          : "No Invites"
-        }
-      </Text>
+      <View style={{ paddingTop:15, flexDirection:'row', justifyContent:'space-between'}}>
+        <Text style={globalStyles.header}>
+          {inviteStatus ?
+            "Pending Invites"
+            : "No Invites"
+          }
+        </Text>
+        <BlueButton
+          onPress={() => logout()}
+          buttonText="Logout"
+          style={{width: 90, padding:8, marginBottom:10}}
+        />
+      </View>
 
       {inviteStatus !== false ?
         <View style={styles.inviteView}>
@@ -142,11 +149,6 @@ export default function Trips({ navigation }) {
           </View>
         }
       </View>
-
-      <BlueButton
-        onPress={() => logout()}
-        buttonText="Logout"
-      />
 
       <StyledModal
         modalOpen={modalEditOpen}

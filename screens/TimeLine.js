@@ -4,17 +4,21 @@ import { globalStyles, colors, AddButton, StyledModal, EditButton } from "../sty
 const { primary, blue, grey } = colors
 
 import { EventContext } from '../context/EventContext';
+import { TripContext } from '../context/TripContext';
 
 import moment from 'moment';
 
 import AddTimeline from './AddTimeline';
 import EditTimeline from './EditTimeline';
 
+
+
 import Timeline from 'react-native-timeline-flatlist'
 
 import Dialog from "react-native-dialog";//New
 
-export default function TimeLine({ navigation }) {
+export default function TimeLine({ }) {
+  const { trips } = useContext(TripContext)
   const { tripEvents, tripid } = useContext(EventContext)
 
   const [modalOpen, setModalOpen] = useState(false);
@@ -26,11 +30,35 @@ export default function TimeLine({ navigation }) {
 
   const [visible, setVisible] = useState(true);
 
+  const [ firstLoad, setFirstLoad ] = useState(true)
 
-  //fetch one trip detail with trip id 
-  
+
+  const dateFormat = (date) => {
+    return moment(date).format("YYYY-MM-DD");
+  }
+
   useEffect(() => {
     setDayViewData([])
+
+    let startDateTrip, lastDateTrip
+    trips.forEach((trip) => {
+      if (trip.id === tripid) {
+        startDateTrip = dateFormat(trip.start_date)
+        lastDateTrip = dateFormat(trip.end_date)
+      }
+    })
+
+    var getDaysArray = function (start, end) {
+      for (var arr = [], dt = moment(start); dt <= moment(end); dt = moment(dt).add(1, 'days')) {
+        arr.push(moment(dt));
+      }
+      return arr;
+    };
+    var daylist = getDaysArray(dateFormat(startDateTrip), dateFormat(lastDateTrip));
+    daylist.map((v) => v.toISOString().slice(0, 10)).join("")
+
+    console.log(daylist)
+
     if (tripEvents !== null) {
       // setDateSortEvents({});
       const Obj = {}
@@ -75,10 +103,34 @@ export default function TimeLine({ navigation }) {
           date: key,
           info: Obj[key]
         }));
+
+        console.log(res)
+        const newArraytWithDays = []
+        let counter = 0
+        daylist.forEach((day) => {
+          const newObjectWithDays = {}
+          if (res[counter]) {
+            if (moment(day).format("dddd, MMM DD, YYYY") === res[counter]["date"]) {
+              newObjectWithDays["date"] = [moment(day).format("dddd, MMM DD, YYYY")]
+              newObjectWithDays["info"] = res[counter]["info"]
+              counter++ 
+            }
+            else {
+              newObjectWithDays["date"] = [moment(day).format("dddd, MMM DD, YYYY")]
+              newObjectWithDays["info"] = {}
+            }
+          }
+          else {
+            newObjectWithDays["date"] = [moment(day).format("dddd, MMM DD, YYYY")]
+            newObjectWithDays["info"] = {}
+          }
+          newArraytWithDays.push(newObjectWithDays)
+        })
+        console.log("newObjectWithDays", newArraytWithDays)
         // console.log("🍏", JSON.stringify(res));
-        setDateSortEvents(res)
+        setDateSortEvents(newArraytWithDays)
       }
-    } 
+    }
   }, [tripEvents])
 
   // const pressHandler = (eventName) => {
@@ -89,57 +141,57 @@ export default function TimeLine({ navigation }) {
 
   const setDayData = (date, events) => {
     const eventArr = []
-
-    events.forEach((event) => {
-      const eventObject = {}
-      const objToSendToEdit = {}
-      objToSendToEdit["date"] = moment(date + " " + event["time"], "dddd, MMMM Do YYYY HH:mm A")
-      objToSendToEdit["event_name"] = event["event_name"]
-      objToSendToEdit["event_id"] = event["id"]
-      objToSendToEdit["description"] = event["description"]
-
-
-      eventObject["time"] = <Text> {event["time"]} </Text>
-      eventObject["title"] = (
-        //The width is set up by number. I really dont like this, but I dont know how to do it to make it look good
-        <View style={{ width:261, flexDirection: 'row', justifyContent: 'space-between' }}>
-          <Text>{event["event_name"]} </Text>
-          <EditButton
-            setModalOpen={setModalEditOpen}
-            setEditData={setEventEditData}
-            editData={objToSendToEdit}
-          />
-        </View>)
-      eventObject["description"] = <Text> {event["description"] ? event["description"] : "There is no description yet" }</Text>
-
-      eventArr.push(eventObject)
-    })
-
-    setDayViewData(eventArr)
-
+    if(events.length == undefined) {
+      setDayViewData([])
+    }
+    if(events.length >= 1){
+      events.forEach((event) => {
+        const eventObject = {}
+        const objToSendToEdit = {}
+        objToSendToEdit["date"] = moment(date + " " + event["time"], "dddd, MMMM Do YYYY HH:mm A")
+        objToSendToEdit["event_name"] = event["event_name"]
+        objToSendToEdit["event_id"] = event["id"]
+        objToSendToEdit["description"] = event["description"]
+  
+        eventObject["time"] = <Text> {event["time"]} </Text>
+        eventObject["title"] = (
+          //The width is set up by number. I really dont like this, but I dont know how to do it to make it look good
+          <View style={{ width: 261, flexDirection: 'row', justifyContent: 'space-between' }}>
+            <Text>{event["event_name"]} </Text>
+            <EditButton
+              setModalOpen={setModalEditOpen}
+              setEditData={setEventEditData}
+              editData={objToSendToEdit}
+            />
+          </View>)
+        eventObject["description"] = <Text> {event["description"] ? event["description"] : "There is no description yet"}</Text>
+  
+        eventArr.push(eventObject)
+      })
+  
+      setDayViewData(eventArr)
+    }
   }
 
 
   const renderItem = ({ item, index }) => {
     index++
     let eventArr = item.info;
+    if(index === 1 && firstLoad){
+      setDayData(item.date, eventArr)
+      setFirstLoad(false)
+    }
     return (
       <View
         // onPress={() => { console.log(eventArr); setDayData(item.date, eventArr); }}
         style={styles.dateView}
       >
-        {/*
-        We need to change the Day X or add all days of the trip.
-        Not all days have events.
-        Should we add all the empty days too and just say "No events today."?
-        Or do  we only want to show the days that have events?
-        */}
-        <Text style={styles.dateText} onPress={() => { setDayData(item.date, eventArr); }}> Day {index}</Text>
+        <Text style={styles.dateText} onPress={ () => { setDayData(item.date, eventArr) }}> Day {index}</Text>
         <Text>{item.date}</Text>
       </View>
     )
   }
-  
+
 
   // handle pop up message
   const hideDialog = () => {
@@ -148,13 +200,13 @@ export default function TimeLine({ navigation }) {
 
   return (
     <>
-    
+
       <View style={globalStyles.container}>
         {Array.isArray(dateSortEvents) &&
           <View style={{ height: 80 }}>
             <FlatList
               horizontal={true}
-              keyExtractor={(item) => item.id}
+              keyExtractor={(item) => item.date}
               data={dateSortEvents}
               renderItem={renderItem}
             />
@@ -165,9 +217,9 @@ export default function TimeLine({ navigation }) {
             <Dialog.Container visible={visible}>
               <Dialog.Title style={styles.dialogTitle}>There is no event now!</Dialog.Title>
               <Dialog.Description style={styles.dialogDescription}>
-              Create new events to enhance your travels!
+                Create new events to enhance your travels!
               </Dialog.Description>
-              <Dialog.Button label="OK" style={styles.dialogButton} onPress={hideDialog}/>
+              <Dialog.Button label="OK" style={styles.dialogButton} onPress={hideDialog} />
             </Dialog.Container>
           </View>
         }
@@ -304,10 +356,10 @@ const styles = StyleSheet.create({
   },
 
   dialogDescription: {
-    fontWeight: 'bold', 
+    fontWeight: 'bold',
     color: 'goldenrod'
   },
-  
+
   dialogButton: {
     fontWeight: 'bold'
   },
