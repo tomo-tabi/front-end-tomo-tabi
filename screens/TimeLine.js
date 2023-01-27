@@ -17,7 +17,7 @@ import Timeline from 'react-native-timeline-flatlist'
 
 import Dialog from "react-native-dialog";//New
 
-export default function TimeLine({ }) {
+export default function TimeLine({ navigation }) {
   const { trips, getUsersInTrip } = useContext(TripContext)
   const { tripEvents, tripid } = useContext(EventContext)
 
