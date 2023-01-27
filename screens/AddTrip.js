@@ -93,8 +93,8 @@ export default function AddTrip({setModalOpen}) {
               label="Start Date and End Date"
               onPress={showDatePicker}
               iconName="calendar-blank-outline"
-              value={startDate && endDate ? `${startDate.toDateString()}  ${endDate.toDateString()}` : ''}
-              placeholder="YYYY-MM-DD  YYYY-MM-DD"
+              value={startDate && endDate ? `${startDate.toDateString()} - ${endDate.toDateString()}` : ''}
+              placeholder="YYYY MM DD - YYYY MMDD"
               onChangeText={props.handleChange('startDate')}
             />
             {/* <StyledDTPicker
