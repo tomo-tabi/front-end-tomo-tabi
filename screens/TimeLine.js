@@ -32,13 +32,17 @@ export default function TimeLine({ }) {
 
   const [ firstLoad, setFirstLoad ] = useState(true)
 
+  const [dayEvent, setDayEvent] = useState(null); //new
+  const [dayRange, setDayRange] = useState([]); //new
 
   const dateFormat = (date) => {
-    return moment(date).format("YYYY-MM-DD");
+    return moment(date).format("ddd, MMM DD");
+    // return moment(date).format("YYYY-MM-DD");
   }
 
   useEffect(() => {
-    setDayViewData([])
+    getUsersInTrip(tripid)
+  },[])
 
     let startDateTrip, lastDateTrip
     trips.forEach((trip) => {
@@ -172,6 +176,149 @@ export default function TimeLine({ }) {
       setDayViewData(eventArr)
     }
   }
+  
+  useEffect(() => {
+    //set up day range
+    if (dayRange.length !== 0 ) {
+      return
+    }
+
+    let currentTrip = trips.find((trip) => trip.id === tripid );
+    let startDateTrip = new Date(currentTrip.start_date);
+    let lastDateTrip = new Date(currentTrip.end_date); 
+
+    let index = 0;
+
+    for(let day = startDateTrip ; day <= lastDateTrip ; day.setDate(day.getDate() + 1)) {
+      dayRange.push([new Date(day),{focused: index === 0 ? true : false, index: index}]);
+      // array of [[2022-12-21T00:00:00.000Z, {"focused": true, "index": 0}], ...]
+      index ++;
+    };
+
+  }, [tripEvents])
+
+  useEffect(() => {
+    //set day event depending on date selected 
+    if (Array.isArray(dayRange) && tripEvents !== null ) {
+      // console.log(dayRange);
+      const currentDateArr = dayRange.find((item) => {
+       return item[1].focused === true
+      });
+
+      const currentEventArr = tripEvents.filter((item) => {
+        return dateFormat(currentDateArr[0]) === dateFormat(item.event_date)
+      });
+      // console.log(currentDateArr);
+
+      const eventArrFormat = currentEventArr.map((item) => {
+        return {
+          time: item.event_date,
+          title: item.event_name,
+          description: item.description ? item.description : "There is no description yet",
+          id: item.id
+        }
+      });
+
+      setDayEvent(eventArrFormat);
+      // console.log(eventArrFormat);
+    }
+
+  }, [dayRange, tripEvents])
+
+  const pressHandler = (eventName, id) => {
+    navigation.navigate('Voting',{
+      eventName: eventName,
+      eventid: id
+    })
+  } 
+
+  const renderTime = (rowData) => {
+    // console.log(rowData.time);
+    return (
+      <View >
+        <Text style={{borderRadius:20, backgroundColor:yellow, padding:5, paddingHorizontal:5}}>
+          {moment(rowData.time).format("HH:mm A")}
+        </Text>
+      </View>
+    )
+  }
+  
+  const renderDetail = (rowData) => {
+    
+    const editData = {
+      "date": rowData.time,
+      "event_name": rowData["event_name"],
+      "event_id": rowData["id"],
+      "description": rowData["description"]
+    }
+
+    let title = (
+      <View style={{ flex:1, flexDirection: 'row', justifyContent: 'space-between', alignContent:'center'}}>
+        <Text style={{textAlignVertical:'center', fontWeight:'bold', fontSize:20}}>{rowData.title} </Text>
+        <EditButton
+          setModalOpen={setModalEditOpen}
+          setEditData={setEventEditData}
+          editData={editData}
+        />
+      </View>
+    )
+    let desc;
+    if(rowData.description) {
+      desc = (
+        <View style={{flex:1 }}>
+          <Text style={{flex:1, color:'#9E9E9E'}}>{rowData.description}</Text>
+          <BlueButton
+            onPress={() => pressHandler(rowData.title, rowData.id)}
+            buttonText='Vote'
+            style={{ padding:5, marginTop:5, marginBottom:0, alignSelf:'flex-end'}}
+            textStyle={{fontSize:14}}
+          />
+        </View>
+      )
+    }
+
+    return (
+      <View style={{flex:1 }}>
+        {title}
+        {desc}
+      </View>
+    )
+  }
+
+  const handelDatePress = (date, index) => {
+
+    const sameDate = dayRange.find((item) => {
+      return item[1].index === index && item[1].focused === true
+    })
+    
+    if (sameDate) {
+      return
+    };
+
+    const newDayRange = dayRange.map((item) => {
+      if (item[1].index === index && item[1].focused === false) {
+        item[1].focused = true;
+      } else {
+        item[1].focused = false;
+      }
+      return item
+    });
+
+    setDayRange(newDayRange);
+  }
+
+  const renderDayHorizontal = ({ item, index }) => {
+    let focused = item[1].focused;
+
+    return (
+      <View style={{ flex:1, margin:5, padding:5, borderRadius:6, backgroundColor: focused ? blue : primary}}>
+      <TouchableOpacity onPress={ () => handelDatePress(item[0],index)} >
+        <Text style={[styles.dateText,{color:focused ? primary :'#9E9E9E'}]} > Day {index + 1}</Text>
+        <Text style={{fontSize:14, color:focused ? primary :'#9E9E9E', marginTop:5}}>{dateFormat(item[0])}</Text>
+      </TouchableOpacity>
+      </View>
+    )
+  };
 
 
   const renderItem = ({ item, index }) => {
