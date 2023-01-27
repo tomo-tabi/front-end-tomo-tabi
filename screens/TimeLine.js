@@ -1,7 +1,7 @@
 import React, { useState, useEffect, useContext } from 'react';
 import { StyleSheet, Text, FlatList, View, TouchableOpacity } from 'react-native';
-import { globalStyles, colors, AddButton, StyledModal, EditButton } from "../styles/globalStyles";
-const { primary, blue, grey } = colors
+import { globalStyles, colors, AddButton, StyledModal, EditButton, BlueButton } from "../styles/globalStyles";
+const { primary, blue, yellow } = colors
 
 import { EventContext } from '../context/EventContext';
 import { TripContext } from '../context/TripContext';
@@ -18,15 +18,15 @@ import Timeline from 'react-native-timeline-flatlist'
 import Dialog from "react-native-dialog";//New
 
 export default function TimeLine({ }) {
-  const { trips } = useContext(TripContext)
+  const { trips, getUsersInTrip } = useContext(TripContext)
   const { tripEvents, tripid } = useContext(EventContext)
 
   const [modalOpen, setModalOpen] = useState(false);
-  const [dateSortEvents, setDateSortEvents] = useState({})
+  // const [dateSortEvents, setDateSortEvents] = useState({})
   const [modalEditOpen, setModalEditOpen] = useState(false)
   const [eventEditData, setEventEditData] = useState({}) // Set the event I want to send to Edit Timeline component
 
-  const [dayViewData, setDayViewData] = useState([])
+  // const [dayViewData, setDayViewData] = useState([])
 
   const [visible, setVisible] = useState(true);
 
@@ -44,104 +44,101 @@ export default function TimeLine({ }) {
     getUsersInTrip(tripid)
   },[])
 
-    let startDateTrip, lastDateTrip
-    trips.forEach((trip) => {
-      if (trip.id === tripid) {
-        startDateTrip = dateFormat(trip.start_date)
-        lastDateTrip = dateFormat(trip.end_date)
-      }
-    })
+  // useEffect(() => {
+  //   setDayViewData([])
 
-    var getDaysArray = function (start, end) {
-      for (var arr = [], dt = moment(start); dt <= moment(end); dt = moment(dt).add(1, 'days')) {
-        arr.push(moment(dt));
-      }
-      return arr;
-    };
-    var daylist = getDaysArray(dateFormat(startDateTrip), dateFormat(lastDateTrip));
-    daylist.map((v) => v.toISOString().slice(0, 10)).join("")
-
-    console.log(daylist)
-
-    if (tripEvents !== null) {
-      // setDateSortEvents({});
-      const Obj = {}
-      tripEvents.map((item) => {
-        let date = moment(item.event_date).format("dddd, MMM DD, YYYY");
-        let time = moment(item.event_date).format("HH:mm A");
-
-        if (item.trip_id !== tripid) {
-          return
-        }
-
-        const dateObj = {
-          trip_id: item.trip_id,
-          event_name: item.event_name,
-          time: time,
-          id: item.id,
-          description: item.description
-        }
-
-        if (Obj[date]) {
-          let exists = Obj[date].find((eventItem) => {
-            return eventItem.id === item.id
-          })
-
-          if (exists) {
-            return
-          } else {
-            Obj[date].push(dateObj)
-          }
-
-        } else {
-          Obj[date] = [dateObj]
-        }
-      })
-
-      // console.log("🦴", JSON.stringify(Obj));
-      //convert into array
-
-      if (Object.keys(Obj).length !== 0) {
-        const res = Object.keys(Obj).map((key) => ({
-          id: Obj[key][0]["id"],
-          date: key,
-          info: Obj[key]
-        }));
-
-        console.log(res)
-        const newArraytWithDays = []
-        let counter = 0
-        daylist.forEach((day) => {
-          const newObjectWithDays = {}
-          if (res[counter]) {
-            if (moment(day).format("dddd, MMM DD, YYYY") === res[counter]["date"]) {
-              newObjectWithDays["date"] = [moment(day).format("dddd, MMM DD, YYYY")]
-              newObjectWithDays["info"] = res[counter]["info"]
-              counter++ 
-            }
-            else {
-              newObjectWithDays["date"] = [moment(day).format("dddd, MMM DD, YYYY")]
-              newObjectWithDays["info"] = {}
-            }
-          }
-          else {
-            newObjectWithDays["date"] = [moment(day).format("dddd, MMM DD, YYYY")]
-            newObjectWithDays["info"] = {}
-          }
-          newArraytWithDays.push(newObjectWithDays)
-        })
-        console.log("newObjectWithDays", newArraytWithDays)
-        // console.log("🍏", JSON.stringify(res));
-        setDateSortEvents(newArraytWithDays)
-      }
-    }
-  }, [tripEvents])
-
-  // const pressHandler = (eventName) => {
-  //   navigation.navigate('Voting',{
-  //     eventName: eventName
+  //   let startDateTrip, lastDateTrip
+  //   trips.forEach((trip) => {
+  //     if (trip.id === tripid) {
+  //       startDateTrip = dateFormat(trip.start_date)
+  //       lastDateTrip = dateFormat(trip.end_date)
+  //     }
   //   })
-  // } 
+
+  //   var getDaysArray = function (start, end) {
+  //     for (var arr = [], dt = moment(start); dt <= moment(end); dt = moment(dt).add(1, 'days')) {
+  //       arr.push(moment(dt));
+  //     }
+  //     return arr;
+  //   };
+  //   var daylist = getDaysArray(dateFormat(startDateTrip), dateFormat(lastDateTrip));
+  //   daylist.map((v) => v.toISOString().slice(0, 10)).join("")
+
+  //   console.log(daylist)
+
+  //   if (tripEvents !== null) {
+  //     // setDateSortEvents({});
+  //     const Obj = {}
+  //     tripEvents.map((item) => {
+  //       let date = moment(item.event_date).format("dddd, MMM DD, YYYY");
+  //       let time = moment(item.event_date).format("HH:mm A");
+
+  //       if (item.trip_id !== tripid) {
+  //         return
+  //       }
+
+  //       const dateObj = {
+  //         trip_id: item.trip_id,
+  //         event_name: item.event_name,
+  //         time: time,
+  //         id: item.id,
+  //         description: item.description
+  //       }
+
+  //       if (Obj[date]) {
+  //         let exists = Obj[date].find((eventItem) => {
+  //           return eventItem.id === item.id
+  //         })
+
+  //         if (exists) {
+  //           return
+  //         } else {
+  //           Obj[date].push(dateObj)
+  //         }
+
+  //       } else {
+  //         Obj[date] = [dateObj]
+  //       }
+  //     })
+
+  //     // console.log("🦴", JSON.stringify(Obj));
+  //     //convert into array
+
+  //     if (Object.keys(Obj).length !== 0) {
+  //       const res = Object.keys(Obj).map((key) => ({
+  //         id: Obj[key][0]["id"],
+  //         date: key,
+  //         info: Obj[key]
+  //       }));
+
+  //       console.log(res)
+  //       const newArraytWithDays = []
+  //       let counter = 0
+  //       daylist.forEach((day) => {
+  //         const newObjectWithDays = {}
+  //         if (res[counter]) {
+  //           if (moment(day).format("dddd, MMM DD, YYYY") === res[counter]["date"]) {
+  //             newObjectWithDays["date"] = [moment(day).format("dddd, MMM DD, YYYY")]
+  //             newObjectWithDays["info"] = res[counter]["info"]
+  //             counter++ 
+  //           }
+  //           else {
+  //             newObjectWithDays["date"] = [moment(day).format("dddd, MMM DD, YYYY")]
+  //             newObjectWithDays["info"] = {}
+  //           }
+  //         }
+  //         else {
+  //           newObjectWithDays["date"] = [moment(day).format("dddd, MMM DD, YYYY")]
+  //           newObjectWithDays["info"] = {}
+  //         }
+  //         newArraytWithDays.push(newObjectWithDays)
+  //       })
+  //       console.log("newObjectWithDays", newArraytWithDays)
+  //       // console.log("🍏", JSON.stringify(res));
+  //       setDateSortEvents(newArraytWithDays)
+  //     }
+  //   }
+  // }, [tripEvents])
 
   const setDayData = (date, events) => {
     const eventArr = []
@@ -349,13 +346,13 @@ export default function TimeLine({ }) {
     <>
 
       <View style={globalStyles.container}>
-        {Array.isArray(dateSortEvents) &&
+        {Array.isArray(dayRange) &&
           <View style={{ height: 80 }}>
             <FlatList
               horizontal={true}
-              keyExtractor={(item) => item.date}
-              data={dateSortEvents}
-              renderItem={renderItem}
+              keyExtractor={(item, i) => i}
+              data={dayRange}
+              renderItem={renderDayHorizontal}
             />
           </View>
         }
@@ -382,22 +379,23 @@ export default function TimeLine({ }) {
           EditData={eventEditData}
         />
 
-        {dayViewData &&
+        {dayEvent &&
           <Timeline
             style={styles2.list}
-            data={dayViewData}
+            data={dayEvent}
+            renderDetail={renderDetail}
+            renderTime={renderTime}
             circleSize={20}
             circleColor='rgb(45,156,219)'
             lineColor='rgb(45,156,219)'
-            timeContainerStyle={{ minWidth: 52 }}
-            timeStyle={{ textAlign: 'center', backgroundColor: '#ff9797', color: 'white', padding: 5, borderRadius: 13 }}
-            descriptionStyle={{ color: 'gray' }}
+            // timeContainerStyle={{ minWidth: 52 }}
+            // timeStyle={{ textAlign: 'center', backgroundColor: '#ff9797', color: 'white', padding: 5, borderRadius: 13 }}
             options={{
               style: { paddingTop: 5 }
             }}
             innerCircle={'dot'}
             separator={false}
-            detailContainerStyle={{ marginBottom: 20, paddingLeft: 5, paddingRight: 5, backgroundColor: "#BBDAFF", borderRadius: 10 }}
+            detailContainerStyle={{ flex: 1, marginBottom: 20, paddingHorizontal: 5, backgroundColor: primary, borderRadius: 10 }}
             // columnFormat='two-column'
             isUsingFlatlist={true}
           />
@@ -470,6 +468,7 @@ const styles = StyleSheet.create({
   },
   dateText: {
     fontSize: 24,
+    textAlign:'center',
   },
 
   date: {
