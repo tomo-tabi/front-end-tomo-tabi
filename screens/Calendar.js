@@ -148,17 +148,26 @@ export default function CalendarView(params) {
 
     const checkDate = (day) => {
         // console.log("dateSortEvents", dateSortEvents)
-        if (Array.isArray(dateSortEvents)) {
+        if (tripEvents !== null) {
+            const currentEventArr = tripEvents.filter((item) => {
+                return dateFormat(day) === dateFormat(item.event_date)
+              });
+        
+            const eventArrFormat = currentEventArr.map((item) => {
+            return {
+                event_date: item.event_date,
+                event_name: item.event_name,
+                    description: item.description,
+                    id: item.id
+                }
+            });
+            // console.log("eventArrFormat",eventArrFormat);
 
-            const dayEvent = dateSortEvents.find((item) => dateFormat(item.date) === dateFormat(day));
-            console.log(dayEvent);
-            if (dayEvent) {
-                setDayViewDate(dayEvent["date"])
-                setDayData(dayEvent["date"], dayEvent["info"])
-            }
-            else {
-                setDayViewDate(moment(day).format("dddd, MMM DD, YYYY"))
-                setDayViewData([])
+            setDayViewDate(new Date(day));
+            if(eventArrFormat && eventArrFormat.length !== 0 ) {
+                setDayViewData(eventArrFormat);
+            } else {
+                setDayViewData([]);
             }
         }
     }
