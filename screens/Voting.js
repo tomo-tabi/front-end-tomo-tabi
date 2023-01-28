@@ -117,9 +117,8 @@ export default function Voting({ route, navigation }) {
           }
           seteditOpen(false); 
         }}
-        //need to add yesFunc, noFunc
-      />
-      :''
+        />
+        :''
       }
 
 
