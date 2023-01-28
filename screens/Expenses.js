@@ -1,11 +1,10 @@
 import React, { useState, useCallback, useContext, useEffect } from "react";
-import { Linking, StyleSheet, View, TouchableOpacity, Text, ScrollView } from "react-native";
+import { Linking, StyleSheet, View, Text, ScrollView } from "react-native";
 import { Table, TableWrapper, Row, Cell } from "react-native-table-component";
 import { globalStyles, colors, AddButton, StyledModal, TempButton, EditButton } from "../styles/globalStyles";
 
 import { AuthContext } from "../context/AuthContext";
 import { ExpContext } from "../context/ExpContext";
-import { EventContext } from "../context/EventContext";
 import { TripContext } from "../context/TripContext";
 
 import AddExpenses from "./AddExpenses";
@@ -54,7 +53,7 @@ export const ExpenseTable = () => {
         expArr.push([
           obj.username,
           obj.item_name,
-          obj.money,
+          Math.trunc(obj.money),
           edit
         ])
       })
@@ -107,11 +106,11 @@ export const ExpenseTable = () => {
       sortedValuesPaid[j] -= debt;
 
       if (sortedPeople[i] === userData.username) {
-        someoneOwnsYou.push(<Text style={styles.oweCalc} key={i}>You owe {sortedPeople[j]} ¥{debt.toFixed(2)}</Text>);
+        someoneOwnsYou.push(<Text style={styles.oweCalc} key={i}>You owe {sortedPeople[j]} ¥{Math.trunc(debt)}</Text>);
       }
 
       if (sortedPeople[j] === userData.username) {
-        oweYou.push(<Text style={styles.oweCalc} key={j}>{sortedPeople[i]} owes you ¥ {debt.toFixed(2)}</Text>)
+        oweYou.push(<Text style={styles.oweCalc} key={j}>{sortedPeople[i]} owes you ¥ {Math.trunc(debt)}</Text>)
       }
 
 

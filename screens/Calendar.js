@@ -232,7 +232,7 @@ export default function CalendarView(params) {
 
             />
             <View style={globalStyles.container}>
-                <Text style={styles.date}>{dayViewDate}</Text>
+                {dayViewDate && <Text style={styles.date}>{dayViewDate}</Text>}
                 {dayViewData &&
                     <Timeline
                         style={styles2.list}
