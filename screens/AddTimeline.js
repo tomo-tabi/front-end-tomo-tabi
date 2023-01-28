@@ -89,11 +89,6 @@ export default function AddTimeline({ setModalOpen }) {
                 onChangeText={props.handleChange('eventName')}
                 value={props.values.eventName}
               />
-  
-              {/* <Text>Please choose a day between</Text>
-              <Text style={styles.date}>
-                {moment(startDate).format('MMMM Do')} and {moment(endDate).format('MMMM Do')}!
-              </Text> */}
               <StyledDTPicker
                 label="Event Date"
                 onPress={showDatepicker}
@@ -116,17 +111,6 @@ export default function AddTimeline({ setModalOpen }) {
                 multiline={true}
                 numberOfLines={4}
               />
-  
-              {/* <Text>Event Date: </Text>
-              <TouchableOpacity onPress={showDatepicker} style={globalStyles.textInput}>
-                <MaterialCommunityIcons name='calendar-blank-outline' size={30}/>
-                <Text style={globalStyles.textInputText}>{moment(date).format('dddd, MMMM Do YYYY')}</Text>
-              </TouchableOpacity> */}
-              {/* <Text>Event Time: </Text>
-              <TouchableOpacity onPress={showTimepicker} style={globalStyles.textInput}>
-                <MaterialCommunityIcons name='clock-outline' size={30}/>
-                <Text style={globalStyles.textInputText}>{moment(date).format('h:mm A')}</Text>
-              </TouchableOpacity> */}
   
               {show && (
                 <DateTimePicker
