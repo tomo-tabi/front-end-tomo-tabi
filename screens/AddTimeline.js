@@ -51,7 +51,6 @@ export default function AddTimeline({ setModalOpen }) {
       setShow(false);
       setDate(currentDate);
     }
-    Keyboard.dismiss();
   };
 
   const showMode = (currentMode) => {
