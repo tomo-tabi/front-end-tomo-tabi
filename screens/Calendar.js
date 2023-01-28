@@ -47,54 +47,54 @@ export default function CalendarView(params) {
 
     }, [tripEvents]);
 
-
-            if (Object.keys(Obj).length !== 0) {
-
-                const res = Object.keys(Obj).map((key) => ({
-                    id: Obj[key][0]["id"],
-                    date: key,
-                    info: Obj[key]
-                }));
-                // console.log("🍏", JSON.stringify(res));
-
-                setDateSortEvents(res)
-            }
+    const renderTime = (rowData) => {
+        return (
+          <View >
+            <Text style={{borderRadius:20, backgroundColor:yellow, padding:5, paddingHorizontal:5, fontSize:12}}>
+              {moment(rowData.event_date).format("HH:mm A")}
+            </Text>
+          </View>
+        )
+    };
+      
+    const renderDetail = (rowData) => {
+        // console.log("rowdata",rowData);
+    
+        const editData = {
+            "date": rowData.event_date,
+            "event_name": rowData.event_name,
+            "event_id": rowData.id,
+            "description": rowData.description
         }
 
-    }, [tripEvents])
+        let title = (
+            <View style={{
+                flex:1, 
+                flexDirection: 'row', 
+                justifyContent: 'space-between', 
+                alignContent:'center', 
+                backgroundColor:primary, 
+                borderRadius: 10,
+                padding:10,
+                marginTop:-10
+            }}>
+            <Text style={{textAlignVertical:'center', fontWeight:'bold', fontSize:17}}>
+                {rowData.event_name} 
+            </Text>
+            <EditButton
+                setModalOpen={setModalEditOpen}
+                setEditData={setEventEditData}
+                editData={editData}
+            />
+            </View>
+        )
 
-    const dateFormat = (date) => {
-        return moment(date).format("YYYY-MM-DD");
-    }
-
-    const setDayData = (date, events) => {
-        const eventArr = []
-        events.forEach((event) => {
-            const eventObject = {}
-            const objToSendToEdit = {}
-            objToSendToEdit["date"] = moment(date + " " + event["time"], "dddd, MMMM Do YYYY HH:mm A")
-            objToSendToEdit["event_name"] = event["event_name"]
-            objToSendToEdit["event_id"] = event["id"]
-            objToSendToEdit["description"] = event["description"]
-
-            eventObject["time"] = <Text> {event["time"]} </Text>
-            eventObject["title"] = (
-                //The width is set up by number. I really dont like this, but I dont know how to do it to make it look good
-                <View style={{ width: 261, flexDirection: 'row', justifyContent: 'space-between' }}>
-                    <Text>{event["event_name"]} </Text>
-                    <EditButton
-                        setModalOpen={setModalEditOpen}
-                        setEditData={setEventEditData}
-                        editData={objToSendToEdit}
-                    />
-                </View>)
-            eventObject["description"] = <Text> {event["description"] ? event["description"] : "There is no description yet"}</Text>
-
-            eventArr.push(eventObject)
-        })
-
-        setDayViewData(eventArr)
-    }
+        return (
+            <View style={{flex:1}}>
+                {title}
+            </View>
+        )
+    };
 
 
     const formatEventsOnCalendar = (tripEvents) => {
