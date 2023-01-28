@@ -30,9 +30,9 @@ export default function CalendarView(params) {
 
 
     useEffect(() => {
-        setDateSortEvents({});// don't know if I need it, will look into later
         getTripEvents(tripid);
-    }, [tripid])
+        setDayViewDate(startDate);
+    }, [tripid]);
 
     useEffect(() => {
         if (tripEvents !== null) {
