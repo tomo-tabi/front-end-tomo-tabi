@@ -1,8 +1,8 @@
-import React, { useState, useEffect, useContext, useRef } from 'react';
-import { StyleSheet, Text, FlatList, View } from 'react-native';
+import React, { useState, useEffect, useContext } from 'react';
+import { StyleSheet, Text, View } from 'react-native';
 import { Calendar, CalendarList, Agenda } from 'react-native-calendars';
-import { StyledModal, AddButton, globalStyles, colors, EditButton } from "../styles/globalStyles";
-const { yellow } = colors
+import { StyledModal, globalStyles, colors, EditButton, AddButtonSqr } from "../styles/globalStyles";
+const { primary, yellow, blue } = colors
 const darkYellow = '#fcc256'
 
 import { TripContext } from '../context/TripContext';
@@ -20,7 +20,6 @@ export default function CalendarView(params) {
     const { tripid, tripEvents, getTripEvents } = useContext(EventContext);
 
     const [modalOpen, setModalOpen] = useState(false);
-    const [dateSortEvents, setDateSortEvents] = useState({})
 
     const [modalEditOpen, setModalEditOpen] = useState(false)
     const [eventEditData, setEventEditData] = useState({}) // Set the event I want to send to Edit Timeline component
@@ -28,99 +27,85 @@ export default function CalendarView(params) {
     const [dayViewData, setDayViewData] = useState([])
     const [dayViewDate, setDayViewDate] = useState()
 
-
-    useEffect(() => {
-        setDateSortEvents({});// don't know if I need it, will look into later
-        getTripEvents(tripid);
-    }, [tripid])
-
-    useEffect(() => {
-        if (tripEvents !== null) {
-            // setDateSortEvents({});
-            const Obj = {}
-            tripEvents.map((item) => {
-                let date = moment(item.event_date).format("dddd, MMM DD, YYYY");
-                let time = moment(item.event_date).format("HH:mm A");
-
-                if (item.trip_id !== tripid) {
-                    return
-                }
-
-                const dateObj = {
-                    trip_id: item.trip_id,
-                    event_name: item.event_name,
-                    time: time,
-                    id: item.id,
-                    description: item.description
-                }
-
-                if (Obj[date]) {
-                    let exists = Obj[date].find((eventItem) => {
-                        return eventItem.id === item.id
-                    })
-
-                    if (exists) {
-                        return
-                    } else {
-                        Obj[date].push(dateObj)
-                    }
-
-                } else {
-                    Obj[date] = [dateObj]
-                }
-            })
-
-            // console.log("🦴", JSON.stringify(Obj));
-            //convert into array
-
-
-            if (Object.keys(Obj).length !== 0) {
-
-                const res = Object.keys(Obj).map((key) => ({
-                    id: Obj[key][0]["id"],
-                    date: key,
-                    info: Obj[key]
-                }));
-                // console.log("🍏", JSON.stringify(res));
-
-                setDateSortEvents(res)
-            }
-        }
-
-    }, [tripEvents])
-
+    //get trip info(id, name, duration)
+    function getID(arr) {
+        return arr.id === tripid;
+    }
+    const getTripInfo = trips.find(getID);
+    const startDate = new Date(getTripInfo.start_date);
+    // console.log(trips);
+    
     const dateFormat = (date) => {
         return moment(date).format("YYYY-MM-DD");
     }
 
-    const setDayData = (date, events) => {
-        const eventArr = []
-        events.forEach((event) => {
-            const eventObject = {}
-            const objToSendToEdit = {}
-            objToSendToEdit["date"] = moment(date + " " + event["time"], "dddd, MMMM Do YYYY HH:mm A")
-            objToSendToEdit["event_name"] = event["event_name"]
-            objToSendToEdit["event_id"] = event["id"]
-            objToSendToEdit["description"] = event["description"]
+    useEffect(() => {
+        getTripEvents(tripid);
+        setDayViewDate(startDate);
+    }, [tripid]);
 
-            eventObject["time"] = <Text> {event["time"]} </Text>
-            eventObject["title"] = (
-                //The width is set up by number. I really dont like this, but I dont know how to do it to make it look good
-                <View style={{ width: 261, flexDirection: 'row', justifyContent: 'space-between' }}>
-                    <Text>{event["event_name"]} </Text>
-                    <EditButton
-                        setModalOpen={setModalEditOpen}
-                        setEditData={setEventEditData}
-                        editData={objToSendToEdit}
-                    />
-                </View>)
-            eventObject["description"] = <Text> {event["description"] ? event["description"] : "There is no description yet"}</Text>
+    useEffect(() => {
+        
+        if (tripEvents !== null) {
+            let startEvent = tripEvents.filter((event) => {
+                return dateFormat(event.event_date) === dateFormat(dayViewDate)
+            })
+            // console.log(startEvent);
+            if (startEvent.length !== 0) {
+                setDayViewData(startEvent);
+            }
+        }
 
-            eventArr.push(eventObject)
-        })
+    }, [tripEvents]);
 
-        setDayViewData(eventArr)
-    }
+    const renderTime = (rowData) => {
+        return (
+          <View >
+            <Text style={{borderRadius:20, backgroundColor:yellow, padding:5, paddingHorizontal:5, fontSize:12}}>
+              {moment(rowData.event_date).format("HH:mm A")}
+            </Text>
+          </View>
+        )
+    };
+      
+    const renderDetail = (rowData) => {
+        // console.log("rowdata",rowData);
+    
+        const editData = {
+            "date": rowData.event_date,
+            "event_name": rowData.event_name,
+            "event_id": rowData.id,
+            "description": rowData.description
+        }
+
+        let title = (
+            <View style={{
+                flex:1, 
+                flexDirection: 'row', 
+                justifyContent: 'space-between', 
+                alignContent:'center', 
+                backgroundColor:primary, 
+                borderRadius: 10,
+                padding:10,
+                marginTop:-10
+            }}>
+            <Text style={{textAlignVertical:'center', fontWeight:'bold', fontSize:17}}>
+                {rowData.event_name} 
+            </Text>
+            <EditButton
+                setModalOpen={setModalEditOpen}
+                setEditData={setEventEditData}
+                editData={editData}
+            />
+            </View>
+        )
+
+        return (
+            <View style={{flex:1}}>
+                {title}
+            </View>
+        )
+    };
 
 
     const formatEventsOnCalendar = (tripEvents) => {
@@ -174,28 +159,30 @@ export default function CalendarView(params) {
 
     const checkDate = (day) => {
         // console.log("dateSortEvents", dateSortEvents)
-        if (Array.isArray(dateSortEvents)) {
+        if (tripEvents !== null) {
+            const currentEventArr = tripEvents.filter((item) => {
+                return dateFormat(day) === dateFormat(item.event_date)
+              });
+        
+            const eventArrFormat = currentEventArr.map((item) => {
+            return {
+                event_date: item.event_date,
+                event_name: item.event_name,
+                    description: item.description,
+                    id: item.id
+                }
+            });
+            // console.log("eventArrFormat",eventArrFormat);
 
-            const dayEvent = dateSortEvents.find((item) => dateFormat(item.date) === dateFormat(day));
-            console.log(dayEvent);
-            if (dayEvent) {
-                setDayViewDate(dayEvent["date"])
-                setDayData(dayEvent["date"], dayEvent["info"])
-            }
-            else {
-                setDayViewDate(moment(day).format("dddd, MMM DD, YYYY"))
-                setDayViewData([])
+            setDayViewDate(new Date(day));
+            if(eventArrFormat && eventArrFormat.length !== 0 ) {
+                setDayViewData(eventArrFormat);
+            } else {
+                setDayViewData([]);
             }
         }
     }
 
-    //get trip info(id, name, duration)
-    function getID(arr) {
-        return arr.id === tripid;
-    }
-    const getTripInfo = trips.find(getID);
-    const startDate = new Date(getTripInfo.start_date);
-    // console.log(startDate);
 
     return (
         <>
@@ -232,92 +219,61 @@ export default function CalendarView(params) {
 
             />
             <View style={globalStyles.container}>
-                <Text style={styles.date}>{dayViewDate}</Text>
-                {dayViewData &&
+                <View style={styles.date}>
+                    <Text style={styles.dateText}>{moment(dayViewDate).format("dddd, MMM DD")}</Text>
+                    <AddButtonSqr
+                        setModalOpen={setModalOpen}
+                        style={{ height:undefined, margin:0, padding:1, backgroundColor:yellow }}
+                    />
+                </View>
+                {dayViewData ?
                     <Timeline
-                        style={styles2.list}
+                        style={styles.container}
                         data={dayViewData}
+                        renderDetail={renderDetail}
+                        renderTime={renderTime}
                         circleSize={20}
-                        circleColor='rgb(45,156,219)'
-                        lineColor='rgb(45,156,219)'
-                        timeContainerStyle={{ minWidth: 52 }}
-                        timeStyle={{ textAlign: 'center', backgroundColor: '#ff9797', color: 'white', padding: 5, borderRadius: 13 }}
-                        descriptionStyle={{ color: 'gray' }}
+                        circleColor={blue}
+                        lineColor={blue}
                         options={{
-                            style: { paddingTop: 5 }
+                            style: { paddingTop: 5  }
                         }}
                         innerCircle={'dot'}
                         separator={false}
-                        detailContainerStyle={{ marginBottom: 20, paddingLeft: 5, paddingRight: 5, backgroundColor: "#BBDAFF", borderRadius: 10 }}
-                        // columnFormat='two-column'
                         isUsingFlatlist={true}
                     />
+                    :''
                 }
-                {/* {info} */}
                 <StyledModal
                     modalOpen={modalOpen}
                     setModalOpen={setModalOpen}
                     AddComponent={AddTimeline}
                 />
-                <AddButton
-                    setModalOpen={setModalOpen}
-                />
+                
             </View>
         </>
     )
 };
 
-const styles2 = StyleSheet.create({
-    container: {
-        flex: 1,
-
-        // height:0,
-    },
-    list: {
-        flex: 1,
-        // marginTop: 20,
-    },
-    title: {
-        fontSize: 16,
-        fontWeight: 'bold'
-    },
-    descriptionContainer: {
-        flexDirection: 'row',
-        paddingRight: 50
-    },
-    image: {
-        width: 50,
-        height: 50,
-        borderRadius: 25
-    },
-    textDescription: {
-        marginLeft: 10,
-        color: 'gray'
-    }
-});
-
 
 const styles = StyleSheet.create({
+    container: {
+        flex: 1,
+    },
     date: {
-        fontWeight: "bold",
-        fontSize: 24,
-        padding: 20,
-        marginTop: 10,
+        marginBottom:5,
+        flexDirection:'row',
+        justifyContent:"space-between",
+    },
+    dateText:{
+        flex:1,
+        padding: 5,
         borderRadius: 6,
-        backgroundColor: '#9CCAEC'
-    },
-    dayContainer: {
-        marginTop: 7,
-        marginLeft: 7
-    },
-
-    dayTime: {
-        fontSize: 7,
-    },
-
-    dayEvent: {
-        fontSize: 24,
-        paddingLeft: 24,
-        paddingBottom: 10,
+        backgroundColor: '#9CCAEC',
+        fontWeight: "bold",
+        fontSize: 20,
+        textAlignVertical:'center',
+        marginRight:5,
+        marginVertical:3,
     },
 })

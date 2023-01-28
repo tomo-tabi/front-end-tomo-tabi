@@ -22,6 +22,7 @@ export default function EditTimeline({ setModalOpen, EditData }) {
     const currentDate = selectedDate;
     setShow(false);
     setDate(currentDate);
+    Keyboard.dismiss();
   };
 
 
