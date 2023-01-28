@@ -13,13 +13,15 @@ export default function EditTimeline({ setModalOpen, EditData }) {
   const { editTripEvents, deleteTripEvents } = useContext(EventContext)
 
   // for time date picker
-  const [date, setDate] = useState(EditData["date"])
+  const [date, setDate] = useState(EditData["event_date"])
   const [mode, setMode] = useState('date');
   const [show, setShow] = useState(false);
 
 
   const onChange = (event, selectedDate) => {
     const currentDate = selectedDate;
+
+    // console.log("change",moment(currentDate).format('h:mm A'));
     setShow(false);
     setDate(currentDate);
     Keyboard.dismiss();
@@ -43,10 +45,12 @@ export default function EditTimeline({ setModalOpen, EditData }) {
     showMode('time');
   };
 
-  const editEvent = (info) => {
-    editTripEvents(info)
-    setModalOpen(false)
-  }
+  // const editEvent = (info) => {
+  //   moment(date).format('h:mm A')
+  //   console.log("?",info.eventDate);
+  //   editTripEvents(info)
+  //   setModalOpen(false)
+  // }
 
   const deleteEvent = (info) => {
     deleteTripEvents(info)
@@ -60,8 +64,13 @@ export default function EditTimeline({ setModalOpen, EditData }) {
           initialValues={{
             eventName: EditData["event_name"],
             eventDate: date,
-            event_id: EditData["event_id"],
+            event_id: EditData["id"],
             description: EditData["description"]
+          }}
+          onSubmit={(values) => {
+            console.log("subEd",moment(values.eventDate).format('h:mm A'));
+            editTripEvents(values);
+            setModalOpen(false);
           }}
         >
           {(props) => (
@@ -94,6 +103,7 @@ export default function EditTimeline({ setModalOpen, EditData }) {
                   is24Hour={false}
                   display="default"
                   onChange={(event, selectedDate) => {
+                    console.log("DT change",moment(selectedDate).format('h:mm A'));
                     onChange(undefined, selectedDate)
                     props.setFieldValue('eventDate', selectedDate)
                   }}
@@ -110,7 +120,7 @@ export default function EditTimeline({ setModalOpen, EditData }) {
                 numberOfLines={4}
               />
               <BlueButton
-                onPress={() => { editEvent(props.values) }}
+                onPress={props.handleSubmit}
                 buttonText="Submit Edit"
               />
               <BlueButton
