@@ -19,8 +19,8 @@ export default function TimeLine({ navigation }) {
   const { tripEvents, tripid } = useContext(EventContext)
 
   const [modalOpen, setModalOpen] = useState(false);
-  const [modalEditOpen, setModalEditOpen] = useState(false)
-  const [eventEditData, setEventEditData] = useState({}) // Set the event I want to send to Edit Timeline component
+  const [modalEditOpen, setModalEditOpen] = useState(false);
+  const [eventEditData, setEventEditData] = useState({}); // Set the event I want to send to Edit Timeline component
 
   const [visible, setVisible] = useState(true);
 
@@ -29,7 +29,6 @@ export default function TimeLine({ navigation }) {
 
   const dateFormat = (date) => {
     return moment(date).format("ddd, MMM DD");
-    // return moment(date).format("YYYY-MM-DD");
   }
 
   useEffect(() => {
@@ -54,7 +53,7 @@ export default function TimeLine({ navigation }) {
       index ++;
     };
 
-  }, [tripEvents])
+  }, [tripEvents]);
 
   useEffect(() => {
     //set day event depending on date selected 
@@ -82,14 +81,14 @@ export default function TimeLine({ navigation }) {
       // console.log(eventArrFormat);
     }
 
-  }, [dayRange, tripEvents])
+  }, [dayRange, tripEvents]);
 
   const pressHandler = (eventName, id) => {
     navigation.navigate('Voting',{
       eventName: eventName,
       eventid: id
     })
-  } 
+  }; 
 
   const renderTime = (rowData) => {
     // console.log(rowData.time);
@@ -100,7 +99,7 @@ export default function TimeLine({ navigation }) {
         </Text>
       </View>
     )
-  }
+  };
   
   const renderDetail = (rowData) => {
     
@@ -142,7 +141,7 @@ export default function TimeLine({ navigation }) {
         {desc}
       </View>
     )
-  }
+  };
 
   const handelDatePress = (date, index) => {
 
@@ -164,7 +163,7 @@ export default function TimeLine({ navigation }) {
     });
 
     setDayRange(newDayRange);
-  }
+  };
 
   const renderDayHorizontal = ({ item, index }) => {
     let focused = item[1].focused;
@@ -329,4 +328,4 @@ const styles = StyleSheet.create({
   dialogButton: {
     fontWeight: 'bold'
   },
-})
+});
