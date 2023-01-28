@@ -31,9 +31,8 @@ export default function Voting({ route, navigation }) {
       let voteArr = votes.voteArray
       
       let notVote = usersInTrip.filter((obj) => {
-        // console.log(obj.username);
         for ( let i = 0 ; i < votes.voteArray.length ; i ++) {
-          return obj.username !== votes.voteArray[i].username
+          return obj.email !== votes.voteArray[i].email
         }
       })
       // console.log(voteArr);
@@ -49,14 +48,10 @@ export default function Voting({ route, navigation }) {
   },[votes, userVote])
 
 
-  // API_URL/vote/yes/:eventid
-  // API_URL/vote/no/:eventid
-
   // this screen is voting detail view
   const renderItem = ({ item }) => {
     
     let status, vote;
-    // console.log(item);
 
     if(item.vote === undefined) {
       vote = <MaterialCommunityIcons name="dots-horizontal" size={20}/>;
@@ -74,7 +69,7 @@ export default function Voting({ route, navigation }) {
     return (
       <View style={[globalStyles.flexRow,{alignItems:'center',}]}>
         <Text style={[styles.memberList]}>{item.username}</Text>
-        { item.username === userData.username ? 
+        { item.username === userData.username && status !== 'pending' ? 
           <TouchableOpacity 
             style={[styles.status, globalStyles[status], {backgroundColor:0}]}
             onPress={() => seteditOpen(true)}
@@ -94,17 +89,15 @@ export default function Voting({ route, navigation }) {
     <View style={globalStyles.container}>
 
       {
-        (userVote && userVote[0]["vote"] !== null) ? 
+        (userVote && userVote[0]["vote"] !== null)  ? 
         ""
-        : 
-      <YesOrNoCard
-        propmt={
-          <Text style={styles.questionText}>Will you be attending {eventName}?</Text>
-        }
-        yesFunc={() => postYesVote(eventid)}
-        noFunc={() => postNoVote(eventid)}
-        //need to add yesFunc, noFunc
-      />
+        :<YesOrNoCard
+          propmt={
+            <Text style={styles.questionText}>Will you be attending {eventName}?</Text>
+          }
+          yesFunc={() => postYesVote(eventid)}
+          noFunc={() => postNoVote(eventid)}
+        />
       }
       {
         editOpen ? 
@@ -124,9 +117,8 @@ export default function Voting({ route, navigation }) {
           }
           seteditOpen(false); 
         }}
-        //need to add yesFunc, noFunc
-      />
-      :''
+        />
+        :''
       }
 
 
