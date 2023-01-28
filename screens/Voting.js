@@ -52,7 +52,6 @@ export default function Voting({ route, navigation }) {
   const renderItem = ({ item }) => {
     
     let status, vote;
-    // console.log(item);
 
     if(item.vote === undefined) {
       vote = <MaterialCommunityIcons name="dots-horizontal" size={20}/>;
@@ -70,7 +69,7 @@ export default function Voting({ route, navigation }) {
     return (
       <View style={[globalStyles.flexRow,{alignItems:'center',}]}>
         <Text style={[styles.memberList]}>{item.username}</Text>
-        { item.username === userData.username ? 
+        { item.username === userData.username && status !== 'pending' ? 
           <TouchableOpacity 
             style={[styles.status, globalStyles[status], {backgroundColor:0}]}
             onPress={() => seteditOpen(true)}
@@ -90,7 +89,7 @@ export default function Voting({ route, navigation }) {
     <View style={globalStyles.container}>
 
       {
-        (userVote && userVote[0]["vote"] !== null) ? 
+        (userVote && userVote[0]["vote"] !== null)  ? 
         ""
         : 
       <YesOrNoCard
