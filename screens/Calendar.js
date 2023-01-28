@@ -45,8 +45,7 @@ export default function CalendarView(params) {
             }
         }
 
-            // console.log("🦴", JSON.stringify(Obj));
-            //convert into array
+    }, [tripEvents]);
 
 
             if (Object.keys(Obj).length !== 0) {
