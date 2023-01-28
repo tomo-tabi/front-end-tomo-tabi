@@ -91,15 +91,13 @@ export default function Voting({ route, navigation }) {
       {
         (userVote && userVote[0]["vote"] !== null)  ? 
         ""
-        : 
-      <YesOrNoCard
-        propmt={
-          <Text style={styles.questionText}>Will you be attending {eventName}?</Text>
-        }
-        yesFunc={() => postYesVote(eventid)}
-        noFunc={() => postNoVote(eventid)}
-        //need to add yesFunc, noFunc
-      />
+        :<YesOrNoCard
+          propmt={
+            <Text style={styles.questionText}>Will you be attending {eventName}?</Text>
+          }
+          yesFunc={() => postYesVote(eventid)}
+          noFunc={() => postNoVote(eventid)}
+        />
       }
       {
         editOpen ? 
