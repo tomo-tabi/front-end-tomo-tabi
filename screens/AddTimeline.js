@@ -3,6 +3,7 @@ import { View, Alert, Text, StyleSheet } from 'react-native';//change
 import { Formik } from 'formik';
 import { MyTextInput, StyledDTPicker, BlueButton } from "../styles/globalStyles";
 import DateTimePicker from '@react-native-community/datetimepicker';
+import KeyboardAvoidingWrapper from '../styles/KeyboardAvoidingWrapper';
 
 import { EventContext } from '../context/EventContext';
 import { TripContext } from '../context/TripContext';//add
@@ -50,7 +51,7 @@ export default function AddTimeline({ setModalOpen }) {
       setShow(false);
       setDate(currentDate);
     }
-
+    Keyboard.dismiss();
   };
 
   const showMode = (currentMode) => {
@@ -71,85 +72,87 @@ export default function AddTimeline({ setModalOpen }) {
   };
 
   return (
-    <>
-      <Formik
-        initialValues={{ eventName: '', eventDate: date, description: '' }}
-        onSubmit={(values) => {
-          postTripEvents(values);
-          setModalOpen(false);
-        }}
-      >
-        {(props) => (
-          <View>
-            <MyTextInput
-              label="Event Name"
-              icon="account-outline"
-              placeholder="Grand Canyon"
-              onChangeText={props.handleChange('eventName')}
-              value={props.values.eventName}
-            />
-
-            {/* <Text>Please choose a day between</Text>
-            <Text style={styles.date}>
-              {moment(startDate).format('MMMM Do')} and {moment(endDate).format('MMMM Do')}!
-            </Text> */}
-            <StyledDTPicker
-              label="Event Date"
-              onPress={showDatepicker}
-              iconName="calendar-blank-outline"
-              value={moment(date).format('dddd, MMMM Do YYYY')}
-            />
-            <StyledDTPicker
-              label="Event Time"
-              onPress={showTimepicker}
-              iconName="clock-outline"
-              value={moment(date).format('h:mm A')}
-            />
-
-            <MyTextInput
-              label="Event Description"
-              icon="text"
-              placeholder="Add a description for this event"
-              value={props.values.description}
-              onChangeText={props.handleChange('description')}
-              multiline={true}
-              numberOfLines={4}
-            />
-
-            {/* <Text>Event Date: </Text>
-            <TouchableOpacity onPress={showDatepicker} style={globalStyles.textInput}>
-              <MaterialCommunityIcons name='calendar-blank-outline' size={30}/>
-              <Text style={globalStyles.textInputText}>{moment(date).format('dddd, MMMM Do YYYY')}</Text>
-            </TouchableOpacity> */}
-            {/* <Text>Event Time: </Text>
-            <TouchableOpacity onPress={showTimepicker} style={globalStyles.textInput}>
-              <MaterialCommunityIcons name='clock-outline' size={30}/>
-              <Text style={globalStyles.textInputText}>{moment(date).format('h:mm A')}</Text>
-            </TouchableOpacity> */}
-
-            {show && (
-              <DateTimePicker
-                testID="dateTimePicker"
-                minimumDate={startDate}
-                maximumDate={endDate}
-                value={date}
-                mode={mode}
-                is24Hour={false}
-                display="default"
-                onChange={(event, selectedDate) => {
-                  onChange(undefined, selectedDate)
-                  props.setFieldValue('eventDate', selectedDate)
-                }}
+    <> 
+      <KeyboardAvoidingWrapper>
+        <Formik
+          initialValues={{ eventName: '', eventDate: date, description: '' }}
+          onSubmit={(values) => {
+            postTripEvents(values);
+            setModalOpen(false);
+          }}
+        >
+          {(props) => (
+            <View>
+              <MyTextInput
+                label="Event Name"
+                icon="account-outline"
+                placeholder="Grand Canyon"
+                onChangeText={props.handleChange('eventName')}
+                value={props.values.eventName}
               />
-            )}
-            <BlueButton
-              onPress={props.handleSubmit}
-              buttonText="Submit"
-            />
-          </View>
-        )}
-
-      </Formik>
+  
+              {/* <Text>Please choose a day between</Text>
+              <Text style={styles.date}>
+                {moment(startDate).format('MMMM Do')} and {moment(endDate).format('MMMM Do')}!
+              </Text> */}
+              <StyledDTPicker
+                label="Event Date"
+                onPress={showDatepicker}
+                iconName="calendar-blank-outline"
+                value={moment(date).format('dddd, MMMM Do YYYY')}
+              />
+              <StyledDTPicker
+                label="Event Time"
+                onPress={showTimepicker}
+                iconName="clock-outline"
+                value={moment(date).format('h:mm A')}
+              />
+  
+              <MyTextInput
+                label="Event Description"
+                icon="text"
+                placeholder="Add a description for this event"
+                value={props.values.description}
+                onChangeText={props.handleChange('description')}
+                multiline={true}
+                numberOfLines={4}
+              />
+  
+              {/* <Text>Event Date: </Text>
+              <TouchableOpacity onPress={showDatepicker} style={globalStyles.textInput}>
+                <MaterialCommunityIcons name='calendar-blank-outline' size={30}/>
+                <Text style={globalStyles.textInputText}>{moment(date).format('dddd, MMMM Do YYYY')}</Text>
+              </TouchableOpacity> */}
+              {/* <Text>Event Time: </Text>
+              <TouchableOpacity onPress={showTimepicker} style={globalStyles.textInput}>
+                <MaterialCommunityIcons name='clock-outline' size={30}/>
+                <Text style={globalStyles.textInputText}>{moment(date).format('h:mm A')}</Text>
+              </TouchableOpacity> */}
+  
+              {show && (
+                <DateTimePicker
+                  testID="dateTimePicker"
+                  minimumDate={startDate}
+                  maximumDate={endDate}
+                  value={date}
+                  mode={mode}
+                  is24Hour={false}
+                  display="default"
+                  onChange={(event, selectedDate) => {
+                    onChange(undefined, selectedDate)
+                    props.setFieldValue('eventDate', selectedDate)
+                  }}
+                />
+              )}
+              <BlueButton
+                onPress={props.handleSubmit}
+                buttonText="Submit"
+              />
+            </View>
+          )}
+  
+        </Formik>
+      </KeyboardAvoidingWrapper>
     </>
   )
 };
