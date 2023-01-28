@@ -292,13 +292,25 @@ export const EditButton = ({ setModalOpen, setEditData, editData, style }) => {
     </TouchableOpacity>
   )
 };
-export const AddButton = ({ setModalOpen }) => {
+export const AddButton = ({ setModalOpen, style }) => {
   return (
-    <TouchableOpacity onPress={() => setModalOpen(true)} style={globalStyles.addIconButton}>
+    <TouchableOpacity onPress={() => setModalOpen(true)} style={[globalStyles.addIconButton, style]}>
       <MaterialCommunityIcons
         name='plus'
         size={50}
         style={globalStyles.modalToggle}
+      />
+    </TouchableOpacity>
+  )
+};
+
+export const AddButtonSqr = ({ setModalOpen, style }) => {
+  return (
+    <TouchableOpacity onPress={() => setModalOpen(true)} style={[globalStyles.buttonStyle, style]}>
+      <MaterialCommunityIcons
+        name='plus'
+        size={30}
+        style={[globalStyles.modalToggle, {margin:5}]}
       />
     </TouchableOpacity>
   )

@@ -1,7 +1,7 @@
 import React, { useState, useContext, useEffect } from 'react'
 import { StyleSheet, Text, FlatList, View, TouchableOpacity, SectionList } from 'react-native';
-import { globalStyles, colors, AddButton, StyledModal, BlueButton, EditButton, YesOrNoCard, Seperator } from "../styles/globalStyles";
-const { primary } = colors
+import { globalStyles, colors, AddButtonSqr, StyledModal, BlueButton, EditButton, YesOrNoCard, Seperator } from "../styles/globalStyles";
+const { primary, yellow } = colors
 
 import { AuthContext } from '../context/AuthContext';
 import { TripContext } from '../context/TripContext';
@@ -107,7 +107,14 @@ export default function Trips({ navigation }) {
         </View>
         : ""
       }
-      <Text style={globalStyles.header}>Trips </Text>
+      <View style={{ paddingTop:15, flexDirection:'row',}}>
+        <Text style={globalStyles.header}>Trips </Text>
+        <AddButtonSqr
+          setModalOpen={setModalOpen}
+          style={{ height:undefined, padding:1, marginBottom:10 }}
+        />
+      </View>
+      
 
       <View style={styles.tripView}>
         <FlatList
@@ -157,9 +164,9 @@ export default function Trips({ navigation }) {
         EditData={tripEditData}
       />
 
-      <AddButton
+      {/* <AddButton
         setModalOpen={setModalOpen}
-      />
+      /> */}
     </View>
   )
 };
