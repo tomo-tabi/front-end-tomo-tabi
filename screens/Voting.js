@@ -31,9 +31,8 @@ export default function Voting({ route, navigation }) {
       let voteArr = votes.voteArray
       
       let notVote = usersInTrip.filter((obj) => {
-        // console.log(obj.username);
         for ( let i = 0 ; i < votes.voteArray.length ; i ++) {
-          return obj.username !== votes.voteArray[i].username
+          return obj.email !== votes.voteArray[i].email
         }
       })
       // console.log(voteArr);
@@ -48,9 +47,6 @@ export default function Voting({ route, navigation }) {
     
   },[votes, userVote])
 
-
-  // API_URL/vote/yes/:eventid
-  // API_URL/vote/no/:eventid
 
   // this screen is voting detail view
   const renderItem = ({ item }) => {
