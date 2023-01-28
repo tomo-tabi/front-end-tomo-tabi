@@ -1,8 +1,8 @@
 import React, { useState, useEffect, useContext, useRef } from 'react';
 import { StyleSheet, Text, FlatList, View } from 'react-native';
 import { Calendar, CalendarList, Agenda } from 'react-native-calendars';
-import { StyledModal, AddButton, globalStyles, colors, EditButton } from "../styles/globalStyles";
-const { yellow } = colors
+import { StyledModal, globalStyles, colors, EditButton, AddButtonSqr } from "../styles/globalStyles";
+const { primary, yellow, blue } = colors
 const darkYellow = '#fcc256'
 
 import { TripContext } from '../context/TripContext';
@@ -219,92 +219,61 @@ export default function CalendarView(params) {
 
             />
             <View style={globalStyles.container}>
-                {dayViewDate && <Text style={styles.date}>{dayViewDate}</Text>}
-                {dayViewData &&
+                <View style={styles.date}>
+                    <Text style={styles.dateText}>{moment(dayViewDate).format("dddd, MMM DD")}</Text>
+                    <AddButtonSqr
+                        setModalOpen={setModalOpen}
+                        style={{ height:undefined, margin:0, padding:1, backgroundColor:yellow }}
+                    />
+                </View>
+                {dayViewData ?
                     <Timeline
-                        style={styles2.list}
+                        style={styles.container}
                         data={dayViewData}
+                        renderDetail={renderDetail}
+                        renderTime={renderTime}
                         circleSize={20}
-                        circleColor='rgb(45,156,219)'
-                        lineColor='rgb(45,156,219)'
-                        timeContainerStyle={{ minWidth: 52 }}
-                        timeStyle={{ textAlign: 'center', backgroundColor: '#ff9797', color: 'white', padding: 5, borderRadius: 13 }}
-                        descriptionStyle={{ color: 'gray' }}
+                        circleColor={blue}
+                        lineColor={blue}
                         options={{
-                            style: { paddingTop: 5 }
+                            style: { paddingTop: 5  }
                         }}
                         innerCircle={'dot'}
                         separator={false}
-                        detailContainerStyle={{ marginBottom: 20, paddingLeft: 5, paddingRight: 5, backgroundColor: "#BBDAFF", borderRadius: 10 }}
-                        // columnFormat='two-column'
                         isUsingFlatlist={true}
                     />
+                    :''
                 }
-                {/* {info} */}
                 <StyledModal
                     modalOpen={modalOpen}
                     setModalOpen={setModalOpen}
                     AddComponent={AddTimeline}
                 />
-                <AddButton
-                    setModalOpen={setModalOpen}
-                />
+                
             </View>
         </>
     )
 };
 
-const styles2 = StyleSheet.create({
-    container: {
-        flex: 1,
-
-        // height:0,
-    },
-    list: {
-        flex: 1,
-        // marginTop: 20,
-    },
-    title: {
-        fontSize: 16,
-        fontWeight: 'bold'
-    },
-    descriptionContainer: {
-        flexDirection: 'row',
-        paddingRight: 50
-    },
-    image: {
-        width: 50,
-        height: 50,
-        borderRadius: 25
-    },
-    textDescription: {
-        marginLeft: 10,
-        color: 'gray'
-    }
-});
-
 
 const styles = StyleSheet.create({
+    container: {
+        flex: 1,
+    },
     date: {
-        fontWeight: "bold",
-        fontSize: 24,
-        padding: 20,
-        marginTop: 10,
+        marginBottom:5,
+        flexDirection:'row',
+        justifyContent:"space-between",
+    },
+    dateText:{
+        flex:1,
+        padding: 5,
         borderRadius: 6,
-        backgroundColor: '#9CCAEC'
-    },
-    dayContainer: {
-        marginTop: 7,
-        marginLeft: 7
-    },
-
-    dayTime: {
-        fontSize: 7,
-    },
-
-    dayEvent: {
-        fontSize: 24,
-        paddingLeft: 24,
-        paddingBottom: 10,
+        backgroundColor: '#9CCAEC',
+        fontWeight: "bold",
+        fontSize: 20,
+        textAlignVertical:'center',
+        marginRight:5,
+        marginVertical:3,
     },
 })
