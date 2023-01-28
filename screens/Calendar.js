@@ -20,7 +20,6 @@ export default function CalendarView(params) {
     const { tripid, tripEvents, getTripEvents } = useContext(EventContext);
 
     const [modalOpen, setModalOpen] = useState(false);
-    const [dateSortEvents, setDateSortEvents] = useState({})
 
     const [modalEditOpen, setModalEditOpen] = useState(false)
     const [eventEditData, setEventEditData] = useState({}) // Set the event I want to send to Edit Timeline component
@@ -35,40 +34,16 @@ export default function CalendarView(params) {
     }, [tripid]);
 
     useEffect(() => {
+        
         if (tripEvents !== null) {
-            // setDateSortEvents({});
-            const Obj = {}
-            tripEvents.map((item) => {
-                let date = moment(item.event_date).format("dddd, MMM DD, YYYY");
-                let time = moment(item.event_date).format("HH:mm A");
-
-                if (item.trip_id !== tripid) {
-                    return
-                }
-
-                const dateObj = {
-                    trip_id: item.trip_id,
-                    event_name: item.event_name,
-                    time: time,
-                    id: item.id,
-                    description: item.description
-                }
-
-                if (Obj[date]) {
-                    let exists = Obj[date].find((eventItem) => {
-                        return eventItem.id === item.id
-                    })
-
-                    if (exists) {
-                        return
-                    } else {
-                        Obj[date].push(dateObj)
-                    }
-
-                } else {
-                    Obj[date] = [dateObj]
-                }
+            let startEvent = tripEvents.filter((event) => {
+                return dateFormat(event.event_date) === dateFormat(dayViewDate)
             })
+            // console.log(startEvent);
+            if (startEvent.length !== 0) {
+                setDayViewData(startEvent);
+            }
+        }
 
             // console.log("🦴", JSON.stringify(Obj));
             //convert into array
