@@ -21,7 +21,7 @@ export default function EditExpenses({ setModalOpen, EditData }) {
     return (
         <>
             <Formik
-                initialValues={{ itemName: EditData["item_name"], money: EditData["money"], id: EditData["id"]  }}
+                initialValues={{ itemName: EditData["item_name"], money: Math.trunc(EditData.money).toString(), id: EditData["id"]  }}
             >
                 {(props) => (
                     <View>
