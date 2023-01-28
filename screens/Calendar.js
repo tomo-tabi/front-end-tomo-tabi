@@ -27,6 +27,17 @@ export default function CalendarView(params) {
     const [dayViewData, setDayViewData] = useState([])
     const [dayViewDate, setDayViewDate] = useState()
 
+    //get trip info(id, name, duration)
+    function getID(arr) {
+        return arr.id === tripid;
+    }
+    const getTripInfo = trips.find(getID);
+    const startDate = new Date(getTripInfo.start_date);
+    // console.log(trips);
+    
+    const dateFormat = (date) => {
+        return moment(date).format("YYYY-MM-DD");
+    }
 
     useEffect(() => {
         getTripEvents(tripid);
@@ -172,13 +183,6 @@ export default function CalendarView(params) {
         }
     }
 
-    //get trip info(id, name, duration)
-    function getID(arr) {
-        return arr.id === tripid;
-    }
-    const getTripInfo = trips.find(getID);
-    const startDate = new Date(getTripInfo.start_date);
-    // console.log(startDate);
 
     return (
         <>
