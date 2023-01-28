@@ -24,8 +24,9 @@ export default function TimeLine({ navigation }) {
 
   const [visible, setVisible] = useState(true);
 
-  const [dayEvent, setDayEvent] = useState(null); //new
-  const [dayRange, setDayRange] = useState([]); //new
+  const [dayEvent, setDayEvent] = useState(null); 
+  const [dayRange, setDayRange] = useState([]);
+  const [dateSelected, setDateSelected] = useState(null); 
 
   const dateFormat = (date) => {
     return moment(date).format("ddd, MMM DD");
@@ -62,6 +63,8 @@ export default function TimeLine({ navigation }) {
       const currentDateArr = dayRange.find((item) => {
         return item[1].focused === true
       });
+
+      setDateSelected(moment(currentDateArr[0]).format('YYYY-MM-DD'));
 
       // currentEventArr = [{"description": null, "event_date": "2023-01-17T16:12:41.211Z", "event_name": "a", "id": 81, "trip_id": 11}]
       const currentEventArr = tripEvents.filter((item) => {
@@ -148,6 +151,7 @@ export default function TimeLine({ navigation }) {
     const newDayRange = dayRange.map((item) => {
       if (item[1].index === index && item[1].focused === false) {
         item[1].focused = true;
+        setDateSelected(moment(item[0]).format('YYYY-MM-DD'));
       } else {
         item[1].focused = false;
       }
@@ -203,6 +207,7 @@ export default function TimeLine({ navigation }) {
           modalOpen={modalOpen}
           setModalOpen={setModalOpen}
           AddComponent={AddTimeline}
+          dateSelected={dateSelected}
         />
         <StyledModal
           modalOpen={modalEditOpen}
