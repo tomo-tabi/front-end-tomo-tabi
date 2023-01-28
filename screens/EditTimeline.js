@@ -3,6 +3,7 @@ import { View } from 'react-native';
 import { Formik } from 'formik';
 import { MyTextInput, StyledDTPicker, BlueButton } from "../styles/globalStyles";
 import DateTimePicker from '@react-native-community/datetimepicker';
+import KeyboardAvoidingWrapper from '../styles/KeyboardAvoidingWrapper';
 
 import { EventContext } from '../context/EventContext';
 
@@ -21,6 +22,7 @@ export default function EditTimeline({ setModalOpen, EditData }) {
     const currentDate = selectedDate;
     setShow(false);
     setDate(currentDate);
+    Keyboard.dismiss();
   };
 
 
@@ -53,71 +55,73 @@ export default function EditTimeline({ setModalOpen, EditData }) {
 
   return (
     <>
-      <Formik
-        initialValues={{
-          eventName: EditData["event_name"],
-          eventDate: date,
-          event_id: EditData["event_id"],
-          description: EditData["description"]
-        }}
-      >
-        {(props) => (
-          <View>
-            <MyTextInput
-              label="Event Name"
-              icon="account-outline"
-              placeholder="Grand Canyon"
-              onChangeText={props.handleChange('eventName')}
-              value={props.values.eventName}
-            />
-            <StyledDTPicker
-              label="Event Date"
-              onPress={showDatepicker}
-              iconName="calendar-blank-outline"
-              value={moment(date).format('dddd, MMMM Do YYYY')}
-            />
-            <StyledDTPicker
-              label="Event Time"
-              onPress={showTimepicker}
-              iconName="clock-outline"
-              value={moment(date).format('h:mm A')}
-            />
-
-            {show && (
-              <DateTimePicker
-                testID="dateTimePicker"
-                value={new Date(date)}
-                mode={mode}
-                is24Hour={false}
-                display="default"
-                onChange={(event, selectedDate) => {
-                  onChange(undefined, selectedDate)
-                  props.setFieldValue('eventDate', selectedDate)
-                }}
+      <KeyboardAvoidingWrapper>
+        <Formik
+          initialValues={{
+            eventName: EditData["event_name"],
+            eventDate: date,
+            event_id: EditData["event_id"],
+            description: EditData["description"]
+          }}
+        >
+          {(props) => (
+            <View>
+              <MyTextInput
+                label="Event Name"
+                icon="account-outline"
+                placeholder="Grand Canyon"
+                onChangeText={props.handleChange('eventName')}
+                value={props.values.eventName}
               />
-            )}
-
-            <MyTextInput
-              label="Event Description"
-              icon="text"
-              placeholder="Add a description for this event"
-              value={props.values.description}
-              onChangeText={props.handleChange('description')}
-              multiline={true}
-              numberOfLines={4}
-            />
-            <BlueButton
-              onPress={() => { editEvent(props.values) }}
-              buttonText="Submit Edit"
-            />
-            <BlueButton
-              onPress={() => deleteEvent(props.values)}
-              buttonText="Delete Event"
-            />
-          </View>
-        )}
-
-      </Formik>
+              <StyledDTPicker
+                label="Event Date"
+                onPress={showDatepicker}
+                iconName="calendar-blank-outline"
+                value={moment(date).format('dddd, MMMM Do YYYY')}
+              />
+              <StyledDTPicker
+                label="Event Time"
+                onPress={showTimepicker}
+                iconName="clock-outline"
+                value={moment(date).format('h:mm A')}
+              />
+  
+              {show && (
+                <DateTimePicker
+                  testID="dateTimePicker"
+                  value={new Date(date)}
+                  mode={mode}
+                  is24Hour={false}
+                  display="default"
+                  onChange={(event, selectedDate) => {
+                    onChange(undefined, selectedDate)
+                    props.setFieldValue('eventDate', selectedDate)
+                  }}
+                />
+              )}
+  
+              <MyTextInput
+                label="Event Description"
+                icon="text"
+                placeholder="Add a description for this event"
+                value={props.values.description}
+                onChangeText={props.handleChange('description')}
+                multiline={true}
+                numberOfLines={4}
+              />
+              <BlueButton
+                onPress={() => { editEvent(props.values) }}
+                buttonText="Submit Edit"
+              />
+              <BlueButton
+                onPress={() => deleteEvent(props.values)}
+                buttonText="Delete Event"
+              />
+            </View>
+          )}
+  
+        </Formik>
+      </KeyboardAvoidingWrapper>
     </>
   )
 };
