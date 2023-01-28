@@ -58,23 +58,22 @@ export default function TimeLine({ navigation }) {
   useEffect(() => {
     //set day event depending on date selected 
     if (Array.isArray(dayRange) && tripEvents !== null ) {
-      // console.log(dayRange);
+      // currentDateArr = [2022-12-21T00:00:00.000Z, {"focused": true, "index": 0}]
       const currentDateArr = dayRange.find((item) => {
-       return item[1].focused === true
+        return item[1].focused === true
       });
 
+      // currentEventArr = [{"description": null, "event_date": "2023-01-17T16:12:41.211Z", "event_name": "a", "id": 81, "trip_id": 11}]
       const currentEventArr = tripEvents.filter((item) => {
         return dateFormat(currentDateArr[0]) === dateFormat(item.event_date)
       });
-      // console.log(currentDateArr);
 
+      // for each dayEvent make new obj with below format
       const eventArrFormat = currentEventArr.map((item) => {
-        return {
-          time: item.event_date,
-          title: item.event_name,
-          description: item.description ? item.description : "There is no description yet",
-          id: item.id
+        if(!item.description){
+          item.description = "There is no description yet"
         }
+        return item
       });
 
       setDayEvent(eventArrFormat);
@@ -91,32 +90,25 @@ export default function TimeLine({ navigation }) {
   }; 
 
   const renderTime = (rowData) => {
-    // console.log(rowData.time);
+    // console.log(rowData.event_date);
     return (
       <View >
         <Text style={{borderRadius:20, backgroundColor:yellow, padding:5, paddingHorizontal:5}}>
-          {moment(rowData.time).format("HH:mm A")}
+          {moment(rowData.event_date).format("HH:mm A")}
         </Text>
       </View>
     )
   };
   
   const renderDetail = (rowData) => {
-    
-    const editData = {
-      "date": rowData.time,
-      "event_name": rowData["event_name"],
-      "event_id": rowData["id"],
-      "description": rowData["description"]
-    }
 
     let title = (
       <View style={{ flex:1, flexDirection: 'row', justifyContent: 'space-between', alignContent:'center'}}>
-        <Text style={{textAlignVertical:'center', fontWeight:'bold', fontSize:20}}>{rowData.title} </Text>
+        <Text style={{textAlignVertical:'center', fontWeight:'bold', fontSize:20}}>{rowData.event_name} </Text>
         <EditButton
           setModalOpen={setModalEditOpen}
           setEditData={setEventEditData}
-          editData={editData}
+          editData={rowData}
         />
       </View>
     )
@@ -126,7 +118,7 @@ export default function TimeLine({ navigation }) {
         <View style={{flex:1 }}>
           <Text style={{flex:1, color:'#9E9E9E'}}>{rowData.description}</Text>
           <BlueButton
-            onPress={() => pressHandler(rowData.title, rowData.id)}
+            onPress={() => pressHandler(rowData.event_name, rowData.id)}
             buttonText='Vote'
             style={{ padding:5, marginTop:5, marginBottom:0, alignSelf:'flex-end'}}
             textStyle={{fontSize:14}}

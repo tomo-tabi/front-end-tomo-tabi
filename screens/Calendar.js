@@ -26,6 +26,7 @@ export default function CalendarView(params) {
 
     const [dayViewData, setDayViewData] = useState([])
     const [dayViewDate, setDayViewDate] = useState()
+    // const [showTimeline, setShowTimeline] = useState(true);
 
     //get trip info(id, name, duration)
     function getID(arr) {
@@ -70,13 +71,6 @@ export default function CalendarView(params) {
       
     const renderDetail = (rowData) => {
         // console.log("rowdata",rowData);
-    
-        const editData = {
-            "date": rowData.event_date,
-            "event_name": rowData.event_name,
-            "event_id": rowData.id,
-            "description": rowData.description
-        }
 
         let title = (
             <View style={{
@@ -95,7 +89,7 @@ export default function CalendarView(params) {
             <EditButton
                 setModalOpen={setModalEditOpen}
                 setEditData={setEventEditData}
-                editData={editData}
+                editData={rowData}
             />
             </View>
         )
@@ -183,6 +177,15 @@ export default function CalendarView(params) {
         }
     }
 
+    // const monthChange = (month) => {
+    //     if (month.month !== moment(startDate).format('MM')) {
+    //         return setShowTimeline(false);
+    //     } else if (month.month === moment(startDate).format('MM')) {
+    //         console.log(month.month, moment(startDate).format('MM'));
+    //         return setShowTimeline(true);
+    //     }
+    // }
+
 
     return (
         <>
@@ -201,8 +204,8 @@ export default function CalendarView(params) {
                 monthFormat={'MMMM, yyyy'}
                 // If firstDay=1 week starts from Monday. Note that dayNames and dayNamesShort should still start from Sunday
                 firstDay={1}
-                // Hide day names. Default = false
-                hideDayNames={true}
+                // Hide day names. s Default = false
+                // hideDayNames={true}
                 // Show week numbers to the left. Default = false
                 showWeekNumbers={false}
                 // Handler which gets executed when press arrow icon left. It receive a callback can go back month
@@ -213,6 +216,7 @@ export default function CalendarView(params) {
                 // renderHeader={date => {
                 //     /*Return JSX*/
                 // }}
+                // onMonthChange={(month) => monthChange(month)}
 
                 markingType={'period'}
                 markedDates={formatEventsOnCalendar(tripEvents)}
