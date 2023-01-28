@@ -1,5 +1,5 @@
-import React, { useState, useEffect, useContext, useRef } from 'react';
-import { StyleSheet, Text, FlatList, View } from 'react-native';
+import React, { useState, useEffect, useContext } from 'react';
+import { StyleSheet, Text, View } from 'react-native';
 import { Calendar, CalendarList, Agenda } from 'react-native-calendars';
 import { StyledModal, globalStyles, colors, EditButton, AddButtonSqr } from "../styles/globalStyles";
 const { primary, yellow, blue } = colors
