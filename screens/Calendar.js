@@ -252,6 +252,7 @@ export default function CalendarView(params) {
                     modalOpen={modalOpen}
                     setModalOpen={setModalOpen}
                     AddComponent={AddTimeline}
+                    dateSelected={dayViewDate}
                 />
                 
             </View>

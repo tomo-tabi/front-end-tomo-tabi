@@ -10,13 +10,14 @@ import { TripContext } from '../context/TripContext';//add
 
 import moment from 'moment';
 
-export default function AddTimeline({ setModalOpen }) {
+export default function AddTimeline({ setModalOpen, dateSelected }) {
+
   const { postTripEvents, tripid } = useContext(EventContext)//change
   const { trips } = useContext(TripContext)//add
 
 
   // for time date picker
-  const [date, setDate] = useState(new Date());
+  const [date, setDate] = useState(new Date(dateSelected));
   const [mode, setMode] = useState('date');
   const [show, setShow] = useState(false);
 
