@@ -97,7 +97,7 @@ export default function TimeLine({ navigation }) {
     // console.log(rowData.event_date);
     return (
       <View >
-        <Text style={{borderRadius:20, backgroundColor:yellow, padding:5, paddingHorizontal:5}}>
+        <Text style={{ paddingHorizontal:5, fontWeight:'bold'}}>
           {moment(rowData.event_date).format("HH:mm A")}
         </Text>
       </View>
@@ -131,8 +131,8 @@ export default function TimeLine({ navigation }) {
       )
     }
 
-    return (
-      <View style={{flex:1 }}>
+    return ( 
+      <View style={{flex:1, marginTop:-10, backgroundColor: primary, borderRadius: 10, padding:5 }}>
         {title}
         {desc}
       </View>
@@ -238,11 +238,11 @@ export default function TimeLine({ navigation }) {
             // timeContainerStyle={{ minWidth: 52 }}
             // timeStyle={{ textAlign: 'center', backgroundColor: '#ff9797', color: 'white', padding: 5, borderRadius: 13 }}
             options={{
-              style: { paddingTop: 5 }
+              style: { marginTop: 5 },
             }}
             innerCircle={'dot'}
             separator={false}
-            detailContainerStyle={{ flex: 1, marginBottom: 20, paddingHorizontal: 5, backgroundColor: primary, borderRadius: 10 }}
+            detailContainerStyle={{ flex: 1, marginBottom: 10, borderRadius: 10 }}
             isUsingFlatlist={true}
           />
         }
