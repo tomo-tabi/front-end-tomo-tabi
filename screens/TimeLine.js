@@ -199,6 +199,7 @@ export default function TimeLine({ navigation }) {
               keyExtractor={(item, i) => i}
               data={dayRange}
               renderItem={renderDayHorizontal}
+              ref={dayRangeRef}
             />
           </View>
         }
