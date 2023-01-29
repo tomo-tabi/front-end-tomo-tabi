@@ -1,8 +1,8 @@
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
 
 import Compose from '../utils/Compose';
-import Trips from '../screens/Trips';
 import TripTabNav from './TripTabNav';
+import TripStack from './TripsStack';
 
 import { EventProvider } from "../context/EventContext";
 import { ExpProvider } from "../context/ExpContext";
@@ -17,7 +17,7 @@ export default function AppStack() {
   return (
     <Compose components={[TripProvider, EventProvider, InviteProvider, ExpProvider, VoteProvider]}>
       <Stack.Navigator>
-        <Stack.Screen name='Trips' component={Trips} 
+        <Stack.Screen name='TripStack' component={TripStack} 
           options={({route}) => ({
             headerShown:false
           })} 

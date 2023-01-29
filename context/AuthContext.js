@@ -5,7 +5,7 @@ import { userPostOpt, checkStatus } from "../utils/fetchUtils";
 
 export const AuthContext = createContext();
 
-export function AuthProvider({children}) {
+export function AuthProvider({ children }) {
   const [isLoading, setIsLoading] = useState(false);
   const [userToken, setUserToken] = useState(null);
   const [userData, setUserData] = useState(null);
@@ -22,7 +22,7 @@ export function AuthProvider({children}) {
   }
 
   const authHeader = {
-    'Accept': 'application/json, text/plain, */*', 
+    'Accept': 'application/json, text/plain, */*',
     'Content-Type': 'application/json',
     'Authorization': `Bearer ${userToken}`
   }
@@ -34,7 +34,7 @@ export function AuthProvider({children}) {
       );
 
       checkStatus(signup, setData);
-      
+
       // const signupRes = await signupReq.json();
       // userCheckStatus(signupRes, signupReq, setData)
       // setData(signupRes);
@@ -59,7 +59,7 @@ export function AuthProvider({children}) {
     } catch (error) {
       console.error(error)
     }
-    
+
   }
 
   const logout = () => {
@@ -70,9 +70,9 @@ export function AuthProvider({children}) {
     setIsLoading(false);
   }
 
- // only when user logged before and quite app
+  // only when user logged before and quite app
   const isLoggedIn = async () => {
-    try{
+    try {
       setIsLoading(true)
       let userTokenStored = await AsyncStorage.getItem('userToken');
 
@@ -81,24 +81,24 @@ export function AuthProvider({children}) {
         return
       } else {
         setUserToken(userTokenStored);
-        
-        
+
+
         const isLoggedIn = await fetch(`http://${API_URL}:8080/user/`, {
-          method:"GET",
+          method: "GET",
           headers: {
-            'Accept': 'application/json, text/plain, */*', 
+            'Accept': 'application/json, text/plain, */*',
             'Content-Type': 'application/json',
             'Authorization': `Bearer ${userTokenStored}`
           }
         });
 
-        if(isLoggedIn.status === 401) {
+        if (isLoggedIn.status === 401) {
           await AsyncStorage.removeItem('userToken');
           setIsLoading(false);
           return
         }
-        
-        checkStatus(isLoggedIn,setUserData)
+
+        checkStatus(isLoggedIn, setUserData)
         // console.log("???", isLoggedInReq);
         // const isLoggedInRes = await isLoggedInReq.json();
         // userCheckStatus(isLoggedInRes, isLoggedInReq, setUserData)
@@ -109,14 +109,45 @@ export function AuthProvider({children}) {
     }
   }
 
+  const editUser = async (userInfo) => {
+    try {
+      const editUserInfo = await fetch(`http://${API_URL}:8080/user/update`, {
+        method: "PUT",
+        headers: authHeader,
+        body: JSON.stringify(userInfo)
+      })
+
+      checkStatus(editUserInfo, setData)
+
+    } catch (e) {
+      console.log(`Update Info Error: ${e}`)
+    }
+  }
+
+  const editPassword = async (PasswordInfo) => {
+    try {
+      const editPassword = await fetch(`http://${API_URL}:8080/user/password`, {
+        method: "PUT",
+        headers: authHeader,
+        body: JSON.stringify(PasswordInfo)
+      })
+
+      checkStatus(editPassword, setData)
+
+
+    } catch (e) {
+      console.log(`Update Password Error: ${e}`)
+    }
+  }
+
   useEffect(() => {
     isLoggedIn();
     // if(userToken){
     // }
   }, []);
-  
+
   return (
-    <AuthContext.Provider value={{login, logout, signup, authHeader, userToken, userData, isLoading}}>
+    <AuthContext.Provider value={{ login, logout, signup, editUser, editPassword, authHeader, userToken, userData, isLoading }}>
       {children}
     </AuthContext.Provider>
   )
