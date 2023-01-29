@@ -13,18 +13,15 @@ export default function EditTimeline({ setModalOpen, EditData }) {
   const { editTripEvents, deleteTripEvents } = useContext(EventContext)
 
   // for time date picker
-  const [date, setDate] = useState(EditData["event_date"])
+  const [date, setDate] = useState(new Date(EditData["event_date"]))
   const [mode, setMode] = useState('date');
   const [show, setShow] = useState(false);
 
 
   const onChange = (event, selectedDate) => {
     const currentDate = selectedDate;
-
-    // console.log("change",moment(currentDate).format('h:mm A'));
-    setShow(false);
     setDate(currentDate);
-    Keyboard.dismiss();
+    setShow(false);
   };
 
 
@@ -45,12 +42,11 @@ export default function EditTimeline({ setModalOpen, EditData }) {
     showMode('time');
   };
 
-  // const editEvent = (info) => {
-  //   moment(date).format('h:mm A')
-  //   console.log("?",info.eventDate);
-  //   editTripEvents(info)
-  //   setModalOpen(false)
-  // }
+  const editEvent = (info) => {
+    console.log("?",info);
+    editTripEvents(info)
+    setModalOpen(false)
+  }
 
   const deleteEvent = (info) => {
     deleteTripEvents(info)
@@ -61,17 +57,19 @@ export default function EditTimeline({ setModalOpen, EditData }) {
     <>
       <KeyboardAvoidingWrapper>
         <Formik
-          initialValues={{
-            eventName: EditData["event_name"],
-            eventDate: date,
-            event_id: EditData["id"],
-            description: EditData["description"]
-          }}
-          onSubmit={(values) => {
-            console.log("subEd",moment(values.eventDate).format('h:mm A'));
-            editTripEvents(values);
-            setModalOpen(false);
-          }}
+          initialValues={
+            EditData["description"] !== "There is no description yet" ? {
+                eventName: EditData["event_name"],
+                eventDate: date,
+                event_id: EditData["id"],
+                description: EditData["description"]
+              } : {
+                  eventName: EditData["event_name"],
+                  eventDate: date,
+                  event_id: EditData["id"],
+                }
+          }
+
         >
           {(props) => (
             <View>
@@ -98,14 +96,15 @@ export default function EditTimeline({ setModalOpen, EditData }) {
               {show && (
                 <DateTimePicker
                   testID="dateTimePicker"
-                  value={new Date(date)}
+                  value={date}
                   mode={mode}
                   is24Hour={false}
                   display="default"
                   onChange={(event, selectedDate) => {
-                    console.log("DT change",moment(selectedDate).format('h:mm A'));
+                    console.log(selectedDate);
                     onChange(undefined, selectedDate)
                     props.setFieldValue('eventDate', selectedDate)
+                    Keyboard.dismiss();
                   }}
                 />
               )}
@@ -120,7 +119,7 @@ export default function EditTimeline({ setModalOpen, EditData }) {
                 numberOfLines={4}
               />
               <BlueButton
-                onPress={props.handleSubmit}
+                onPress={() => {editEvent(props.values)}}
                 buttonText="Submit Edit"
               />
               <BlueButton
