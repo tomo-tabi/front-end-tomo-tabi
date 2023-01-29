@@ -10,6 +10,7 @@ export function EventProvider({children}) {
   
   const [tripEvents, setTripEvents] = useState(null);//trip events for one trip
   const [tripid, setTripid] = useState(null);//trip id
+  const [ modalOpen, setModalOpen] = useState(false);
 
 
   const getTripEvents = async (tripid) => {
@@ -79,7 +80,7 @@ export function EventProvider({children}) {
   
 
   return (
-    <EventContext.Provider value={{ tripEvents, tripid, getTripEvents, postTripEvents, editTripEvents, deleteTripEvents}}>
+    <EventContext.Provider value={{ tripEvents, tripid, getTripEvents, postTripEvents, editTripEvents, deleteTripEvents, modalOpen, setModalOpen}}>
       {children}
     </EventContext.Provider>
   )

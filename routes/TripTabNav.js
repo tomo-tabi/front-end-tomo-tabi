@@ -1,20 +1,34 @@
-import React from 'react';
+import React, { useEffect, useState, useContext } from 'react';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
+import { useNavigationState } from '@react-navigation/native';
 import { MaterialCommunityIcons } from '@expo/vector-icons';
-import { colors } from "../styles/globalStyles";
+import { colors, TimeLinAddBtn } from "../styles/globalStyles";
 
 const { primary, blue } = colors;
 
 import Calendar from '../screens/Calendar';
-import TimeLine from '../screens/TimeLine';
 import Invite from '../screens/Invite';
-import { ExpenseTable } from '../screens/Expenses';
 import TimelineStack from './TimelineStack';
+import { ExpenseTable } from '../screens/Expenses';
 import { View } from 'react-native';
+import { EventContext } from '../context/EventContext';
 
 const Tab = createBottomTabNavigator();
 
 export default function TripTabNav() {
+  const { setModalOpen } = useContext(EventContext)
+  const state = useNavigationState(state => state);
+
+  const [ showBtn, setShowBtn ] = useState(false);
+
+  useEffect(()=> {
+    let tabIndex = state.routes[1].state ? state.routes[1].state.index : 0;
+    if (tabIndex === 0) {
+      setShowBtn(true);
+    } else {
+      setShowBtn(false);
+    }
+  },[state.routes[1].state])
 
   return (
     <Tab.Navigator initialRouteName='TimeLine'
@@ -48,6 +62,14 @@ export default function TripTabNav() {
     >
       <Tab.Screen name="TimeLine" component={TimelineStack} />
       <Tab.Screen name="Calendar" component={Calendar} />
+      { showBtn ? 
+        <Tab.Screen name="Add Event" component={TimelineStack}
+          options={{
+            tabBarButton:() => <TimeLinAddBtn setModalOpen={setModalOpen}/>
+          }} 
+        />
+        : null
+      }
       <Tab.Screen name="Expenses" component={ExpenseTable} />
       <Tab.Screen name="Invite" component={Invite} />
     </Tab.Navigator>

@@ -1,7 +1,6 @@
 import React, { useState, useEffect, useContext, useRef } from 'react';
 import { StyleSheet, Text, FlatList, View, TouchableOpacity, Dimensions } from 'react-native';
-import { MaterialCommunityIcons } from '@expo/vector-icons';
-import { globalStyles, colors, AddButton, StyledModal, EditButton, BlueButton } from "../styles/globalStyles";
+import { globalStyles, colors, StyledModal, EditButton, BlueButton } from "../styles/globalStyles";
 const { primary, blue, yellow } = colors
 
 import { EventContext } from '../context/EventContext';
@@ -17,9 +16,8 @@ import Dialog from "react-native-dialog";//New
 
 export default function TimeLine({ navigation }) {
   const { trips, getUsersInTrip } = useContext(TripContext)
-  const { tripEvents, tripid } = useContext(EventContext)
+  const { tripEvents, tripid, modalOpen, setModalOpen } = useContext(EventContext)
 
-  const [modalOpen, setModalOpen] = useState(false);
   const [modalEditOpen, setModalEditOpen] = useState(false);
   const [eventEditData, setEventEditData] = useState({}); // Set the event I want to send to Edit Timeline component
 
@@ -249,9 +247,6 @@ export default function TimeLine({ navigation }) {
           />
         }
 
-        <AddButton
-          setModalOpen={setModalOpen}
-        />
       </View>
     </>
   )
