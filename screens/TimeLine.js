@@ -200,6 +200,7 @@ export default function TimeLine({ navigation }) {
               data={dayRange}
               renderItem={renderDayHorizontal}
               ref={dayRangeRef}
+              showsHorizontalScrollIndicator={false}
             />
           </View>
         }
