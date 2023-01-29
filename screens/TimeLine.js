@@ -1,5 +1,6 @@
-import React, { useState, useEffect, useContext } from 'react';
-import { StyleSheet, Text, FlatList, View, TouchableOpacity } from 'react-native';
+import React, { useState, useEffect, useContext, useRef } from 'react';
+import { StyleSheet, Text, FlatList, View, TouchableOpacity, Dimensions } from 'react-native';
+import { MaterialCommunityIcons } from '@expo/vector-icons';
 import { globalStyles, colors, AddButton, StyledModal, EditButton, BlueButton } from "../styles/globalStyles";
 const { primary, blue, yellow } = colors
 
@@ -27,6 +28,8 @@ export default function TimeLine({ navigation }) {
   const [dayEvent, setDayEvent] = useState(null); 
   const [dayRange, setDayRange] = useState([]);
   const [dateSelected, setDateSelected] = useState(null); 
+
+  const dayRangeRef = useRef();
 
   const dateFormat = (date) => {
     return moment(date).format("ddd, MMM DD");
@@ -166,7 +169,14 @@ export default function TimeLine({ navigation }) {
 
     return (
       <View style={{ flex:1, margin:5, padding:5, borderRadius:6, backgroundColor: focused ? blue : primary}}>
-      <TouchableOpacity onPress={ () => handelDatePress(item[0],index)} >
+      <TouchableOpacity onPress={ () => {
+        handelDatePress(item[0],index); 
+        dayRangeRef.current.scrollToIndex({
+          animated: true,
+          index,
+          viewOffset: Dimensions.get('window').width / 2.7,
+        });
+        }} >
         <Text style={[styles.dateText,{color:focused ? primary :'#9E9E9E'}]} > Day {index + 1}</Text>
         <Text style={{fontSize:14, color:focused ? primary :'#9E9E9E', marginTop:5}}>{dateFormat(item[0])}</Text>
       </TouchableOpacity>
