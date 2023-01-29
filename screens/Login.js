@@ -54,6 +54,7 @@ export default function Login ( { navigation } ) {
               value={props.values.email}
             />
             <PasswordTextInput
+              Text={<Text>Password</Text>}
               onChangeText={props.handleChange('password')}
               // onBlur={props.handleBlur('password')} //what is this
               autoCapitalize="none"
