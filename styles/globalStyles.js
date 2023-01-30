@@ -213,11 +213,11 @@ export const MyTextInput = ( { label, icon, ...props }) => {
   );
 };
 
-export const PasswordTextInput = ( { Text, hidePassword, setHidePassword, ...props }) => {
+export const PasswordTextInput = ( { text, hidePassword, setHidePassword, ...props }) => {
   const touchRef = useRef();
   return (
       <View>
-        {Text}
+        <Text>{text}</Text>
         <TouchableOpacity 
             onPress={() => {touchRef.current.focus()}}
             style={globalStyles.textInput}

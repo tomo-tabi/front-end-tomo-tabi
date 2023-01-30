@@ -80,7 +80,7 @@ export default function Signup() {
                 value={props.values.email}
               />
               <PasswordTextInput
-                Text={<Text>Password</Text>}
+                text='Password'
                 onChangeText={props.handleChange('password')}
                 // onBlur={handleBlur('password')} what is this
                 autoCapitalize="none"
@@ -90,7 +90,7 @@ export default function Signup() {
                 setHidePassword={setHidePassword}
               />
               <PasswordTextInput
-                Text={<Text>Confirm password</Text>}
+                text='Confirm password'
                 onChangeText={props.handleChange('confirmpassword')}
                 // onBlur={handleBlur('confirmpassword')} what is this
                 autoCapitalize="none"

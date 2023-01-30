@@ -36,7 +36,7 @@ export default function EditPassword({ setModalOpen, EditData }) {
                     {(props) => (
                         <View>
                             <PasswordTextInput
-                                Text={<Text>Old password</Text>}
+                                text='Old password'
                                 onChangeText={props.handleChange('OldPassword')}
                                 autoCapitalize="none"
                                 value={props.values.OldPassword}
@@ -45,7 +45,7 @@ export default function EditPassword({ setModalOpen, EditData }) {
                                 setHidePassword={setHidePassword}
                             />
                             <PasswordTextInput
-                                Text={<Text>New password</Text>}
+                                text='New password'
                                 onChangeText={props.handleChange('password')}
                                 autoCapitalize="none"
                                 value={props.values.password}
@@ -54,7 +54,7 @@ export default function EditPassword({ setModalOpen, EditData }) {
                                 setHidePassword={setHidePassword}
                             />
                             <PasswordTextInput
-                                Text={<Text>Confirm new password</Text>}
+                                text='Confirm new password'
                                 onChangeText={props.handleChange('confirmpassword')}
                                 autoCapitalize="none"
                                 value={props.values.confirmpassword}
