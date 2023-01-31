@@ -11,7 +11,7 @@ export function VoteProvider({children}) {
   const { userData, authHeader } = useContext(AuthContext);
   const { tripid } = useContext(EventContext);
   
-  const [votes, setVotes] = useState(null);//{ [ { username, vote } ], numOfYesVotes, numOfNoVotes, numNotVoted }
+  const [votes, setVotes] = useState(null);//{ [ { username, email, vote } ], numOfYesVotes, numOfNoVotes, numNotVoted }
   const [userVote, setUserVote] = useState(null);//get user's votes
 
   const getVotes = async (eventid) => {//all votes
