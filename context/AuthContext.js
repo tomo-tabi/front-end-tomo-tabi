@@ -1,7 +1,7 @@
-import AsyncStorage from "@react-native-async-storage/async-storage";
-import React, { createContext, useEffect, useState } from "react";
-import API_URL from "../config";
-import { userPostOpt, checkStatus } from "../utils/fetchUtils";
+import AsyncStorage from '@react-native-async-storage/async-storage';
+import React, { createContext, useEffect, useState } from 'react';
+import API_URL from '../config';
+import { userPostOpt, checkStatus } from '../utils/fetchUtils';
 
 export const AuthContext = createContext();
 
@@ -10,7 +10,7 @@ export function AuthProvider({ children }) {
   const [userToken, setUserToken] = useState(null);
   const [userData, setUserData] = useState(null);
 
-  const setData = async (userInfo) => {
+  const setData = async userInfo => {
     // console.log("object");
     if (userInfo) {
       setIsLoading(true);
@@ -19,17 +19,18 @@ export function AuthProvider({ children }) {
       setUserToken(userInfo.token);
       setIsLoading(false);
     }
-  }
+  };
 
   const authHeader = {
-    'Accept': 'application/json, text/plain, */*',
+    Accept: 'application/json, text/plain, */*',
     'Content-Type': 'application/json',
-    'Authorization': `Bearer ${userToken}`
-  }
+    Authorization: `Bearer ${userToken}`,
+  };
 
-  const signup = async (userInput) => {
+  const signup = async userInput => {
     try {
-      const signup = await fetch(`http://${API_URL}:8080/user/signup`,
+      const signup = await fetch(
+        `${API_URL}/user/signup`,
         userPostOpt(userInput)
       );
 
@@ -38,15 +39,15 @@ export function AuthProvider({ children }) {
       // const signupRes = await signupReq.json();
       // userCheckStatus(signupRes, signupReq, setData)
       // setData(signupRes);
-
     } catch (error) {
-      console.error(error)
+      console.error(error);
     }
-  }
+  };
 
-  const login = async (userInput) => {
+  const login = async userInput => {
     try {
-      const login = await fetch(`http://${API_URL}:8080/user/login`,
+      const login = await fetch(
+        `${API_URL}/user/login`,
         userPostOpt(userInput)
       );
 
@@ -55,90 +56,84 @@ export function AuthProvider({ children }) {
 
       // const loginRes = await loginReq.json();
       // userCheckStatus(loginRes, loginReq, setData)
-
     } catch (error) {
-      console.error(error)
+      console.error(error);
     }
-
-  }
+  };
 
   const logout = () => {
     setIsLoading(true);
     setUserData(null);
-    AsyncStorage.removeItem('userToken')
+    AsyncStorage.removeItem('userToken');
     setUserToken(null);
     setIsLoading(false);
-  }
+  };
 
   // only when user logged before and quite app
   const isLoggedIn = async () => {
     try {
-      setIsLoading(true)
+      setIsLoading(true);
       let userTokenStored = await AsyncStorage.getItem('userToken');
 
       if (userTokenStored === null) {
         setIsLoading(false);
-        return
+        return;
       } else {
         setUserToken(userTokenStored);
 
-
-        const isLoggedIn = await fetch(`http://${API_URL}:8080/user/`, {
-          method: "GET",
+        const isLoggedIn = await fetch(`${API_URL}/user/`, {
+          method: 'GET',
           headers: {
-            'Accept': 'application/json, text/plain, */*',
+            Accept: 'application/json, text/plain, */*',
             'Content-Type': 'application/json',
-            'Authorization': `Bearer ${userTokenStored}`
-          }
+            Authorization: `Bearer ${userTokenStored}`,
+          },
         });
 
         if (isLoggedIn.status === 401) {
           await AsyncStorage.removeItem('userToken');
           setIsLoading(false);
-          return
+          return;
         }
 
-        checkStatus(isLoggedIn, setUserData)
+        checkStatus(isLoggedIn, setUserData);
         // console.log("???", isLoggedInReq);
         // const isLoggedInRes = await isLoggedInReq.json();
         // userCheckStatus(isLoggedInRes, isLoggedInReq, setUserData)
         setIsLoading(false);
       }
     } catch (e) {
-      console.log(`Logged in Error: ${e}`)
+      console.log(`Logged in Error: ${e}`);
     }
-  }
+  };
 
-  const editUser = async (userInfo) => {
+  const editUser = async userInfo => {
     try {
-      const editUserInfo = await fetch(`http://${API_URL}:8080/user/update`, {
-        method: "PUT",
+      const editUserInfo = await fetch(`${API_URL}/user/update`, {
+        method: 'PUT',
         headers: authHeader,
-        body: JSON.stringify(userInfo)
-      })
+        body: JSON.stringify(userInfo),
+      });
 
-      checkStatus(editUserInfo, setData)
-
+      checkStatus(editUserInfo, setData);
     } catch (e) {
-      console.log(`Update Info Error: ${e}`)
+      console.log(`Update Info Error: ${e}`);
     }
-  }
+  };
 
-  const editPassword = async (PasswordInfo) => {
+  const editPassword = async PasswordInfo => {
     try {
-      const editPassword = await fetch(`http://${API_URL}:8080/user/password`, {
-        method: "PUT",
+      const editPassword = await fetch(`${API_URL}/user/password`, {
+        method: 'PUT',
         headers: authHeader,
-        body: JSON.stringify(PasswordInfo)
-      })
+        body: JSON.stringify(PasswordInfo),
+      });
 
-      checkStatus(editPassword, setData)
-
-
+      checkStatus(editPassword, setData);
     } catch (e) {
-      console.log(`Update Password Error: ${e}`)
+      console.log(`Update Password Error: ${e}`);
     }
-  }
+  };
 
   useEffect(() => {
     isLoggedIn();
@@ -147,8 +142,20 @@ export function AuthProvider({ children }) {
   }, []);
 
   return (
-    <AuthContext.Provider value={{ login, logout, signup, editUser, editPassword, authHeader, userToken, userData, isLoading }}>
+    <AuthContext.Provider
+      value={{
+        login,
+        logout,
+        signup,
+        editUser,
+        editPassword,
+        authHeader,
+        userToken,
+        userData,
+        isLoading,
+      }}
+    >
       {children}
     </AuthContext.Provider>
-  )
-};
+  );
+}
