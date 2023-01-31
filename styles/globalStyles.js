@@ -64,6 +64,20 @@ export const globalStyles = StyleSheet.create({
     shadowRadius: 5,
     elevation: 7,
   },
+  timelineAdd:{
+    alignSelf:"center",
+    backgroundColor: yellow,
+    borderRadius: 40,
+    marginBottom:25,
+    padding:5,
+
+    borderWidth:5, 
+    borderColor:primary,
+    
+    height:70,
+    width:70,
+
+  },
   buttonStyle:{ //blue button
     backgroundColor: blue, 
     // justiftyContent: 'center',
@@ -299,6 +313,18 @@ export const AddButton = ({ setModalOpen, style }) => {
         name='plus'
         size={50}
         style={globalStyles.modalToggle}
+      />
+    </TouchableOpacity>
+  )
+};
+
+export const TimeLinAddBtn = ({ setModalOpen, style }) => {
+  return (
+    <TouchableOpacity onPress={() => setModalOpen(true)} style={[globalStyles.timelineAdd, style]}>
+      <MaterialCommunityIcons
+        name='plus'
+        size={50}
+        style={{ color:primary, textAlign:'center', textAlignVertical:'center'}}
       />
     </TouchableOpacity>
   )

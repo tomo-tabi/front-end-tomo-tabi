@@ -1,6 +1,6 @@
-import React, { useState, useEffect, useContext } from 'react';
-import { StyleSheet, Text, FlatList, View, TouchableOpacity } from 'react-native';
-import { globalStyles, colors, AddButton, StyledModal, EditButton, BlueButton } from "../styles/globalStyles";
+import React, { useState, useEffect, useContext, useRef } from 'react';
+import { StyleSheet, Text, FlatList, View, TouchableOpacity, Dimensions } from 'react-native';
+import { globalStyles, colors, StyledModal, EditButton, BlueButton } from "../styles/globalStyles";
 const { primary, blue, yellow } = colors
 
 import { EventContext } from '../context/EventContext';
@@ -16,9 +16,8 @@ import Dialog from "react-native-dialog";//New
 
 export default function TimeLine({ navigation }) {
   const { trips, getUsersInTrip } = useContext(TripContext)
-  const { tripEvents, tripid } = useContext(EventContext)
+  const { tripEvents, tripid, modalOpen, setModalOpen } = useContext(EventContext)
 
-  const [modalOpen, setModalOpen] = useState(false);
   const [modalEditOpen, setModalEditOpen] = useState(false);
   const [eventEditData, setEventEditData] = useState({}); // Set the event I want to send to Edit Timeline component
 
@@ -27,6 +26,8 @@ export default function TimeLine({ navigation }) {
   const [dayEvent, setDayEvent] = useState(null); 
   const [dayRange, setDayRange] = useState([]);
   const [dateSelected, setDateSelected] = useState(null); 
+
+  const dayRangeRef = useRef();
 
   const dateFormat = (date) => {
     return moment(date).format("ddd, MMM DD");
@@ -96,7 +97,7 @@ export default function TimeLine({ navigation }) {
     // console.log(rowData.event_date);
     return (
       <View >
-        <Text style={{borderRadius:20, backgroundColor:yellow, padding:5, paddingHorizontal:5}}>
+        <Text style={{ paddingHorizontal:5, fontWeight:'bold'}}>
           {moment(rowData.event_date).format("HH:mm A")}
         </Text>
       </View>
@@ -130,8 +131,8 @@ export default function TimeLine({ navigation }) {
       )
     }
 
-    return (
-      <View style={{flex:1 }}>
+    return ( 
+      <View style={{flex:1, marginTop:-10, backgroundColor: primary, borderRadius: 10, padding:5 }}>
         {title}
         {desc}
       </View>
@@ -166,7 +167,14 @@ export default function TimeLine({ navigation }) {
 
     return (
       <View style={{ flex:1, margin:5, padding:5, borderRadius:6, backgroundColor: focused ? blue : primary}}>
-      <TouchableOpacity onPress={ () => handelDatePress(item[0],index)} >
+      <TouchableOpacity onPress={ () => {
+        handelDatePress(item[0],index); 
+        dayRangeRef.current.scrollToIndex({
+          animated: true,
+          index,
+          viewOffset: Dimensions.get('window').width / 2.7,
+        });
+        }} >
         <Text style={[styles.dateText,{color:focused ? primary :'#9E9E9E'}]} > Day {index + 1}</Text>
         <Text style={{fontSize:14, color:focused ? primary :'#9E9E9E', marginTop:5}}>{dateFormat(item[0])}</Text>
       </TouchableOpacity>
@@ -189,6 +197,8 @@ export default function TimeLine({ navigation }) {
               keyExtractor={(item, i) => i}
               data={dayRange}
               renderItem={renderDayHorizontal}
+              ref={dayRangeRef}
+              showsHorizontalScrollIndicator={false}
             />
           </View>
         }
@@ -228,18 +238,15 @@ export default function TimeLine({ navigation }) {
             // timeContainerStyle={{ minWidth: 52 }}
             // timeStyle={{ textAlign: 'center', backgroundColor: '#ff9797', color: 'white', padding: 5, borderRadius: 13 }}
             options={{
-              style: { paddingTop: 5 }
+              style: { marginTop: 5 },
             }}
             innerCircle={'dot'}
             separator={false}
-            detailContainerStyle={{ flex: 1, marginBottom: 20, paddingHorizontal: 5, backgroundColor: primary, borderRadius: 10 }}
+            detailContainerStyle={{ flex: 1, marginBottom: 10, borderRadius: 10 }}
             isUsingFlatlist={true}
           />
         }
 
-        <AddButton
-          setModalOpen={setModalOpen}
-        />
       </View>
     </>
   )
