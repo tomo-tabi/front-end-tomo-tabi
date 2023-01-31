@@ -2,7 +2,7 @@ import React, { useContext, useEffect, useState } from 'react'
 import { Image, ImageBackground, Platform, StyleSheet, Text, View, Button, TouchableOpacity } from 'react-native'
 import { MaterialCommunityIcons } from '@expo/vector-icons';
 import { StyledModal, colors, globalStyles } from "../styles/globalStyles";
-const { primary, lightBlue } = colors
+const { yellow, lightBlue, blue, grey } = colors
 
 import { AuthContext } from '../context/AuthContext'
 
@@ -33,38 +33,32 @@ export default function UserPage({ }) {
                             source={{ uri: "https://media.istockphoto.com/id/1311084168/photo/overjoyed-pretty-asian-woman-look-at-camera-with-sincere-laughter.jpg?b=1&s=170667a&w=0&k=20&c=XPuGhP9YyCWquTGT-tUFk6TwI-HZfOr1jNkehKQ17g0=" }}
                         />
                         <Text style={styles.userNameText}>{userData.username}</Text>
+                        <Text style={styles.userInfo}>
+                            {userData.email}
+                        </Text>
                     </View>
                 </ImageBackground>
             </View>
-            <View>
-                <View style={{flexDirection:'row', alignItems:'center', marginLeft:10}}>
-                    <MaterialCommunityIcons name='email-outline' size={30}/>
-                    <Text style={styles.titleText}>Email</Text>
-                </View>
-
-                <Text style={styles.userInfo}>
-                    {userData.email}
-                </Text>
-                <Separator />
-            </View>
-            <View style={styles.buttonsContainer}>
+ 
+            <View style={[globalStyles.card, styles.buttonsContainer]}>
                 <TouchableOpacity 
-                    style={[globalStyles.buttonStyle,styles.button]}
+                    style={styles.button}
                     onPress={() => setEditInfoModal(true)}
                 >
-                    <Text style={[globalStyles.buttonText,{ textAlignVertical:'center',fontSize: 18}]}>
+                    <MaterialCommunityIcons name='pencil' size={30} style={{ marginRight:10, color:yellow }}/>
+                    <Text style={{ textAlignVertical:'center',fontSize: 18}}>
                         Edit Profile
                     </Text>
-                    <MaterialCommunityIcons name='pencil' size={30} style={{color:primary, marginLeft:10}}/>
                 </TouchableOpacity>
+                <Separator/>
                 <TouchableOpacity 
-                    style={[globalStyles.buttonStyle,styles.button]}
+                    style={styles.button}
                     onPress={() => setEditPasswordModal(true)}
                 >
-                    <Text style={[globalStyles.buttonText,{ textAlignVertical:'center',fontSize: 18}]}>
+                    <MaterialCommunityIcons name='lock' size={30} style={{ marginRight:10, color:blue }}/>
+                    <Text style={{ textAlignVertical:'center',fontSize: 18}}>
                         Edit Password
                     </Text>
-                    <MaterialCommunityIcons name='lock' size={30} style={{color:primary, marginLeft:10}}/>
                 </TouchableOpacity>
             </View>
             <StyledModal
@@ -95,14 +89,18 @@ const styles = StyleSheet.create({
     },
     buttonsContainer: {
         marginTop: 25,
-        flexDirection: 'row',
-        justifyContent: 'space-between',
-        width: "90%",
-        alignSelf: "center",
+        marginHorizontal:10,
+        // flex:1,
+        // flexDirection: 'row',
+        // justifyContent: 'space-between',
+        // width: "90%",
+        // alignSelf: "center",
     },
     button: {
         flexDirection:'row', 
-        justifyContent:'center'
+        // justifyContent:'center',
+        paddingVertical:5,
+        // borderRadius:20,
     },
     headerContainer: {
         marginBottom: 85,
@@ -129,29 +127,30 @@ const styles = StyleSheet.create({
     userNameText: {
         fontSize: 22,
         fontWeight: 'bold',
-        paddingBottom: 8,
+        // paddingBottom: 8,
         textAlign: 'center',
-        marginBottom:15,
+        // marginBottom:15,
     },
     separator: {
         marginVertical: 8,
-        borderBottomColor: '#737373',
-        borderBottomWidth: 1,
-        width: "90%",
+        borderBottomColor: '#9E9E9E',
+        borderBottomWidth: 0.5,
+        width: "110%",
         alignSelf: "center",
     },
     titleText: {
-        marginTop: 10,
-        fontSize: 20,
-        fontWeight: 'bold',
-        paddingBottom: 8,
+        fontSize: 18,
+        color:'#737373',
+        // paddingBottom: 8,
         textAlignVertical:'center',
         justifyContent:'center',
 
     },
     userInfo: {
-        fontSize: 18,
-        paddingBottom: 5,
-        marginLeft: 20,
+        fontSize: 15,
+        // paddingBottom: 5,
+        // marginLeft: 20,
+        fontWeight: 'bold',
+        color:'#9E9E9E',
     }
 })
