@@ -1,6 +1,8 @@
 import React, { useContext, useEffect, useState } from 'react'
 import { Image, ImageBackground, Platform, StyleSheet, Text, View, Button, TouchableOpacity } from 'react-native'
-import {StyledModal} from "../styles/globalStyles";
+import { MaterialCommunityIcons } from '@expo/vector-icons';
+import { StyledModal, colors, globalStyles } from "../styles/globalStyles";
+const { primary, lightBlue } = colors
 
 import { AuthContext } from '../context/AuthContext'
 
@@ -35,27 +37,34 @@ export default function UserPage({ }) {
                 </ImageBackground>
             </View>
             <View>
-                <Text style={styles.titleText}>
-                    {"Username:"}
-                </Text>
-                <Text style={styles.userInfo}>
-                    {userData.username}
-                </Text>
-                <Separator />
-                <Text style={styles.titleText}>
-                    {"Email:"}
-                </Text>
+                <View style={{flexDirection:'row', alignItems:'center', marginLeft:10}}>
+                    <MaterialCommunityIcons name='email-outline' size={30}/>
+                    <Text style={styles.titleText}>Email</Text>
+                </View>
+
                 <Text style={styles.userInfo}>
                     {userData.email}
                 </Text>
                 <Separator />
             </View>
             <View style={styles.buttonsContainer}>
-                <TouchableOpacity style={styles.button}>
-                    <Text style={{ color: '#fff', fontSize: 18 }} onPress={() => setEditInfoModal(true)}>Edit profile</Text>
+                <TouchableOpacity 
+                    style={[globalStyles.buttonStyle,styles.button]}
+                    onPress={() => setEditInfoModal(true)}
+                >
+                    <Text style={[globalStyles.buttonText,{ textAlignVertical:'center',fontSize: 18}]}>
+                        Edit Profile
+                    </Text>
+                    <MaterialCommunityIcons name='pencil' size={30} style={{color:primary, marginLeft:10}}/>
                 </TouchableOpacity>
-                <TouchableOpacity style={styles.button}>
-                    <Text style={{ color: '#fff', fontSize: 18 }} onPress={() => setEditPasswordModal(true)}>Edit password</Text>
+                <TouchableOpacity 
+                    style={[globalStyles.buttonStyle,styles.button]}
+                    onPress={() => setEditPasswordModal(true)}
+                >
+                    <Text style={[globalStyles.buttonText,{ textAlignVertical:'center',fontSize: 18}]}>
+                        Edit Password
+                    </Text>
+                    <MaterialCommunityIcons name='lock' size={30} style={{color:primary, marginLeft:10}}/>
                 </TouchableOpacity>
             </View>
             <StyledModal
@@ -78,7 +87,7 @@ export default function UserPage({ }) {
 const styles = StyleSheet.create({
     container: {
         flex: 1,
-        backgroundColor: "#E5EFF9",//used to be '#fff'
+        backgroundColor: lightBlue,
     },
     headerBackgroundImage: {
         paddingBottom: 20,
@@ -88,19 +97,19 @@ const styles = StyleSheet.create({
         marginTop: 25,
         flexDirection: 'row',
         justifyContent: 'space-between',
-        width: "70%",
+        width: "90%",
         alignSelf: "center",
     },
     button: {
-        backgroundColor: '#147EFB',
-        borderRadius: 5,
-        padding: 10,
+        flexDirection:'row', 
+        justifyContent:'center'
     },
     headerContainer: {
-        marginBottom: 35,
+        marginBottom: 85,
     },
     headerColumn: {
         backgroundColor: 'transparent',
+        marginBottom:-120,
         ...Platform.select({
             ios: {
                 alignItems: 'center',
@@ -113,19 +122,16 @@ const styles = StyleSheet.create({
         }),
     },
     userImage: {
-        borderColor: '#FFF',
         borderRadius: 85,
-        borderWidth: 3,
-        height: 170,
-        marginBottom: 15,
-        width: 170,
+        height: 150,
+        width: 150,
     },
     userNameText: {
-        color: '#FFF',
         fontSize: 22,
         fontWeight: 'bold',
         paddingBottom: 8,
         textAlign: 'center',
+        marginBottom:15,
     },
     separator: {
         marginVertical: 8,
@@ -136,15 +142,16 @@ const styles = StyleSheet.create({
     },
     titleText: {
         marginTop: 10,
-        fontSize: 22,
+        fontSize: 20,
         fontWeight: 'bold',
         paddingBottom: 8,
-        marginLeft: 20,
+        textAlignVertical:'center',
+        justifyContent:'center',
+
     },
     userInfo: {
-        marginTop: 10,
         fontSize: 18,
-        paddingBottom: 8,
+        paddingBottom: 5,
         marginLeft: 20,
     }
 })
