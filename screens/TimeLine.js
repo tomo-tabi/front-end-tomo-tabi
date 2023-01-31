@@ -1,6 +1,9 @@
 import React, { useState, useEffect, useContext, useRef } from 'react';
 import { StyleSheet, Text, FlatList, View, TouchableOpacity, Dimensions } from 'react-native';
-import { globalStyles, colors, StyledModal, EditButton, BlueButton } from "../styles/globalStyles";
+import { SelectList } from 'react-native-dropdown-select-list'
+
+import { globalStyles, colors, StyledModal, EditButton, BlueButton, } from "../styles/globalStyles";
+
 const { primary, blue, yellow } = colors
 
 import { EventContext } from '../context/EventContext';
@@ -22,6 +25,8 @@ export default function TimeLine({ navigation }) {
   const [eventEditData, setEventEditData] = useState({}); // Set the event I want to send to Edit Timeline component
 
   const [visible, setVisible] = useState(true);
+  const [filterEvents, setFilterEvents] = useState(null);
+  const [filterSelect, setFilterSelect] = useState('');
 
   const [dayEvent, setDayEvent] = useState(null); 
   const [dayRange, setDayRange] = useState([]);
@@ -187,6 +192,13 @@ export default function TimeLine({ navigation }) {
     setVisible(false);
   };
 
+  const filterOpt = [
+    {key:'1', value:'No Filter'},
+    {key:'2', value:'Pending'},
+    {key:'3', value:'Accepted'},
+    {key:'4', value:'Rejected'},
+  ]
+
   return (
     <>
       <View style={globalStyles.container}>
@@ -202,6 +214,21 @@ export default function TimeLine({ navigation }) {
             />
           </View>
         }
+
+        <SelectList 
+          search={false}
+          setSelected={(val) => {
+            setFilterSelect(val);
+          }} 
+          data={filterOpt} 
+          save="value"
+          placeholder='No Filter'
+          boxStyles={styles.filterBtn}
+          inputStyles={styles.filterInput}
+          dropdownStyles={styles.filterDropdown}
+          dropdownTextStyles={styles.filterDropdownText}
+        />
+        
         {tripEvents === null &&
           <View>
             <Dialog.Container visible={visible}>
