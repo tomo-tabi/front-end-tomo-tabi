@@ -197,7 +197,76 @@ export default function TimeLine({ navigation }) {
     {key:'2', value:'Pending'},
     {key:'3', value:'Accepted'},
     {key:'4', value:'Rejected'},
+  ];
+
+  const dummyVotes = [
+    {
+      trips_events_id: 95, 
+      id:1,
+      vote:false
+    },
+    {
+      trips_events_id: 99, 
+      id:2,
+      vote:false
+    },
+    {
+      trips_events_id: 96, 
+      id:2,
+      vote:true
+    },
   ]
+
+    // console.log(tripEvents);
+  const handelFilterSelect = () => {
+    if (filterSelect === 'No Filter') {
+      setFilterEvents(dayEvent);
+    } else {
+      let filterState;
+
+      switch (filterSelect) {
+        case 'Pending':
+          filterState = 'Pending';
+          break;
+        case 'Accepted':
+          filterState = true;
+          break;
+        case 'Rejected':
+          filterState = false;
+          break;
+      }
+
+      const filterObj = {};
+
+      dummyVotes.forEach((item) => {
+        // console.log(object);
+        if (filterState === true) {
+          if (item.vote) {
+            return filterObj[item.trips_events_id] = 0
+          }
+        } else if (filterState === false) {
+          if (!item.vote) {
+            return filterObj[item.trips_events_id] = 0
+          }
+        } else {
+          return filterObj[item.trips_events_id] = 0
+        }
+      })
+
+      // console.log(filterSelect, filterObj);
+      const filteredEvent = dayEvent.filter((item) => {
+        if (filterSelect === "Pending") {
+          return filterObj[item.id] === undefined
+        } else {
+          return filterObj[item.id] === 0
+        }
+        // console.log(filterObj[item.trips_events_id]);
+      })
+      // console.log(filteredEvent)
+
+      setFilterEvents(filteredEvent);
+    }
+  }
 
   return (
     <>
@@ -227,6 +296,7 @@ export default function TimeLine({ navigation }) {
           inputStyles={styles.filterInput}
           dropdownStyles={styles.filterDropdown}
           dropdownTextStyles={styles.filterDropdownText}
+          onSelect={handelFilterSelect}
         />
         
         {tripEvents === null &&
@@ -253,17 +323,36 @@ export default function TimeLine({ navigation }) {
           EditData={eventEditData}
         />
 
-        {dayEvent &&
+        {dayEvent && !filterEvents ?
           <Timeline
             style={styles2.list}
             data={dayEvent}
             renderDetail={renderDetail}
             renderTime={renderTime}
             circleSize={20}
-            circleColor='rgb(45,156,219)'
-            lineColor='rgb(45,156,219)'
+            circleColor={blue}
+            lineColor={blue}
             // timeContainerStyle={{ minWidth: 52 }}
             // timeStyle={{ textAlign: 'center', backgroundColor: '#ff9797', color: 'white', padding: 5, borderRadius: 13 }}
+            options={{
+              style: { marginTop: 5 },
+            }}
+            innerCircle={'dot'}
+            separator={false}
+            detailContainerStyle={{ flex: 1, marginBottom: 10, borderRadius: 10 }}
+            isUsingFlatlist={true}
+          />
+          : ''
+        }
+        {filterEvents && 
+          <Timeline
+            style={styles2.list}
+            data={filterEvents}
+            renderDetail={renderDetail}
+            renderTime={renderTime}
+            circleSize={20}
+            circleColor={blue}
+            lineColor={blue}
             options={{
               style: { marginTop: 5 },
             }}
@@ -358,5 +447,38 @@ const styles = StyleSheet.create({
 
   dialogButton: {
     fontWeight: 'bold'
+  },
+
+  filterBtn:{
+    borderRadius:25,
+    backgroundColor:primary,
+    alignSelf:'flex-end',
+    paddingHorizontal:10,
+    textAlign:'center',
+    textAlignVertical:'center',
+    // borderWidth:0,
+    padding:0,
+    borderColor:'#9E9E9E',
+    // marginVertical:5,
+  },
+  filterInput:{
+    color:'#9E9E9E',
+    margin:0,
+    fontSize:14,
+    padding:0
+
+  },
+  filterDropdown:{
+    position: 'absolute',
+    zIndex:6,
+    backgroundColor:primary,
+    borderColor:'#9E9E9E',
+    alignSelf:'flex-end',
+    marginTop:50,
+  },
+  filterDropdownText:{
+    color:'#9E9E9E',
+    alignSelf:'flex-end',
+    margin:0,
   },
 });
