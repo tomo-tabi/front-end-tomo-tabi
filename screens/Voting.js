@@ -28,16 +28,22 @@ export default function Voting({ route, navigation }) {
   useEffect(() => {
     
     if (votes !== null) {
-      let voteArr = votes.voteArray
+      const userVoteStat = {};
+      let noVote = [];
       
-      let notVote = usersInTrip.filter((obj) => {
-        for ( let i = 0 ; i < votes.voteArray.length ; i ++) {
-          return obj.email !== votes.voteArray[i].email
+      votes.voteArray.forEach((item) => {
+        return userVoteStat[item.email] = 0
+      });
+
+      usersInTrip.forEach((obj) => {
+        if(userVoteStat[obj.email] === undefined){
+          noVote.push(obj)
         }
-      })
-      // console.log(voteArr);
-      let res = [...voteArr, ...notVote];
+      });
+
+      let res = [...votes.voteArray, ...noVote];
       setVoteInfo(res);
+      // console.log(res);
       // console.log(notVote);
       
     } else {//no votes at all
