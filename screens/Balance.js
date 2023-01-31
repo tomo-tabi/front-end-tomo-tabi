@@ -1,0 +1,278 @@
+import React, { useContext, useState, useEffect, useCallback } from "react";
+import { StyleSheet, View, Text, ScrollView } from "react-native";
+import { globalStyles, colors, AddButton, StyledModal, TempButton, EditButton } from "../styles/globalStyles";
+const { primary, blue, yellow } = colors;
+
+import { VictoryBar, VictoryChart, VictoryTheme, VictoryLabel, VictoryAxis } from "victory-native";
+
+
+
+
+import { AuthContext } from "../context/AuthContext";
+import { ExpContext } from "../context/ExpContext";
+import { TripContext } from "../context/TripContext";
+
+import AddExpenses from "./AddExpenses";
+
+
+
+export const Balance = () => {
+
+    const { userData } = useContext(AuthContext);//to extract username?
+    const { usersInTrip } = useContext(TripContext);
+    const { getExp, expData } = useContext(ExpContext);
+
+    const [splitPaymentsData, setSplitPaymentData] = useState([[], []]);
+    const [modalOpen, setModalOpen] = useState(false);
+    const [graphData, setGraphData] = useState(null)
+
+
+    useEffect(() => {
+        getExp();
+    }, [])
+
+    useEffect(() => {
+        let expObj = {}
+
+        if (expData) {
+            expData.forEach((obj) => {
+                if (expObj[obj.username]) {
+                    expObj[obj.username] = Number(expObj[obj.username]) + Number(obj.money)
+                }
+                if (!expObj[obj.username]) {
+                    expObj[obj.username] = Number(obj.money)
+                }
+            })
+            usersInTrip.forEach((userObj) => {
+                if (!expObj[userObj.username]) {
+                    expObj[userObj.username] = 0
+                }
+            })
+            setSplitPaymentData(splitPayments(expObj))
+        }
+
+        let sumOfMoneySpend = 0
+        let counter = 0
+
+        for (let key in expObj) {
+            sumOfMoneySpend += Math.trunc(expObj[key])
+            counter += 1
+        }
+
+        let counterGrapch = 1
+        const expArraGraph = []
+
+        for (let key in expObj) {
+            const expObjGraph = {}
+            expObjGraph["x"] = counterGrapch
+            expObjGraph["y"] = Math.trunc(expObj[key] - (sumOfMoneySpend / counter))
+            expObjGraph["z"] = key
+            expArraGraph.push(expObjGraph)
+            counterGrapch += 1
+        }
+
+        setGraphData(expArraGraph)
+
+
+    }, [expData])
+
+
+
+    const splitPayments = (payments) => {
+        const result = []
+        const someoneOwnsYou = []
+        const oweYou = []
+        const people = Object.keys(payments);
+        const valuesPaid = Object.values(payments);
+
+        const sum = valuesPaid.reduce((acc, curr) => curr + acc);
+        const mean = sum / people.length;
+
+        const sortedPeople = people.sort((personA, personB) => payments[personA] - payments[personB]);
+        const sortedValuesPaid = sortedPeople.map((person) => payments[person] - mean);
+
+        let i = 0;
+        let j = sortedPeople.length - 1;
+        let debt;
+
+        while (i < j) {
+            debt = Math.min(-(sortedValuesPaid[i]), sortedValuesPaid[j]);
+            sortedValuesPaid[i] += debt;
+            sortedValuesPaid[j] -= debt;
+
+            if (sortedPeople[i] === userData.username) {
+                someoneOwnsYou.push(<Text style={styles.oweCalc} key={i}>You owe {sortedPeople[j]} ¥{Math.trunc(debt)}</Text>);
+            }
+
+            if (sortedPeople[j] === userData.username) {
+                oweYou.push(<Text style={styles.oweCalc} key={j}>{sortedPeople[i]} owes you ¥ {Math.trunc(debt)}</Text>)
+            }
+
+
+            if (sortedValuesPaid[i] === 0) {
+                i++;
+            }
+
+            if (sortedValuesPaid[j] === 0) {
+                j--;
+            }
+        }
+
+        result.push(someoneOwnsYou)
+        result.push(oweYou)
+
+        return result
+    }
+
+    const PayPayURL = "paypay://";
+
+    const LinePayURL = "linepay://";
+
+    const OpenURLButton = ({ url, children }) => {
+        const handlePress = useCallback(async () => {
+            // Checking if the link is supported for links with custom URL scheme.
+            const supported = await Linking.canOpenURL(url);
+
+            if (supported) {
+                // Opening the link with some app, if the URL scheme is "http" the web link should be opened
+                // by some browser in the mobile
+                await Linking.openURL(url);
+            } else {
+                if (url == "paypay://") {
+                    await Linking.openURL("https://play.google.com/store/apps/details?id=com.paypay.android%22")
+                }
+                else {
+                    await Linking.openURL("https://play.google.com/store/apps/details?id=com.linepaycorp.talaria&hl=en&gl=US")
+                }
+            }
+        }, [url]);
+
+        return (
+            <TempButton
+                onPress={handlePress}
+                buttonText={children}
+            />
+        );
+    };
+
+
+    // post exp needs: itemName, money, optional purchaserid (if blank defaults to userid)
+
+    return (
+        <ScrollView>
+            <View style={{ flex: 1 }}>
+                {graphData && <View style={styles.container}>
+                    {/* <VictoryChart
+                        padding={{ top: 40, bottom: 80, left: 40, right: 40 }}
+                        domainPadding={{ x: 25 }}
+                    > */}
+
+                    <VictoryBar horizontal
+                        style={{
+                            data: {
+                                fill: ({ datum }) => datum.y > 0 ? "green" : "red",
+                                fillOpacity: 0.7,
+                                width: 30,
+                            },
+                            labels: { fill: "black", fontSize: 15, textAlign: "center" },
+
+                        }}
+                        // labelComponent={<VictoryLabel />}
+
+                        data={graphData}
+                        labels={({ datum }) => {
+                            if (datum.y > 0) {
+                                return datum.z + " ¥ " + datum.y
+                            }
+                            else {
+                                return "¥" + datum.y + " " + datum.z
+                            }
+                        }}
+                    />
+                    <VictoryAxis crossAxis={false} tickValues={[]} />
+                    {/* </VictoryChart> */}
+                </View>}
+
+
+                <View style={styles.calcView}>
+
+                    <Text style={styles.textOweTitle} > You owe: </Text>
+
+                    {splitPaymentsData[0].length === 0 ? <Text style={styles.oweCalc}>Congrats, you don't owe anything. </Text> :
+                        splitPaymentsData[0].map((item) => {
+                            // console.log(item);
+                            return (item)
+                        })
+                    }
+
+                    <Text style={styles.textOweTitle}> Someone owes you:</Text>
+
+                    {splitPaymentsData[1].length === 0 ? <Text style={styles.oweCalc}>No one owes you anything...</Text> :
+                        splitPaymentsData[1].map((item) => {
+                            // console.log(item);
+                            return (item)
+                        })
+                    }
+                </View>
+
+                <View style={{ height: 100, backgroundColor: primary, }}>
+                    <View style={styles.buttons}>
+                        <OpenURLButton url={PayPayURL}>Open PayPay</OpenURLButton>
+                        <OpenURLButton url={LinePayURL}>Open Line Pay</OpenURLButton>
+                    </View>
+                    <AddButton
+                        setModalOpen={setModalOpen}
+                    />
+                </View>
+                <StyledModal
+                    modalOpen={modalOpen}
+                    setModalOpen={setModalOpen}
+                    AddComponent={AddExpenses}
+                />
+            </View>
+        </ScrollView>
+
+    );
+};
+
+const styles = StyleSheet.create({
+    container: {
+        flex: 1,
+        justifyContent: "center",
+        alignItems: "center",
+        backgroundColor: "#f5fcff"
+    },
+    buttons: {
+        // flex:1,
+        width: 300,
+        height: 70,
+        flexDirection: 'row',
+        // backgroundColor: pink,
+        position: "absolute",
+        bottom: 15,
+        overflow: 'visible',
+        // padding:5
+
+    },
+    textOwe: {
+        fontSize: 20,
+
+    },
+    textOweTitle: {
+        fontWeight: "bold",
+        fontSize: 24
+    },
+    oweCalc: {
+        fontSize: 20,
+        marginLeft: 10,
+        marginBottom: 10,
+    },
+    calcView: {
+        flex: 1,
+        // borderWidth:1,
+        padding: 5,
+        marginBottom: 10,
+        backgroundColor: blue,
+        borderRadius: 6
+    },
+});

@@ -1,16 +1,22 @@
 import React, { useState, useCallback, useContext, useEffect } from "react";
-import { Linking, StyleSheet, View, Text, ScrollView } from "react-native";
+import { Linking, StyleSheet, View, Text, ScrollView, TouchableOpacity } from "react-native";
 import { Table, TableWrapper, Row, Cell } from "react-native-table-component";
 import { globalStyles, colors, AddButton, StyledModal, TempButton, EditButton } from "../styles/globalStyles";
+import { MaterialCommunityIcons } from '@expo/vector-icons';
+
+
 
 import { AuthContext } from "../context/AuthContext";
 import { ExpContext } from "../context/ExpContext";
 import { TripContext } from "../context/TripContext";
 
+
+import { Balance } from "./Balance";
+
 import AddExpenses from "./AddExpenses";
 import EditExpenses from "./EditExpense";
 
-const { primary, blue } = colors;
+const { primary, blue, yellow } = colors;
 
 export const ExpenseTable = () => {
   const { userData } = useContext(AuthContext);//to extract username?
@@ -25,6 +31,9 @@ export const ExpenseTable = () => {
   const [modalEditOpen, setModalEditOpen] = useState(false)
   const [expenseEditData, setExpenseEditData] = useState({}) // Set the event I want to send to Edit Timeline component
 
+  const [ expensesView, setExpensesView] = useState(true)
+  const [ balanceView, setBalanceView] = useState(false)
+
   useEffect(() => {
     getExp();
   }, [])
@@ -36,16 +45,16 @@ export const ExpenseTable = () => {
     if (expData) {
       expData.forEach((obj) => {
         // console.log(obj.email, userData.email);
-        
+
         let edit
-        if(obj.email === userData.email){
-          edit = 
+        if (obj.email === userData.email) {
+          edit =
             <EditButton
-            setModalOpen={setModalEditOpen}
-            setEditData={setExpenseEditData}
-            editData={obj}
-            style={{alignSelf:'center'}}
-          />
+              setModalOpen={setModalEditOpen}
+              setEditData={setExpenseEditData}
+              editData={obj}
+              style={{ alignSelf: 'center' }}
+            />
         } else {
           edit = <View></View>
         }
@@ -161,27 +170,56 @@ export const ExpenseTable = () => {
     );
   };
 
+
   // post exp needs: itemName, money, optional purchaserid (if blank defaults to userid)
 
   return (
     <View style={{ flex: 1 }}>
       <ScrollView style={{ flex: 1 }}>
-        <Table>
+        <View style={[globalStyles.card, styles.buttonsContainer]}>
+          <TouchableOpacity
+            style={styles.button}
+            onPress={() => {setBalanceView(false); setExpensesView(true)}}
+          >
+            <MaterialCommunityIcons name='table' size={30} style={{ marginRight: 10, color: yellow }} />
+            <Text style={{ textAlignVertical: 'center', fontSize: 18 }}>
+              Expenses
+            </Text>
+          </TouchableOpacity>
+          <TouchableOpacity
+            style={styles.button}
+            onPress={() => {setExpensesView(false); setBalanceView(true)}}
+          >
+            <MaterialCommunityIcons name='scale-balance' size={30} style={{ marginRight: 10, color: blue }} />
+            <Text style={{ textAlignVertical: 'center', fontSize: 18 }}>
+              Balance
+            </Text>
+          </TouchableOpacity>
+        </View>
+        {expensesView && <Table>
           <TableWrapper>
             <Row data={tableHead} style={styles.head} textStyle={styles.text} />
             {
               tableData.map((data, i) => (
                 <TableWrapper style={styles.wrapper} key={i}>
-                    {
-                      data.map((cell, j) => (
-                        <Cell onPress={() => console.log(j)} key={j} data={cell} textStyle={styles.text} borderStyle={styles.cellBorderStyle} />
-                      ))
-                    }
+                  {
+                    data.map((cell, j) => (
+                      <Cell onPress={() => console.log(j)} key={j} data={cell} textStyle={styles.text} borderStyle={styles.cellBorderStyle} />
+                    ))
+                  }
                 </TableWrapper>
               ))
             }
           </TableWrapper>
-        </Table>
+          <View style={{ height: 100, backgroundColor: primary, }}>
+                <AddButton
+                    setModalOpen={setModalOpen}
+                />
+            </View>
+        </Table>}
+
+        {balanceView && <Balance/>}
+        
 
         <View style={globalStyles.container}>
 
@@ -191,39 +229,12 @@ export const ExpenseTable = () => {
             AddComponent={AddExpenses}
           />
 
-          <View style={styles.calcView}>
-
-            <Text style={styles.textOweTitle} > You owe: </Text>
-
-            {splitPaymentsData[0].length === 0 ? <Text style={styles.oweCalc}>Congrats, you don't owe anything. </Text> :
-              splitPaymentsData[0].map((item) => {
-                // console.log(item);
-                return (item)
-              })
-            }
-
-            <Text style={styles.textOweTitle}> Someone owes you:</Text>
-
-            {splitPaymentsData[1].length === 0 ? <Text style={styles.oweCalc}>No one owes you anything...</Text> :
-              splitPaymentsData[1].map((item) => {
-                // console.log(item);
-                return (item)
-              })
-            }
-          </View>
 
         </View>
+        
       </ScrollView>
 
-      <View style={{ height: 100, backgroundColor: primary, }}>
-        <View style={styles.buttons}>
-          <OpenURLButton url={PayPayURL}>Open PayPay</OpenURLButton>
-          <OpenURLButton url={LinePayURL}>Open Line Pay</OpenURLButton>
-        </View>
-        <AddButton
-          setModalOpen={setModalOpen}
-        />
-      </View>
+      
 
       <StyledModal
         modalOpen={modalEditOpen}
@@ -236,6 +247,24 @@ export const ExpenseTable = () => {
 };
 
 const styles = StyleSheet.create({
+  buttonsContainer: {
+    flex:1,
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    width: "100%",
+    alignSelf: "center",
+    height:100,
+  },
+  button: {
+    flexDirection: 'row',
+    paddingVertical: 5,
+    borderStyle:"solid",
+    borderRightWidth:2,
+    width:"50%",
+    alignContent:"center",
+    alignSelf: "center",
+    // borderRadius:20,
+  },
   wrapper: {
     flex: 1,
     flexDirection: "row",
@@ -262,7 +291,6 @@ const styles = StyleSheet.create({
     // padding:5
 
   },
-
   text: {// table text
     textAlign: "center",
 
