@@ -23,7 +23,7 @@ export default function TripStack() {
 
           if (route.name === 'Trips') {
             iconName = 'airplane'
-          } else if (route.name === 'UserPage') {
+          } else if (route.name === 'User Profile') {
             iconName =  "account" 
           }
           return (
@@ -40,7 +40,7 @@ export default function TripStack() {
       })}
     >
       <Tab.Screen name="Trips" component={Trips} />
-      <Tab.Screen name="UserPage" component={UserPage} />
+      <Tab.Screen name="User Profile" component={UserPage} />
     </Tab.Navigator>
   )
   
