@@ -64,6 +64,12 @@ export default function Trips({ navigation }) {
     }
   }, [invites])
 
+  useEffect(() => {
+    if (trips) {
+      handelFilter('upcoming',  moment(new Date()).format('YYYY-MM-DD'));
+    }
+  },[trips])
+
   const handelFilter = (state, todayDate) => {
     //console.log('2022-12-21'<'2023-02-01');
 
