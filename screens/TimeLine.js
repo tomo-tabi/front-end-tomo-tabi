@@ -238,19 +238,9 @@ export default function TimeLine({ navigation }) {
 
       const filterObj = {};
 
-      dummyVotes.forEach((item) => {
-        // console.log(object);
-        if (filterState === true) {
-          if (item.vote) {
-            return filterObj[item.trips_events_id] = 0
-          }
-        } else if (filterState === false) {
-          if (!item.vote) {
-            return filterObj[item.trips_events_id] = 0
-          }
-        } else {
-          return filterObj[item.trips_events_id] = 0
-        }
+      dummyVotes.forEach((item) => { //event ids to filter
+        // console.log(filterState,item.vote);
+        return filterObj[item.trips_events_id] = item.vote !== undefined ? item.vote : 0
       })
 
       // console.log(filterSelect, filterObj);
@@ -258,7 +248,7 @@ export default function TimeLine({ navigation }) {
         if (filterSelect === "Pending") {
           return filterObj[item.id] === undefined
         } else {
-          return filterObj[item.id] === 0
+          return filterObj[item.id] === filterState
         }
         // console.log(filterObj[item.trips_events_id]);
       })
@@ -457,7 +447,7 @@ const styles = StyleSheet.create({
     textAlign:'center',
     textAlignVertical:'center',
     // borderWidth:0,
-    padding:0,
+    paddingVertical:5,
     borderColor:'#9E9E9E',
     // marginVertical:5,
   },
