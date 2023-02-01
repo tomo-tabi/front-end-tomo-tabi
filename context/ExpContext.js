@@ -1,5 +1,5 @@
 import React, { createContext, useContext, useState } from 'react';
-import API_URL from '../config';
+import { API_URL } from '../config';
 
 import { AuthContext } from './AuthContext';
 import { EventContext } from './EventContext';

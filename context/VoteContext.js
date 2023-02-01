@@ -2,7 +2,7 @@ import React, { createContext, useContext, useState, useEffect } from 'react';
 import { AuthContext } from './AuthContext';
 import { EventContext } from './EventContext';
 import { checkStatus, sendStatus } from '../utils/fetchUtils';
-import API_URL from '../config';
+import { API_URL } from '../config';
 import moment from 'moment';
 
 export const VoteContext = createContext();
