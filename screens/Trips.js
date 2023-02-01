@@ -9,7 +9,6 @@ import { InviteContext } from '../context/InviteContext';
 
 import moment from 'moment';
 
-import { Ionicons } from '@expo/vector-icons';
 import Dialog from "react-native-dialog";//New
 
 import AddTrip from './AddTrip';
@@ -133,11 +132,6 @@ export default function Trips({ navigation }) {
                     setEditData={setTripEditData}
                     editData={item}
                   />
-                  {/* <Ionicons
-                    name="ellipsis-horizontal-sharp"
-                    style={{ position: 'absolute', right: 0 }}
-                    size={24} color="black"
-                    onPress={() => { handleEdit(item) }} /> */}
                 </View>
                 <Text style={styles.tripDate}>{dateFormat(item.start_date, item.end_date)}</Text>
               </View>
@@ -164,9 +158,6 @@ export default function Trips({ navigation }) {
         EditData={tripEditData}
       />
 
-      {/* <AddButton
-        setModalOpen={setModalOpen}
-      /> */}
     </View>
   )
 };
@@ -181,7 +172,6 @@ const styles = StyleSheet.create({
     shadowOpacity: 0.8,
     elevation: 7,
 
-    // padding: 5,
     borderTopLeftRadius: 6,
     borderTopRightRadius: 6,
     backgroundColor: primary
