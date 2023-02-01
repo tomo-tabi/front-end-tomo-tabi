@@ -1,6 +1,9 @@
 import React, { useState, useEffect, useContext, useRef } from 'react';
 import { StyleSheet, Text, FlatList, View, TouchableOpacity, Dimensions } from 'react-native';
-import { globalStyles, colors, StyledModal, EditButton, BlueButton } from "../styles/globalStyles";
+import { SelectList } from 'react-native-dropdown-select-list'
+
+import { globalStyles, colors, StyledModal, EditButton, BlueButton, } from "../styles/globalStyles";
+
 const { primary, blue, yellow } = colors
 
 import { EventContext } from '../context/EventContext';
@@ -22,6 +25,8 @@ export default function TimeLine({ navigation }) {
   const [eventEditData, setEventEditData] = useState({}); // Set the event I want to send to Edit Timeline component
 
   const [visible, setVisible] = useState(true);
+  const [filterEvents, setFilterEvents] = useState(null);
+  const [filterSelect, setFilterSelect] = useState('');
 
   const [dayEvent, setDayEvent] = useState(null); 
   const [dayRange, setDayRange] = useState([]);
@@ -187,6 +192,82 @@ export default function TimeLine({ navigation }) {
     setVisible(false);
   };
 
+  const filterOpt = [
+    {key:'1', value:'No Filter'},
+    {key:'2', value:'Pending'},
+    {key:'3', value:'Accepted'},
+    {key:'4', value:'Rejected'},
+  ];
+
+  const dummyVotes = [
+    {
+      trips_events_id: 95, 
+      id:1,
+      vote:false
+    },
+    {
+      trips_events_id: 99, 
+      id:2,
+      vote:false
+    },
+    {
+      trips_events_id: 96, 
+      id:2,
+      vote:true
+    },
+  ]
+
+    // console.log(tripEvents);
+  const handelFilterSelect = () => {
+    if (filterSelect === 'No Filter') {
+      setFilterEvents(dayEvent);
+    } else {
+      let filterState;
+
+      switch (filterSelect) {
+        case 'Pending':
+          filterState = 'Pending';
+          break;
+        case 'Accepted':
+          filterState = true;
+          break;
+        case 'Rejected':
+          filterState = false;
+          break;
+      }
+
+      const filterObj = {};
+
+      dummyVotes.forEach((item) => {
+        // console.log(object);
+        if (filterState === true) {
+          if (item.vote) {
+            return filterObj[item.trips_events_id] = 0
+          }
+        } else if (filterState === false) {
+          if (!item.vote) {
+            return filterObj[item.trips_events_id] = 0
+          }
+        } else {
+          return filterObj[item.trips_events_id] = 0
+        }
+      })
+
+      // console.log(filterSelect, filterObj);
+      const filteredEvent = dayEvent.filter((item) => {
+        if (filterSelect === "Pending") {
+          return filterObj[item.id] === undefined
+        } else {
+          return filterObj[item.id] === 0
+        }
+        // console.log(filterObj[item.trips_events_id]);
+      })
+      // console.log(filteredEvent)
+
+      setFilterEvents(filteredEvent);
+    }
+  }
+
   return (
     <>
       <View style={globalStyles.container}>
@@ -202,6 +283,22 @@ export default function TimeLine({ navigation }) {
             />
           </View>
         }
+
+        <SelectList 
+          search={false}
+          setSelected={(val) => {
+            setFilterSelect(val);
+          }} 
+          data={filterOpt} 
+          save="value"
+          placeholder='No Filter'
+          boxStyles={styles.filterBtn}
+          inputStyles={styles.filterInput}
+          dropdownStyles={styles.filterDropdown}
+          dropdownTextStyles={styles.filterDropdownText}
+          onSelect={handelFilterSelect}
+        />
+        
         {tripEvents === null &&
           <View>
             <Dialog.Container visible={visible}>
@@ -226,17 +323,36 @@ export default function TimeLine({ navigation }) {
           EditData={eventEditData}
         />
 
-        {dayEvent &&
+        {dayEvent && !filterEvents ?
           <Timeline
             style={styles2.list}
             data={dayEvent}
             renderDetail={renderDetail}
             renderTime={renderTime}
             circleSize={20}
-            circleColor='rgb(45,156,219)'
-            lineColor='rgb(45,156,219)'
+            circleColor={blue}
+            lineColor={blue}
             // timeContainerStyle={{ minWidth: 52 }}
             // timeStyle={{ textAlign: 'center', backgroundColor: '#ff9797', color: 'white', padding: 5, borderRadius: 13 }}
+            options={{
+              style: { marginTop: 5 },
+            }}
+            innerCircle={'dot'}
+            separator={false}
+            detailContainerStyle={{ flex: 1, marginBottom: 10, borderRadius: 10 }}
+            isUsingFlatlist={true}
+          />
+          : ''
+        }
+        {filterEvents && 
+          <Timeline
+            style={styles2.list}
+            data={filterEvents}
+            renderDetail={renderDetail}
+            renderTime={renderTime}
+            circleSize={20}
+            circleColor={blue}
+            lineColor={blue}
             options={{
               style: { marginTop: 5 },
             }}
@@ -331,5 +447,38 @@ const styles = StyleSheet.create({
 
   dialogButton: {
     fontWeight: 'bold'
+  },
+
+  filterBtn:{
+    borderRadius:25,
+    backgroundColor:primary,
+    alignSelf:'flex-end',
+    paddingHorizontal:10,
+    textAlign:'center',
+    textAlignVertical:'center',
+    // borderWidth:0,
+    padding:0,
+    borderColor:'#9E9E9E',
+    // marginVertical:5,
+  },
+  filterInput:{
+    color:'#9E9E9E',
+    margin:0,
+    fontSize:14,
+    padding:0
+
+  },
+  filterDropdown:{
+    position: 'absolute',
+    zIndex:6,
+    backgroundColor:primary,
+    borderColor:'#9E9E9E',
+    alignSelf:'flex-end',
+    marginTop:50,
+  },
+  filterDropdownText:{
+    color:'#9E9E9E',
+    alignSelf:'flex-end',
+    margin:0,
   },
 });
