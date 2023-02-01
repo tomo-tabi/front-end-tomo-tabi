@@ -4,7 +4,7 @@ import { AuthContext } from './AuthContext';
 import { TripContext } from './TripContext';
 import { EventContext } from './EventContext';
 import { checkStatus, sendStatus } from '../utils/fetchUtils';
-import { API_URL } from '../config';
+import { API_URL } from '../config.android';
 
 export const InviteContext = createContext();
 

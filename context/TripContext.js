@@ -1,7 +1,7 @@
 import React, { createContext, useContext, useState, useEffect } from 'react';
 import { AuthContext } from './AuthContext';
 import { checkStatus, sendStatus } from '../utils/fetchUtils';
-import { API_URL } from '../config';
+import { API_URL } from '../config.android';
 import moment from 'moment';
 
 export const TripContext = createContext();
