@@ -16,7 +16,7 @@ import { Balance } from "./Balance";
 import AddExpenses from "./AddExpenses";
 import EditExpenses from "./EditExpense";
 
-const { primary, blue, yellow } = colors;
+const { primary, blue, yellow, lightBlue } = colors;
 
 export const ExpenseTable = () => {
   const { userData } = useContext(AuthContext);//to extract username?
@@ -176,9 +176,9 @@ export const ExpenseTable = () => {
   return (
     <View style={{ flex: 1 }}>
       <ScrollView style={{ flex: 1 }}>
-        <View style={[globalStyles.card, styles.buttonsContainer]}>
+      <View style={[styles.buttonsContainer]}>
           <TouchableOpacity
-            style={styles.button}
+            style={[styles.button, {backgroundColor: expensesView ? lightBlue : primary}]}
             onPress={() => {setBalanceView(false); setExpensesView(true)}}
           >
             <MaterialCommunityIcons name='table' size={30} style={{ marginRight: 10, color: yellow }} />
@@ -187,7 +187,7 @@ export const ExpenseTable = () => {
             </Text>
           </TouchableOpacity>
           <TouchableOpacity
-            style={styles.button}
+            style={[styles.button, {backgroundColor: balanceView ? lightBlue : primary}]}
             onPress={() => {setExpensesView(false); setBalanceView(true)}}
           >
             <MaterialCommunityIcons name='scale-balance' size={30} style={{ marginRight: 10, color: blue }} />
@@ -248,21 +248,25 @@ export const ExpenseTable = () => {
 
 const styles = StyleSheet.create({
   buttonsContainer: {
+    backgroundColor:primary,
     flex:1,
     flexDirection: 'row',
-    justifyContent: 'space-between',
-    width: "100%",
+    // justifyContent: 'space-between',
+    // width: "100%",
     alignSelf: "center",
-    height:100,
+    // height:100,
+    paddingHorizontal:10,
   },
   button: {
     flexDirection: 'row',
-    paddingVertical: 5,
-    borderStyle:"solid",
-    borderRightWidth:2,
+    padding: 5,
+    borderRadius:6,
     width:"50%",
-    alignContent:"center",
-    alignSelf: "center",
+    // alignContent:"center",
+    // alignItems:'center',
+    // alignSelf: "center",
+    margin:5,
+    // borderWidth:1,
     // borderRadius:20,
   },
   wrapper: {

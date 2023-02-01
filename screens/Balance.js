@@ -3,7 +3,14 @@ import { StyleSheet, View, Text, ScrollView } from "react-native";
 import { globalStyles, colors, AddButton, StyledModal, TempButton, EditButton } from "../styles/globalStyles";
 const { primary, blue, yellow } = colors;
 
-import { VictoryBar, VictoryChart, VictoryTheme, VictoryLabel, VictoryAxis } from "victory-native";
+
+import { Card } from 'react-native-paper';
+
+import { MaterialCommunityIcons } from '@expo/vector-icons';
+
+
+
+import { VictoryBar, VictoryChart, VictoryTheme, VictoryLabel, VictoryAxis, VictoryGroup } from "victory-native";
 
 
 
@@ -22,9 +29,9 @@ export const Balance = () => {
     const { usersInTrip } = useContext(TripContext);
     const { getExp, expData } = useContext(ExpContext);
 
-    const [splitPaymentsData, setSplitPaymentData] = useState([[], []]);
+    const [splitPaymentsData, setSplitPaymentData] = useState([[]]);
     const [modalOpen, setModalOpen] = useState(false);
-    const [graphData, setGraphData] = useState(null)
+    const [graphData, setGraphData] = useState([])
 
 
     useEffect(() => {
@@ -32,9 +39,10 @@ export const Balance = () => {
     }, [])
 
     useEffect(() => {
+
         let expObj = {}
 
-        if (expData) {
+        if (expData.length > 0) {
             expData.forEach((obj) => {
                 if (expObj[obj.username]) {
                     expObj[obj.username] = Number(expObj[obj.username]) + Number(obj.money)
@@ -51,30 +59,72 @@ export const Balance = () => {
             setSplitPaymentData(splitPayments(expObj))
         }
 
+        // let sumOfMoneySpend = 0
+        // let counter = 0
+
+        // for (let key in expObj) {
+        //     sumOfMoneySpend += Math.trunc(expObj[key])
+        //     counter += 1
+        // }
+
+        // let counterGrapch = 1
+        // const expArraGraph = []
+
+        // for (let key in expObj) {
+        //     const expObjGraph = {}
+        //     expObjGraph["x"] = counterGrapch
+        //     expObjGraph["y"] = Math.trunc(expObj[key] - (sumOfMoneySpend / counter))
+        //     expObjGraph["z"] = key
+        //     expArraGraph.push(expObjGraph)
+        //     counterGrapch += 1
+        // }
+
+        // setGraphData(expArraGraph)
+
         let sumOfMoneySpend = 0
-        let counter = 0
+        let counter = 0 // # of ppl in group? usersInTrip.length?
 
         for (let key in expObj) {
             sumOfMoneySpend += Math.trunc(expObj[key])
             counter += 1
         }
 
-        let counterGrapch = 1
         const expArraGraph = []
 
         for (let key in expObj) {
-            const expObjGraph = {}
-            expObjGraph["x"] = counterGrapch
-            expObjGraph["y"] = Math.trunc(expObj[key] - (sumOfMoneySpend / counter))
-            expObjGraph["z"] = key
-            expArraGraph.push(expObjGraph)
-            counterGrapch += 1
+            let money = Math.trunc(expObj[key] - (sumOfMoneySpend / counter))
+            if (key === userData.username) {
+                const expObjGraph = {
+                    x: 0,
+                    y: money,
+                    label: [key + " (You)", " ¥ " + money]
+                }
+                expArraGraph.push(expObjGraph)
+
+            }
+            else {
+                const expObjGraph = {
+                    x: 0,
+                    y: money,
+                    label: [key, " ¥ " + money]
+                }
+                expArraGraph.push(expObjGraph)
+            }
+            // if (money < 0) {
+            //     expObjGraph["label"] = `${key} -¥${-1*money}`
+            // } else {
+            //     expObjGraph["label"] = `¥${money} ${key}`
+            // }
+            // counterGrapch += 1
         }
+        // console.log(expArraGraph);
 
         setGraphData(expArraGraph)
 
 
     }, [expData])
+
+    const Separator = () => <View style={styles.separator} />;
 
 
 
@@ -100,14 +150,37 @@ export const Balance = () => {
             sortedValuesPaid[i] += debt;
             sortedValuesPaid[j] -= debt;
 
-            if (sortedPeople[i] === userData.username) {
-                someoneOwnsYou.push(<Text style={styles.oweCalc} key={i}>You owe {sortedPeople[j]} ¥{Math.trunc(debt)}</Text>);
-            }
 
-            if (sortedPeople[j] === userData.username) {
-                oweYou.push(<Text style={styles.oweCalc} key={j}>{sortedPeople[i]} owes you ¥ {Math.trunc(debt)}</Text>)
-            }
-
+            someoneOwnsYou.push(
+                <Card style={styles.card}>
+                    <View style={{ flex: 1, flexDirection: 'row', alignItems: "center", alignSelf: "center" }}>
+                        {sortedPeople[i] === userData.username ? <Text style={styles.oweCalc}>{sortedPeople[i]} (You) owes</Text> : <Text style={styles.oweCalc}>{sortedPeople[i]} owes</Text>}
+                        <View>
+                            <MaterialCommunityIcons name="transfer-right" size={100} style={{ color: "#FF6865" }} />
+                            <Text style={[styles.oweCalc, { textAlign: "center" }]}>¥{Math.trunc(debt)}</Text>
+                        </View>
+                        {sortedPeople[j] === userData.username ? <Text style={styles.oweCalc}> to {sortedPeople[j]} (You)</Text> : <Text style={styles.oweCalc}> to {sortedPeople[j]}</Text>}
+                    </View>
+                    {/* {sortedPeople[i] === userData.username ? <Text style={styles.oweCalc}>{sortedPeople[i]} (You)</Text> : <Text style={styles.oweCalc}>{sortedPeople[i]}</Text>}
+                    <View style={{ flex: 1, flexDirection: 'row', }}>
+                    <MaterialCommunityIcons name="arrow-right-thin" size={100} style={{ marginRight: 10, color: "red" }} />
+                        <Text style={[styles.oweCalc]}> owes</Text>
+                        <View style={{ flex: 1 }}>
+                            <Text style={[styles.oweCalc, { textAlign: "left" }]}>¥{Math.trunc(debt)}</Text>
+                        </View>
+                    </View>
+                    {sortedPeople[j] === userData.username ? <Text style={styles.oweCalc}> to {sortedPeople[j]} (You)</Text> : <Text style={styles.oweCalc}> to {sortedPeople[j]}</Text>} */}
+                    {sortedPeople[i] === userData.username ?
+                        <View>
+                            <Separator />
+                            <Text style={[styles.oweCalc]}>Payment options</Text>
+                            <View style={styles.buttons}>
+                                <OpenURLButton url={PayPayURL}>Pay with PayPay</OpenURLButton>
+                                <OpenURLButton url={LinePayURL}>Pay with Line Pay</OpenURLButton>
+                            </View>
+                        </View> : ""}
+                </Card>
+            );
 
             if (sortedValuesPaid[i] === 0) {
                 i++;
@@ -119,7 +192,6 @@ export const Balance = () => {
         }
 
         result.push(someoneOwnsYou)
-        result.push(oweYou)
 
         return result
     }
@@ -156,69 +228,131 @@ export const Balance = () => {
     };
 
 
-    // post exp needs: itemName, money, optional purchaserid (if blank defaults to userid)
-
     return (
         <ScrollView>
-            <View style={{ flex: 1 }}>
-                {graphData && <View style={styles.container}>
-                    {/* <VictoryChart
-                        padding={{ top: 40, bottom: 80, left: 40, right: 40 }}
-                        domainPadding={{ x: 25 }}
-                    > */}
+            {graphData.length !== 0 ? <View style={{ flex: 1, paddingHorizontal: 5 }}>
+                <View style={styles.container}>
+                    {usersInTrip.length > 1 && graphData.length !== 0 &&
+                        <View>
+                            <Text style={{ fontSize: 30, fontWeight: 'bold', textAlign: "center" }}> Group balance graph </Text>
+                            <Text style={{ fontSize: 20, color: "#a9a9a9", textAlign: "center" }}> Take a look at the graph and see who owes money and who is owed </Text>
+                        </View>}
+                    {usersInTrip.length > 1 && graphData.length !== 0 &&
+                        <VictoryChart
+                            padding={{ left: 3, right: 3, }}
+                            // domain={{x: -(usersInTrip.length)/2+1, y:(usersInTrip.length)/2-1}}
+                            // domain={{ x: [-(usersInTrip.length) / 2 + 1, (usersInTrip.length) / 2 - 1] }}
+                            domain={{ x: [-(usersInTrip.length) / 2 + 1, (usersInTrip.length) / 2 - 1] }}
+                            style={{
+                                flex:1,
+                                parent: {
+                                    flex: 1,
+                                    backgroundColor: blue,
+                                    borderRadius: 6,
+                                },
+                            }}
+                            width={380}
+                            height={500}
+                        >
+                            <VictoryGroup
+                                offset={300 / usersInTrip.length}
+                            >
+                                {graphData.map((item) => {
+                                    return (
+                                        <VictoryBar
+                                            horizontal
+                                            style={{
+                                                data: {
+                                                    fill: ({ datum }) => datum.y > 0 ? "#8CEF74" : "#FF6865",
+                                                    fillOpacity: 0.7,
+                                                    width: () => 250 / usersInTrip.length,
+                                                },
+                                            }}
+                                            cornerRadius={6}
 
-                    <VictoryBar horizontal
-                        style={{
-                            data: {
-                                fill: ({ datum }) => datum.y > 0 ? "green" : "red",
-                                fillOpacity: 0.7,
-                                width: 30,
-                            },
-                            labels: { fill: "black", fontSize: 15, textAlign: "center" },
+                                            data={[item]}
 
-                        }}
-                        // labelComponent={<VictoryLabel />}
+                                            labelComponent={
+                                                <VictoryLabel
+                                                    dx={data => {
+                                                        let offset = 5;
+                                                        if (Number(data.datum.y) >= 0) {
+                                                            return - (offset)
+                                                        } else {
+                                                            return offset
+                                                        }
+                                                    }}
+                                                    textAnchor={({ data }) => {
+                                                        if (data[0].y > 0) {
+                                                            data[0].label[0]
+                                                            return 'end'
+                                                        } else {
+                                                            return 'start'
+                                                        }
+                                                    }}
+                                                    style={[
+                                                        { fill: "#000000", fontSize: 18, },
 
-                        data={graphData}
-                        labels={({ datum }) => {
-                            if (datum.y > 0) {
-                                return datum.z + " ¥ " + datum.y
-                            }
-                            else {
-                                return "¥" + datum.y + " " + datum.z
-                            }
-                        }}
-                    />
-                    <VictoryAxis crossAxis={false} tickValues={[]} />
-                    {/* </VictoryChart> */}
-                </View>}
+                                                        {
+                                                            fill: ({ data }) => {
+                                                                if (data[0].y > 0) {
+                                                                    return 'green'
+                                                                } else {
+                                                                    return 'red'
+                                                                }
+                                                            }
+                                                            , fontSize: 18
+                                                        }
+                                                    ]}
 
+                                                />
+                                            }
+                                        />)
+                                })}
+                            </VictoryGroup>
+                            <VictoryAxis
+                                style={{
+                                    tickLabels: { fill: "none" },
+                                    axis: { stroke: primary, strokeWidth: 1, },
+                                    // grid: {stroke:'red'},
+                                }}
+                            />
+                        </VictoryChart>
+                    }
+                    <View>
+                        <View style={styles.legend}>
+                            <View style={{ flexDirection: 'row', }}>
+                                <View style={[styles.SquareShapeView, { backgroundColor: 'red' }]} />
+                                <Text> You owe money</Text>
+                            </View>
+                            <View style={{ flexDirection: 'row', paddingLeft: 10 }}>
+                                <View style={[styles.SquareShapeView, { backgroundColor: 'green' }]} />
+                                <Text> You payed more money</Text>
+                            </View>
+
+                        </View>
+
+                    </View>
+                </View>
+
+
+                <View style={styles.ownsTextBox}>
+                    <Text style={styles.ownsText}>Who owns to whom?</Text>
+                </View>
 
                 <View style={styles.calcView}>
 
-                    <Text style={styles.textOweTitle} > You owe: </Text>
-
-                    {splitPaymentsData[0].length === 0 ? <Text style={styles.oweCalc}>Congrats, you don't owe anything. </Text> :
-                        splitPaymentsData[0].map((item) => {
-                            // console.log(item);
-                            return (item)
-                        })
-                    }
-
-                    <Text style={styles.textOweTitle}> Someone owes you:</Text>
-
-                    {splitPaymentsData[1].length === 0 ? <Text style={styles.oweCalc}>No one owes you anything...</Text> :
-                        splitPaymentsData[1].map((item) => {
-                            // console.log(item);
-                            return (item)
-                        })
+                    {splitPaymentsData[0].map((item) => {
+                        // console.log(item);
+                        return (item)
+                    })
                     }
                 </View>
 
-                <View style={{ height: 100, backgroundColor: primary, }}>
+                {/* <View style={{ height: 100, backgroundColor: primary, }}>
                     <View style={styles.buttons}>
-                        <OpenURLButton url={PayPayURL}>Open PayPay</OpenURLButton>
-                        <OpenURLButton url={LinePayURL}>Open Line Pay</OpenURLButton>
+                        <OpenURLButton url={PayPayURL}>Pay with PayPay</OpenURLButton>
+                        <OpenURLButton url={LinePayURL}>Pay with Line Pay</OpenURLButton>
                     </View>
                     <AddButton
                         setModalOpen={setModalOpen}
@@ -228,10 +362,10 @@ export const Balance = () => {
                     modalOpen={modalOpen}
                     setModalOpen={setModalOpen}
                     AddComponent={AddExpenses}
-                />
-            </View>
+                /> */}
+            </View> : 
+            <Text style={{ fontSize: 24, fontWeight: 'bold' }}> No expenses yet </Text>}
         </ScrollView>
-
     );
 };
 
@@ -240,7 +374,7 @@ const styles = StyleSheet.create({
         flex: 1,
         justifyContent: "center",
         alignItems: "center",
-        backgroundColor: "#f5fcff"
+        marginVertical: 5
     },
     buttons: {
         // flex:1,
@@ -248,7 +382,7 @@ const styles = StyleSheet.create({
         height: 70,
         flexDirection: 'row',
         // backgroundColor: pink,
-        position: "absolute",
+        // position: "absolute",
         bottom: 15,
         overflow: 'visible',
         // padding:5
@@ -269,10 +403,44 @@ const styles = StyleSheet.create({
     },
     calcView: {
         flex: 1,
-        // borderWidth:1,
         padding: 5,
         marginBottom: 10,
-        backgroundColor: blue,
-        borderRadius: 6
+        backgroundColor: "#d3d3d3",
     },
+    ownsTextBox: {
+        height: 50,
+        backgroundColor: "#d3d3d3",
+        alignContent: "center",
+    },
+    ownsText: {
+        alignSelf: "center",
+        paddingTop: 10,
+        fontSize: 20,
+    },
+    card: {
+        paddingTop: 10,
+        marginTop: 20,
+    },
+    separator: {
+        marginVertical: 8,
+        borderBottomColor: '#9E9E9E',
+        borderBottomWidth: 0.5,
+        width: "90%",
+        alignSelf: "center",
+    },
+    SquareShapeView: {
+        width: 10,
+        height: 10,
+        backgroundColor: '#00BCD4',
+        marginTop: 5,
+
+    },
+    legend: {
+        width: "100%",
+        flexDirection: 'row',
+        // backgroundColor: pink,
+        // position: "absolute",
+        // overflow: 'visible',
+        // padding:5
+    }
 });

@@ -19,9 +19,12 @@ export function ExpProvider({ children }) {
       headers: authHeader,
     });
 
+
     if (getExp.status === 404) {
+      setExpData([])
       return;
     }
+
 
     checkStatus(getExp, setExpData);
 
