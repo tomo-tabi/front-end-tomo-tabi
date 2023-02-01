@@ -453,9 +453,7 @@ const styles = StyleSheet.create({
   },
   filterInput:{
     color:'#9E9E9E',
-    margin:0,
     fontSize:14,
-    padding:0
 
   },
   filterDropdown:{
@@ -464,7 +462,8 @@ const styles = StyleSheet.create({
     backgroundColor:primary,
     borderColor:'#9E9E9E',
     alignSelf:'flex-end',
-    marginTop:50,
+    marginTop:40,
+    paddingVertical:0
   },
   filterDropdownText:{
     color:'#9E9E9E',
