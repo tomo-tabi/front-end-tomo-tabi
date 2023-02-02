@@ -150,10 +150,9 @@ export const Balance = () => {
             sortedValuesPaid[i] += debt;
             sortedValuesPaid[j] -= debt;
 
-
-            someoneOwnsYou.push(
-                <Card style={styles.card}>
-                    <View style={{ flex: 1, flexDirection: 'row', alignItems: "center", alignSelf: "center" }}>
+            let card = (
+                <Card style={[globalStyles.card,{flex:1}]} key={sortedPeople[i]+sortedPeople[j]}>
+                    <View style={{ flexDirection: 'row', alignItems: "center", borderWidth:1, }}>
                         {sortedPeople[i] === userData.username ? <Text style={styles.oweCalc}>{sortedPeople[i]} (You) owes</Text> : <Text style={styles.oweCalc}>{sortedPeople[i]} owes</Text>}
                         <View>
                             <MaterialCommunityIcons name="transfer-right" size={100} style={{ color: "#FF6865" }} />
@@ -278,6 +277,7 @@ export const Balance = () => {
                                 {graphData.map((item) => {
                                     return (
                                         <VictoryBar
+                                            key={i}
                                             horizontal
                                             style={{
                                                 data: {
