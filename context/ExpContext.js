@@ -20,7 +20,7 @@ export function ExpProvider({ children }) {
     });
 
     if (getExp.status === 404) {
-      return;
+      return setExpData(null)
     }
 
     checkStatus(getExp, setExpData);

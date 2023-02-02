@@ -14,12 +14,14 @@ import Dialog from "react-native-dialog";//New
 import AddTrip from './AddTrip';
 import EditTrip from './EditTrip';
 import { EventContext } from '../context/EventContext';
+import { VoteContext } from '../context/VoteContext';
 
 // import { enableExpoCliLogging } from 'expo/build/logs/Logs';
 
 export default function Trips({ navigation }) {
   const { logout } = useContext(AuthContext);
-  const { trips } = useContext(TripContext);
+  const { trips, getUsersInTrip } = useContext(TripContext);
+  const { getTripVotes } = useContext(VoteContext);
   const { invites, rejectInvites, acceptInvites } = useContext(InviteContext)
   const { getTripEvents } = useContext(EventContext)
 
@@ -36,6 +38,8 @@ export default function Trips({ navigation }) {
 
   const pressHandler = (item) => {
     getTripEvents(item.id);
+    getUsersInTrip(item.id);
+    getTripVotes(item.id);
 
     navigation.navigate('TripTabNav', {
       screen: 'TimeLine',
@@ -64,18 +68,28 @@ export default function Trips({ navigation }) {
     }
   }, [invites])
 
+  useEffect(() => {
+    if (trips && upcoming) {
+      handelFilter('upcoming',  moment(new Date()).format('YYYY-MM-DD'));
+    } else {
+      handelFilter('past',  moment(new Date()).format('YYYY-MM-DD'));
+    }
+    
+  },[trips])
+
   const handelFilter = (state, todayDate) => {
     //console.log('2022-12-21'<'2023-02-01');
-
-    const filterArr = trips.filter((item) => {
-      if (state === 'upcoming') {
-        return item.start_date >= todayDate;
-      } else {
-        return item.start_date <= todayDate;
-      }
-    })
+    if (trips) {
+      const filterArr = trips.filter((item) => {
+        if (state === 'upcoming') {
+          return item.start_date >= todayDate;
+        } else {
+          return item.start_date <= todayDate;
+        }
+      })
+      setFilteredTrip(filterArr);
+    }
     // console.log(filterArr);
-    setFilteredTrip(filterArr);
     // console.log(state, todayDate);
   }
 

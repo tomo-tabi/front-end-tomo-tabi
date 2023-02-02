@@ -77,7 +77,7 @@ export default function Voting({ route, navigation }) {
         <Text style={[styles.memberList]}>{item.username}</Text>
         { item.username === userData.username && status !== 'pending' ? 
           <TouchableOpacity 
-            style={[styles.status, globalStyles[status], {backgroundColor:0}]}
+            style={[globalStyles.status, globalStyles[status], {backgroundColor:0}]}
             onPress={() => seteditOpen(true)}
           >
             <Text style={[globalStyles[status],{backgroundColor:0}]}>
@@ -85,7 +85,7 @@ export default function Voting({ route, navigation }) {
             </Text>
           </TouchableOpacity>
 
-          :<Text style={[styles.status, globalStyles[status], {backgroundColor:0}]}>{vote}</Text>
+          :<Text style={[globalStyles.status, globalStyles[status], {backgroundColor:0}]}>{vote}</Text>
         }
       </View>
     )
@@ -161,18 +161,6 @@ const styles = StyleSheet.create({
     padding:5
     // borderWidth: 1,
     // borderColor: 'black',
-  },
-
-  status:{//almost same as invite.js
-    borderRadius:20,
-    borderWidth:1.5,
-    marginRight:5,
-    fontSize:17,
-    textAlignVertical:'center',
-    textAlign:'center',
-
-    color:primary,
-    padding:1.5
   },
   
 })
