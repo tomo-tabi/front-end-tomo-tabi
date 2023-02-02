@@ -20,7 +20,7 @@ import Dialog from "react-native-dialog";//New
 
 export default function TimeLine({ navigation }) {
   const { trips, usersInTrip, permission } = useContext(TripContext)
-  const { tripVote } = useContext(VoteContext)
+  const { tripVote, userTripVote } = useContext(VoteContext)
   const { tripEvents, tripid, modalOpen, setModalOpen } = useContext(EventContext)
 
   const [modalEditOpen, setModalEditOpen] = useState(false);
@@ -250,24 +250,6 @@ export default function TimeLine({ navigation }) {
     {key:'4', value:'Rejected'},
   ];
 
-  const dummyVotes = [
-    {
-      trips_events_id: 95, 
-      id:1,
-      vote:false
-    },
-    {
-      trips_events_id: 99, 
-      id:2,
-      vote:false
-    },
-    {
-      trips_events_id: 96, 
-      id:2,
-      vote:true
-    },
-  ]
-
     // console.log(tripEvents);
   const handelFilterSelect = () => {
     if (filterSelect === 'No Filter') {
@@ -289,23 +271,27 @@ export default function TimeLine({ navigation }) {
 
       const filterObj = {};
 
-      dummyVotes.forEach((item) => { //event ids to filter
-        // console.log(filterState,item.vote);
-        return filterObj[item.trips_events_id] = item.vote !== undefined ? item.vote : 0
-      })
+      if (userTripVote) {
 
-      // console.log(filterSelect, filterObj);
-      const filteredEvent = dayEvent.filter((item) => {
-        if (filterSelect === "Pending") {
-          return filterObj[item.id] === undefined
-        } else {
-          return filterObj[item.id] === filterState
-        }
-        // console.log(filterObj[item.trips_events_id]);
-      })
-      // console.log(filteredEvent)
+        (userTripVote.userTripVotesArray).forEach((item) => { //event ids to filter
+          // console.log(filterState,item.vote);
+          return filterObj[item.trips_events_id] = item.vote !== undefined ? item.vote : 0
+        })
+  
+        // console.log(filterSelect, filterObj);
+        const filteredEvent = dayEvent.filter((item) => {
+          if (filterSelect === "Pending") {
+            return filterObj[item.id] === undefined
+          } else {
+            return filterObj[item.id] === filterState
+          }
+          // console.log(filterObj[item.trips_events_id]);
+        })
+        // console.log(filteredEvent)
+  
+        setFilterEvents(filteredEvent);
+      };
 
-      setFilterEvents(filteredEvent);
     }
   }
 
