@@ -77,16 +77,17 @@ export default function Trips({ navigation }) {
 
   const handelFilter = (state, todayDate) => {
     //console.log('2022-12-21'<'2023-02-01');
-
-    const filterArr = trips.filter((item) => {
-      if (state === 'upcoming') {
-        return item.start_date >= todayDate;
-      } else {
-        return item.start_date <= todayDate;
-      }
-    })
+    if (trips) {
+      const filterArr = trips.filter((item) => {
+        if (state === 'upcoming') {
+          return item.start_date >= todayDate;
+        } else {
+          return item.start_date <= todayDate;
+        }
+      })
+      setFilteredTrip(filterArr);
+    }
     // console.log(filterArr);
-    setFilteredTrip(filterArr);
     // console.log(state, todayDate);
   }
 
