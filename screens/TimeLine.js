@@ -19,7 +19,7 @@ import Timeline from 'react-native-timeline-flatlist'
 import Dialog from "react-native-dialog";//New
 
 export default function TimeLine({ navigation }) {
-  const { trips, usersInTrip } = useContext(TripContext)
+  const { trips, usersInTrip, permission } = useContext(TripContext)
   const { tripVote } = useContext(VoteContext)
   const { tripEvents, tripid, modalOpen, setModalOpen } = useContext(EventContext)
 
@@ -162,11 +162,14 @@ export default function TimeLine({ navigation }) {
     let title = (
       <View style={{ flex:1, flexDirection: 'row', justifyContent: 'space-between', alignContent:'center'}}>
         <Text style={{textAlignVertical:'center', fontWeight:'bold', fontSize:20}}>{rowData.event_name} </Text>
-        <EditButton
+        { permission ?
+          null
+          :
+          <EditButton
           setModalOpen={setModalEditOpen}
           setEditData={setEventEditData}
           editData={rowData}
-        />
+        />}
       </View>
     )
     let desc;

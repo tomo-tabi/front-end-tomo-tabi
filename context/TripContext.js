@@ -14,6 +14,7 @@ export function TripProvider({ children }) {
   const [permission, setPermission] = useState(false)
   const [owner, setOwner] = useState(false)
 
+
   const getTrips = async () => {
     // console.log("authHead", authHeader)
     try {
