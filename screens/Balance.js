@@ -28,22 +28,26 @@ export const Balance = () => {
 
         let expObj = {}
 
-        if (expData.length > 0) {
-            expData.forEach((obj) => {
-                if (expObj[obj.username]) {
-                    expObj[obj.username] = Number(expObj[obj.username]) + Number(obj.money)
-                }
-                if (!expObj[obj.username]) {
-                    expObj[obj.username] = Number(obj.money)
-                }
-            })
-            usersInTrip.forEach((userObj) => {
-                if (!expObj[userObj.username]) {
-                    expObj[userObj.username] = 0
-                }
-            })
-            setSplitPaymentData(splitPayments(expObj))
+        if(expData){
+            if (expData.length > 0) {
+                expData.forEach((obj) => {
+                    if (expObj[obj.username]) {
+                        expObj[obj.username] = Number(expObj[obj.username]) + Number(obj.money)
+                    }
+                    if (!expObj[obj.username]) {
+                        expObj[obj.username] = Number(obj.money)
+                    }
+                })
+                usersInTrip.forEach((userObj) => {
+                    if (!expObj[userObj.username]) {
+                        expObj[userObj.username] = 0
+                    }
+                })
+                setSplitPaymentData(splitPayments(expObj))
+            }
         }
+
+       
 
         let sumOfMoneySpend = 0
         let counter = 0 // # of ppl in group? usersInTrip.length?

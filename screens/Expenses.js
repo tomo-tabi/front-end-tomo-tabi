@@ -20,7 +20,7 @@ const { primary, blue, yellow, lightBlue } = colors;
 
 export const ExpenseTable = () => {
   const { userData } = useContext(AuthContext);//to extract username?
-  const { usersInTrip } = useContext(TripContext);
+  const { usersInTrip, permission } = useContext(TripContext);
   const { getExp, expData } = useContext(ExpContext);
   // const { tripid } = useContext(EventContext)
 
@@ -48,13 +48,17 @@ export const ExpenseTable = () => {
 
         let edit
         if (obj.email === userData.email) {
-          edit =
+          { permission ?
+            null
+            :
+            edit =
             <EditButton
               setModalOpen={setModalEditOpen}
               setEditData={setExpenseEditData}
               editData={obj}
               style={{ alignSelf: 'center' }}
-            />
+            />}
+          
         } else {
           edit = <View></View>
         }
@@ -211,11 +215,15 @@ export const ExpenseTable = () => {
               ))
             }
           </TableWrapper>
-          <View style={{ height: 100, backgroundColor: primary, }}>
+          { permission ?
+            <View></View>
+            :
+            <View style={{ height: 100, backgroundColor: primary, }}>
                 <AddButton
                     setModalOpen={setModalOpen}
                 />
-            </View>
+            </View>}
+          
         </Table>}
 
         {balanceView && <Balance/>}
