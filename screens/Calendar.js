@@ -16,7 +16,7 @@ import EditTimeline from './EditTimeline';
 import Timeline from 'react-native-timeline-flatlist'
 
 export default function CalendarView(params) {
-    const { trips } = useContext(TripContext)
+    const { trips, permission } = useContext(TripContext)
     const { tripid, tripEvents, getTripEvents } = useContext(EventContext);
 
     const [modalOpen, setModalOpen] = useState(false);
@@ -35,7 +35,7 @@ export default function CalendarView(params) {
     const getTripInfo = trips.find(getID);
     const startDate = new Date(getTripInfo.start_date);
     // console.log(trips);
-    
+
     const dateFormat = (date) => {
         return moment(date).format("YYYY-MM-DD");
     }
@@ -46,7 +46,7 @@ export default function CalendarView(params) {
     }, [tripid]);
 
     useEffect(() => {
-        
+
         if (tripEvents !== null) {
             let startEvent = tripEvents.filter((event) => {
                 return dateFormat(event.event_date) === dateFormat(dayViewDate)
@@ -61,41 +61,44 @@ export default function CalendarView(params) {
 
     const renderTime = (rowData) => {
         return (
-          <View >
-            <Text style={{borderRadius:20, backgroundColor:yellow, padding:5, paddingHorizontal:5, fontSize:12}}>
-              {moment(rowData.event_date).format("HH:mm A")}
-            </Text>
-          </View>
+            <View >
+                <Text style={{ borderRadius: 20, backgroundColor: yellow, padding: 5, paddingHorizontal: 5, fontSize: 12 }}>
+                    {moment(rowData.event_date).format("HH:mm A")}
+                </Text>
+            </View>
         )
     };
-      
+
     const renderDetail = (rowData) => {
         // console.log("rowdata",rowData);
 
         let title = (
             <View style={{
-                flex:1, 
-                flexDirection: 'row', 
-                justifyContent: 'space-between', 
-                alignContent:'center', 
-                backgroundColor:primary, 
+                flex: 1,
+                flexDirection: 'row',
+                justifyContent: 'space-between',
+                alignContent: 'center',
+                backgroundColor: primary,
                 borderRadius: 10,
-                padding:10,
-                marginTop:-10
+                padding: 10,
+                marginTop: -10
             }}>
-            <Text style={{textAlignVertical:'center', fontWeight:'bold', fontSize:17}}>
-                {rowData.event_name} 
-            </Text>
-            <EditButton
-                setModalOpen={setModalEditOpen}
-                setEditData={setEventEditData}
-                editData={rowData}
-            />
+                <Text style={{ textAlignVertical: 'center', fontWeight: 'bold', fontSize: 17 }}>
+                    {rowData.event_name}
+                </Text>
+                {permission ?
+                    null
+                    :
+                    <EditButton
+                        setModalOpen={setModalEditOpen}
+                        setEditData={setEventEditData}
+                        editData={rowData}
+                    />}
             </View>
         )
 
         return (
-            <View style={{flex:1}}>
+            <View style={{ flex: 1 }}>
                 {title}
             </View>
         )
@@ -156,12 +159,12 @@ export default function CalendarView(params) {
         if (tripEvents !== null) {
             const currentEventArr = tripEvents.filter((item) => {
                 return dateFormat(day) === dateFormat(item.event_date)
-              });
-        
+            });
+
             const eventArrFormat = currentEventArr.map((item) => {
-            return {
-                event_date: item.event_date,
-                event_name: item.event_name,
+                return {
+                    event_date: item.event_date,
+                    event_name: item.event_name,
                     description: item.description,
                     id: item.id
                 }
@@ -169,7 +172,7 @@ export default function CalendarView(params) {
             // console.log("eventArrFormat",eventArrFormat);
 
             setDayViewDate(new Date(day));
-            if(eventArrFormat && eventArrFormat.length !== 0 ) {
+            if (eventArrFormat && eventArrFormat.length !== 0) {
                 setDayViewData(eventArrFormat);
             } else {
                 setDayViewData([]);
@@ -225,10 +228,17 @@ export default function CalendarView(params) {
             <View style={globalStyles.container}>
                 <View style={styles.date}>
                     <Text style={styles.dateText}>{moment(dayViewDate).format("dddd, MMM DD")}</Text>
-                    <AddButtonSqr
+                    {permission ?
+                        null
+                        :
+                        <AddButtonSqr
+                            setModalOpen={setModalOpen}
+                            style={{ height: undefined, margin: 0, padding: 1, backgroundColor: yellow }}
+                        />}
+                    {/* <AddButtonSqr
                         setModalOpen={setModalOpen}
-                        style={{ height:undefined, margin:0, padding:1, backgroundColor:yellow }}
-                    />
+                        style={{ height: undefined, margin: 0, padding: 1, backgroundColor: "#d3d3d3" }}
+                    /> */}
                 </View>
                 {dayViewData ?
                     <Timeline
@@ -240,13 +250,13 @@ export default function CalendarView(params) {
                         circleColor={blue}
                         lineColor={blue}
                         options={{
-                            style: { paddingTop: 5  }
+                            style: { paddingTop: 5 }
                         }}
                         innerCircle={'dot'}
                         separator={false}
                         isUsingFlatlist={true}
                     />
-                    :''
+                    : ''
                 }
                 <StyledModal
                     modalOpen={modalOpen}
@@ -254,7 +264,7 @@ export default function CalendarView(params) {
                     AddComponent={AddTimeline}
                     dateSelected={dayViewDate}
                 />
-                
+
             </View>
         </>
     )
@@ -266,19 +276,19 @@ const styles = StyleSheet.create({
         flex: 1,
     },
     date: {
-        marginBottom:5,
-        flexDirection:'row',
-        justifyContent:"space-between",
+        marginBottom: 5,
+        flexDirection: 'row',
+        justifyContent: "space-between",
     },
-    dateText:{
-        flex:1,
+    dateText: {
+        flex: 1,
         padding: 5,
         borderRadius: 6,
         backgroundColor: '#9CCAEC',
         fontWeight: "bold",
         fontSize: 20,
-        textAlignVertical:'center',
-        marginRight:5,
-        marginVertical:3,
+        textAlignVertical: 'center',
+        marginRight: 5,
+        marginVertical: 3,
     },
 })
