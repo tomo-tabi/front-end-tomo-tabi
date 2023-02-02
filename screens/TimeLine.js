@@ -139,7 +139,7 @@ export default function TimeLine({ navigation }) {
           <View style={{alignSelf:'flex-end'}}>
           {eventVotesNum[rowData.id].true !== 0 && <VoteStat text={eventVotesNum[rowData.id].true} status='accepted' name='check'/>}
           {eventVotesNum[rowData.id].false !== 0 && <VoteStat text={eventVotesNum[rowData.id].false} status='rejected' name='window-close'/>}
-          {eventVotesNum[rowData.id].pend !== 0 &&<VoteStat text={eventVotesNum[rowData.id].pend} status='pending' name='dots-horizontal'/>}
+          {/* {eventVotesNum[rowData.id].pend !== 0 &&<VoteStat text={eventVotesNum[rowData.id].pend} status='pending' name='dots-horizontal'/>} */}
         </View>}
       </View>
     )
