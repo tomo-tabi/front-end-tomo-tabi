@@ -11,6 +11,8 @@ export function TripProvider({ children }) {
 
   const [trips, setTrips] = useState(null); //all trips for user
   const [usersInTrip, setUsersInTrip] = useState([]);
+  const [permission, setPermission] = useState(false)
+  const [owner, setOwner] = useState(false)
 
   const getTrips = async () => {
     // console.log("authHead", authHeader)
@@ -119,6 +121,41 @@ export function TripProvider({ children }) {
     }
   };
 
+  const checkPermission = async (tripID) => {
+
+    try {
+      const checkPermissionRes = await fetch(`${API_URL}/trip/${tripID}/locked`, {
+        method: 'GET',
+        headers: authHeader,
+      });
+
+      const res = await checkPermissionRes.json()
+
+      setPermission(res)
+
+    } catch (e) {
+      console.log(`Check Permission Error: ${e}`);
+    }
+  };
+
+  const checkOwner = async (tripID) => {
+    try {
+      const checkOwnerRes = await fetch(`${API_URL}/trip/${tripID}/owner`, {
+        method: 'GET',
+        headers: authHeader,
+      });
+
+      const res = await checkOwnerRes.json()
+
+      console.log("res", res)
+
+      setOwner(res)
+
+    } catch (e) {
+      console.log(`Check Owner Error: ${e}`);
+    }
+  };
+
   useEffect(() => {
     if (userData) {
       getTrips();
@@ -135,6 +172,10 @@ export function TripProvider({ children }) {
         getUsersInTrip,
         editTrip,
         deleteTrip,
+        checkPermission,
+        permission,
+        checkOwner,
+        owner
       }}
     >
       {children}
