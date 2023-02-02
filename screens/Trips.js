@@ -36,6 +36,8 @@ export default function Trips({ navigation }) {
 
   const pressHandler = (item) => {
     getTripEvents(item.id);
+    getUsersInTrip(item.id);
+    getTripVotes(item.id);
 
     navigation.navigate('TripTabNav', {
       screen: 'TimeLine',
