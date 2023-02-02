@@ -67,9 +67,12 @@ export default function Trips({ navigation }) {
   }, [invites])
 
   useEffect(() => {
-    if (trips) {
+    if (trips && upcoming) {
       handelFilter('upcoming',  moment(new Date()).format('YYYY-MM-DD'));
+    } else {
+      handelFilter('past',  moment(new Date()).format('YYYY-MM-DD'));
     }
+    
   },[trips])
 
   const handelFilter = (state, todayDate) => {
