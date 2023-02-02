@@ -188,6 +188,16 @@ export const globalStyles = StyleSheet.create({
     shadowOpacity: 0.8,
     elevation: 7,
   },
+  status:{//almost same as invite.js
+    borderRadius:20,
+    borderWidth:1.5,
+    marginRight:5,
+    fontSize:17,
+    textAlignVertical:'center',
+    textAlign:'center',
+
+    padding:1.5
+  },
 });
 
 
@@ -394,5 +404,18 @@ export const TempButton = ({ onPress, buttonText }) => {
     <TouchableOpacity onPress={onPress} style={[globalStyles.buttonStyle, globalStyles.yellow, globalStyles.temp]}>
       <Text style={[globalStyles.buttonText,{color:'black'}]}>{buttonText}</Text>
     </TouchableOpacity>
+  )
+}
+
+export const VoteStat = ({ name, status, text }) => {
+  // yellow button for expenses
+  // console.log(text);
+  return (
+    <View style={[{flexDirection:'row', alignItems:'center'}]}>
+      <Text style={[{color:StatusColor[status]}]}>{text}</Text>
+      <View style={[globalStyles.status, globalStyles[status], {backgroundColor:0, marginLeft:2}]}> 
+        <MaterialCommunityIcons name={name} size={15} color={StatusColor[status]} />
+      </View>
+    </View>
   )
 }
