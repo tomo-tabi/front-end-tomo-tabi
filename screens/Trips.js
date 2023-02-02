@@ -20,9 +20,8 @@ import { VoteContext } from '../context/VoteContext';
 
 export default function Trips({ navigation }) {
   const { logout } = useContext(AuthContext);
-  const { trips, getUsersInTrip, checkPermission, checkOwner } = useContext(TripContext);
-
-  const { getTripVotes } = useContext(VoteContext);
+  const { trips, getUsersInTrip, checkPermission } = useContext(TripContext);
+  const { getTripVotes, getUserTripVotes } = useContext(VoteContext);
   const { invites, rejectInvites, acceptInvites } = useContext(InviteContext)
   const { getTripEvents } = useContext(EventContext)
 
@@ -41,9 +40,8 @@ export default function Trips({ navigation }) {
     getTripEvents(item.id);
     getUsersInTrip(item.id);
     getTripVotes(item.id);
-    checkPermission(item.id)
-    checkOwner(item.id)
-
+    getUserTripVotes(item.id);
+    checkPermission(item.id);
 
     navigation.navigate('TripTabNav', {
       screen: 'TimeLine',
