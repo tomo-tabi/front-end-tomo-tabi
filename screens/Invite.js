@@ -63,6 +63,13 @@ export default function Invite() {
     setShowDialog(false);
   };
 
+  const handleLock = () => {
+    console.log("lock");
+  }
+
+  const handleUnlock = () => {
+    console.log("unLock");
+  }
 
   const renderInvite = ({ item }) => {
 
@@ -169,7 +176,23 @@ export default function Invite() {
         ItemSeparatorComponent={<Seperator />}
       />
 
+      {owner ?
 
+        <View style={styles.buttonContainer}>
+          <BlueButton
+            onPress={handleLock}
+            buttonText="Lock your trip"
+            style={styles.button}
+          />
+          <BlueButton
+            onPress={handleUnlock}
+            buttonText="Unlock your trip"
+            style={styles.button}
+          />
+        </View>
+        : ''
+      }
+      
     </View>
   )
 };
@@ -199,5 +222,16 @@ const styles = StyleSheet.create({
     textAlignVertical: 'center',
     // borderWidth: 1,
     // borderColor: 'black',
+  },
+
+  buttonContainer: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    width: '100%',
+  },
+
+  button: {
+    width: '45%',
+    marginHorizontal: 10,
   },
 });
