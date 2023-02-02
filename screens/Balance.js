@@ -182,6 +182,12 @@ export const Balance = () => {
                 </Card>
             );
 
+            if (sortedPeople[i] === userData.username) {
+                someoneOwnsYou.unshift(card);
+            } else {
+                someoneOwnsYou.push(card)
+            }
+
             if (sortedValuesPaid[i] === 0) {
                 i++;
             }
