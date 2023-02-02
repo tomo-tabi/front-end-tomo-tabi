@@ -4,14 +4,14 @@ import { FlatList, View, Text, TouchableOpacity ,StyleSheet } from 'react-native
 import { MaterialCommunityIcons } from '@expo/vector-icons';
 import { globalStyles, colors, MyTextInput, BlueButton, Seperator, StatusColor } from "../styles/globalStyles";
 const { primary, lightBlue, grey } = colors;
-const { pending, pendingLight, rejected, rejectedLight } = StatusColor
+const { pendingLight, rejectedLight } = StatusColor
 
 
 import { Formik } from 'formik';
 
 import { InviteContext } from '../context/InviteContext';
 import { TripContext } from '../context/TripContext';
-import { EventContext } from '../context/EventContext';
+// import { EventContext } from '../context/EventContext';
 
 export default function Invite() {
   const { postInvite, getInvitesSent, invitesSent, deleteInviteSent } = useContext(InviteContext);
@@ -66,21 +66,17 @@ export default function Invite() {
 
   const renderInvite = ({ item }) => {
 
-    let status;
-    if (item.status === "pending") {
-      status = <Text>  Pending  </Text>
-    } else if (item.status === "rejected") {
-      status = <Text>  Rejected  </Text>
-    }
+    let status = (item.status).charAt(0).toUpperCase() + (item.status).slice(1);
+    let color = item.status === 'pending' ? pendingLight : rejectedLight;
     
     return (
       <View style={[globalStyles.flexRow,{alignItems:'center'}]}>
         <Text style={[styles.memberList]}>{item.username}</Text>
         { item.status === "rejected" ?
           <TouchableOpacity onPress={() => { setInviteid(item.id); setShowDialog(true); }}>
-            <Text style={[styles.status, styles[item.status]]}>{status}</Text>
+            <Text style={[globalStyles.status, globalStyles[item.status],{width: 90, height: 27, backgroundColor:color}]}>{status}</Text>
           </TouchableOpacity>
-          :<Text style={[styles.status, styles[item.status]]}>{status}</Text>
+          :<Text style={[globalStyles.status, globalStyles[item.status],{width: 90, height: 27, backgroundColor:color}]}>{status}</Text>
         }
       </View>
     )
@@ -199,25 +195,4 @@ const styles = StyleSheet.create({
     // borderWidth: 1,
     // borderColor: 'black',
   },
-  status:{//almost same as voteing.js
-    borderRadius:20,
-    borderWidth:1.5,
-    marginRight:5,
-    fontSize:17,
-    textAlignVertical:'center',
-    textAlign:'center',
-
-    width:90,
-    height:27,
-  },
-  pending:{
-    color: pending,
-    borderColor: pending,
-    backgroundColor: pendingLight
-  },
-  rejected:{
-    color: rejected,
-    borderColor: rejected,
-    backgroundColor: rejectedLight
-  }
 });
