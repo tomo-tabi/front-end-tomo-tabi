@@ -13,6 +13,7 @@ export function VoteProvider({ children }) {
   
   const [votes, setVotes] = useState(null); //{ [ { username, email, vote } ], numOfYesVotes, numOfNoVotes, numNotVoted }
   const [userVote, setUserVote] = useState(null); //get user's votes
+  const [tripVote, setTripVote] = useState(null); //get all votes in trip
 
   const getVotes = async eventid => {
     //all votes
@@ -52,6 +53,24 @@ export function VoteProvider({ children }) {
       console.log(`Get User Votes Error: ${e}`);
     }
   };
+
+  const getTripVotes = async tripid => {
+    try {
+      const getTripVotes = await fetch(`${API_URL}/vote/tripVotes/${tripid}`, {
+        method:'GET',
+        headers: authHeader,
+      });
+
+      if (getTripVotes.status === 404) {
+        return setTripVote(null);
+      };
+
+      checkStatus(getTripVotes, setTripVote);
+
+    } catch (e) {
+      console.log(`Get Trip Votes Error: ${e}`);
+    }
+  }
 
   const postYesVote = async eventid => {
     try {
@@ -127,8 +146,10 @@ export function VoteProvider({ children }) {
       value={{
         votes,
         userVote,
+        tripVote,
         getVotes,
         getUserVote,
+        getTripVotes,
         postYesVote,
         postNoVote,
         updateYesVote,

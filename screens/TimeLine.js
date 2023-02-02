@@ -2,12 +2,13 @@ import React, { useState, useEffect, useContext, useRef } from 'react';
 import { StyleSheet, Text, FlatList, View, TouchableOpacity, Dimensions } from 'react-native';
 import { SelectList } from 'react-native-dropdown-select-list'
 
-import { globalStyles, colors, StyledModal, EditButton, BlueButton, } from "../styles/globalStyles";
+import { globalStyles, colors, StyledModal, EditButton, BlueButton, VoteStat, } from "../styles/globalStyles";
 
 const { primary, blue, yellow } = colors
 
 import { EventContext } from '../context/EventContext';
 import { TripContext } from '../context/TripContext';
+import { VoteContext } from '../context/VoteContext';
 
 import moment from 'moment';
 
@@ -18,7 +19,8 @@ import Timeline from 'react-native-timeline-flatlist'
 import Dialog from "react-native-dialog";//New
 
 export default function TimeLine({ navigation }) {
-  const { trips, getUsersInTrip } = useContext(TripContext)
+  const { trips, usersInTrip, permission } = useContext(TripContext)
+  const { tripVote } = useContext(VoteContext)
   const { tripEvents, tripid, modalOpen, setModalOpen } = useContext(EventContext)
 
   const [modalEditOpen, setModalEditOpen] = useState(false);
@@ -32,15 +34,13 @@ export default function TimeLine({ navigation }) {
   const [dayRange, setDayRange] = useState([]);
   const [dateSelected, setDateSelected] = useState(null); 
 
+  const [eventVotesNum, setEventVotesNum] = useState(null); 
+
   const dayRangeRef = useRef();
 
   const dateFormat = (date) => {
     return moment(date).format("ddd, MMM DD");
   }
-
-  useEffect(() => {
-    getUsersInTrip(tripid)
-  },[]);
   
   useEffect(() => {
     //set up day range
@@ -91,6 +91,35 @@ export default function TimeLine({ navigation }) {
 
   }, [dayRange, tripEvents]);
 
+  useEffect(() => {
+    // set vote status for each day event
+    if (!dayEvent || dayEvent.length === 0) { // no events
+      return
+    }
+    
+    const eventVote = {};
+
+    dayEvent.forEach((item) => {
+      return eventVote[item.id] = { true: 0, false:0, pend:0}
+    });
+
+    if (!tripVote) {
+      return setEventVotesNum(eventVote);
+    }
+    
+    if (tripVote && dayEvent) { //maybe return trip id with trip vote?
+      if (Number(tripVote.tripid) === tripid) {
+        (tripVote.tripVoteArray).forEach((item) => {
+          if (eventVote[item.trips_events_id]){
+            eventVote[item.trips_events_id][item.vote] ++
+          }
+        })
+        return setEventVotesNum(eventVote);
+      }
+    }
+
+  }, [tripVote, dayEvent]);
+
   const pressHandler = (eventName, id) => {
     navigation.navigate('Voting',{
       eventName: eventName,
@@ -99,12 +128,31 @@ export default function TimeLine({ navigation }) {
   }; 
 
   const renderTime = (rowData) => {
-    // console.log(rowData.event_date);
+    // console.log(eventVotesNum[rowData.id]);
     return (
-      <View >
-        <Text style={{ paddingHorizontal:5, fontWeight:'bold'}}>
+      <View style={{ paddingHorizontal:5, }}>
+        <Text style={{ fontWeight:'bold'}}>
           {moment(rowData.event_date).format("HH:mm A")}
         </Text>
+
+        { eventVotesNum[rowData.id] &&
+          <View style={{alignSelf:'flex-end'}}>
+          {eventVotesNum[rowData.id].true !== 0 && 
+            <VoteStat 
+              text={eventVotesNum[rowData.id].true} 
+              status='accepted' 
+              name='check'
+              onPress={() => pressHandler(rowData.event_name, rowData.id)}
+          />}
+          {eventVotesNum[rowData.id].false !== 0 && 
+            <VoteStat 
+              text={eventVotesNum[rowData.id].false} 
+              status='rejected' 
+              name='window-close'
+              onPress={() => pressHandler(rowData.event_name, rowData.id)}
+          />}
+          {/* {eventVotesNum[rowData.id].pend !== 0 &&<VoteStat text={eventVotesNum[rowData.id].pend} status='pending' name='dots-horizontal'/>} */}
+        </View>}
       </View>
     )
   };
@@ -114,11 +162,14 @@ export default function TimeLine({ navigation }) {
     let title = (
       <View style={{ flex:1, flexDirection: 'row', justifyContent: 'space-between', alignContent:'center'}}>
         <Text style={{textAlignVertical:'center', fontWeight:'bold', fontSize:20}}>{rowData.event_name} </Text>
-        <EditButton
+        { permission ?
+          null
+          :
+          <EditButton
           setModalOpen={setModalEditOpen}
           setEditData={setEventEditData}
           editData={rowData}
-        />
+        />}
       </View>
     )
     let desc;
@@ -238,19 +289,9 @@ export default function TimeLine({ navigation }) {
 
       const filterObj = {};
 
-      dummyVotes.forEach((item) => {
-        // console.log(object);
-        if (filterState === true) {
-          if (item.vote) {
-            return filterObj[item.trips_events_id] = 0
-          }
-        } else if (filterState === false) {
-          if (!item.vote) {
-            return filterObj[item.trips_events_id] = 0
-          }
-        } else {
-          return filterObj[item.trips_events_id] = 0
-        }
+      dummyVotes.forEach((item) => { //event ids to filter
+        // console.log(filterState,item.vote);
+        return filterObj[item.trips_events_id] = item.vote !== undefined ? item.vote : 0
       })
 
       // console.log(filterSelect, filterObj);
@@ -258,7 +299,7 @@ export default function TimeLine({ navigation }) {
         if (filterSelect === "Pending") {
           return filterObj[item.id] === undefined
         } else {
-          return filterObj[item.id] === 0
+          return filterObj[item.id] === filterState
         }
         // console.log(filterObj[item.trips_events_id]);
       })
@@ -323,7 +364,7 @@ export default function TimeLine({ navigation }) {
           EditData={eventEditData}
         />
 
-        {dayEvent && !filterEvents ?
+        {dayEvent && dayEvent.length !== 0 && !filterEvents && eventVotesNum && eventVotesNum[dayEvent[0].id]?
           <Timeline
             style={styles2.list}
             data={dayEvent}
@@ -457,15 +498,13 @@ const styles = StyleSheet.create({
     textAlign:'center',
     textAlignVertical:'center',
     // borderWidth:0,
-    padding:0,
+    paddingVertical:5,
     borderColor:'#9E9E9E',
     // marginVertical:5,
   },
   filterInput:{
     color:'#9E9E9E',
-    margin:0,
     fontSize:14,
-    padding:0
 
   },
   filterDropdown:{
@@ -474,7 +513,8 @@ const styles = StyleSheet.create({
     backgroundColor:primary,
     borderColor:'#9E9E9E',
     alignSelf:'flex-end',
-    marginTop:50,
+    marginTop:40,
+    paddingVertical:0
   },
   filterDropdownText:{
     color:'#9E9E9E',

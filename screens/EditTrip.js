@@ -1,50 +1,62 @@
 import React, { useState, useContext } from 'react';
-import { View } from 'react-native';
+import { View, Keyboard } from 'react-native';
 import { Formik } from 'formik';
 import { MyTextInput, StyledDTPicker, BlueButton } from "../styles/globalStyles";
-import DateTimePicker from '@react-native-community/datetimepicker';
-
+// import DateTimePicker from '@react-native-community/datetimepicker';
+import DatePicker from 'react-native-neat-date-picker';
 import { TripContext } from '../context/TripContext';
-
 import moment from 'moment';
 
 export default function EditTrip({ setModalOpen, EditData }) {
     const { editTrip, deleteTrip } = useContext(TripContext)
 
     // for time date picker
-    const [showEndDate, setShowEndDate] = useState(false);
-    const [showStartDate, setShowStartDate] = useState(false);
+    const [showDate, setShowDate] = useState(false);
+    // const [showEndDate, setShowEndDate] = useState(false);
+    // const [showStartDate, setShowStartDate] = useState(false);
     const [startDate, setStartDate] = useState(EditData["start_date"]);
     const [endDate, setEndDate] = useState(EditData["end_date"]);
 
-    const onChangeStartDate = (event, selectedDate) => {
-        const currentDate = selectedDate;
-        setShowStartDate(false);
-        setStartDate(moment(currentDate).format("YYYY-MM-DD"))
-    };
-    const onChangeEndDate = (event, selectedDate) => {
-        const currentDate = selectedDate;
-        setShowEndDate(false);
-        setEndDate(moment(currentDate).format("YYYY-MM-DD"))
-    };
+    // const onChangeStartDate = (event, selectedDate) => {
+    //     const currentDate = selectedDate;
+    //     setShowStartDate(false);
+    //     setStartDate(moment(currentDate).format("YYYY-MM-DD"))
+    // };
+    // const onChangeEndDate = (event, selectedDate) => {
+    //     const currentDate = selectedDate;
+    //     setShowEndDate(false);
+    //     setEndDate(moment(currentDate).format("YYYY-MM-DD"))
+    // };
 
-    const editTripSubmit = (info) => {
-        editTrip(info)
-        setModalOpen(false)
-    }
+    // const editTripSubmit = (info) => {
+    //     editTrip(info)
+    //     setModalOpen(false)
+    // }
 
     const deleteTripSubmit = (info) => {
-        deleteTrip(info)
-        setModalOpen(false)
+        deleteTrip(info);
+        setModalOpen(false);
     }
 
-    const showStartDatePicker = () => {
-        setShowStartDate(true);
+    const showDatePicker = () => {
+        setShowDate(true);
+        Keyboard.dismiss();
     };
 
-    const showEndDatePicker = () => {
-        setShowEndDate(true);
-    };
+    // const showEndDatePicker = () => {
+    //     setShowEndDate(true);
+    // };
+
+    const onCancel = () => {
+        setShowDate(false);
+    }
+    
+    const onConfirm = (output) => {
+        setShowDate(false);
+        const { startDate, endDate } = output
+        setStartDate(startDate);
+        setEndDate(endDate);
+    }
 
     return (
         <View>
@@ -55,6 +67,11 @@ export default function EditTrip({ setModalOpen, EditData }) {
                     name: EditData["name"],
                     id: EditData["id"]
                 }}
+                onSubmit={(values) => {
+                    values = {...values, startDate: moment(startDate).format("YYYY-MM-DD"), endDate: moment(endDate).format("YYYY-MM-DD")}
+                    editTrip(values);
+                    setModalOpen(false);
+                  }}
             >
                 {(props) => (
                     <View>
@@ -67,40 +84,53 @@ export default function EditTrip({ setModalOpen, EditData }) {
                         />
                         <StyledDTPicker
                             label="Start Date"
-                            onPress={showStartDatePicker}
+                            onPress={showDatePicker}
                             iconName="calendar-blank-outline"
-                            value={startDate}
+                            value={`${moment(startDate).format("YYYY-MM-DD")} - ${moment(endDate).format("YYYY-MM-DD")}`}
                             placeholder="YYYY-MM-DD"
                         />
-                        <StyledDTPicker
+                        {/* <StyledDTPicker
                             label="End Date"
                             onPress={showEndDatePicker}
                             iconName="calendar-blank-outline"
                             value={endDate}
                             placeholder="YYYY-MM-DD"
-                        />
+                        /> */}
 
-                        <BlueButton
+                        {/* <BlueButton
                             onPress={() => { editTripSubmit(props.values) }}
                             buttonText="Submit Edit"
+                        /> */}
+
+                        <BlueButton
+                            onPress={props.handleSubmit}
+                            buttonText="Submit Edit"
                         />
+
                         <BlueButton
                             onPress={() => deleteTripSubmit(props.values)}
                             buttonText="Delete Trip"
                         />
 
-                        {showEndDate && (
-                            <DateTimePicker
-                                value={new Date(endDate)}
-                                mode='date'
-                                is24Hour={false}
-                                onChange={(event, selectedDate) => {
-                                    onChangeEndDate(undefined, selectedDate);
-                                    props.setFieldValue('endDate', moment(selectedDate).format("YYYY-MM-DD"))
-                                }}
+                        {showDate && (
+                            <DatePicker
+                            isVisible={showDate}
+                            initialDate={new Date(startDate)}
+                            mode={'range'}
+                            onCancel={onCancel}
+                            onConfirm={onConfirm}
                             />
+                            // <DateTimePicker
+                            //     value={new Date(endDate)}
+                            //     mode='date'
+                            //     is24Hour={false}
+                            //     onChange={(event, selectedDate) => {
+                            //         onChangeEndDate(undefined, selectedDate);
+                            //         props.setFieldValue('endDate', moment(selectedDate).format("YYYY-MM-DD"))
+                            //     }}
+                            // />
                         )}
-                        {showStartDate && (
+                        {/* {showStartDate && (
                             <DateTimePicker
                                 value={new Date(startDate)}
                                 mode='date'
@@ -110,7 +140,7 @@ export default function EditTrip({ setModalOpen, EditData }) {
                                     props.setFieldValue('startDate', moment(selectedDate).format("YYYY-MM-DD"))
                                 }}
                             />
-                        )}
+                        )} */}
                     </View>
                 )}
             </Formik>

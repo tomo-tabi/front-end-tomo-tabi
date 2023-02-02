@@ -21,8 +21,7 @@ export function ExpProvider({ children }) {
 
 
     if (getExp.status === 404) {
-      setExpData([])
-      return;
+      return setExpData(null)
     }
 
 

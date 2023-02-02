@@ -15,12 +15,11 @@ export const colors = {
 }
 
 export const accOrRej = {
-  pending:'rgb(255, 191, 0)',
   accepted:'rgba(35, 136, 35, 0.8)',
   rejected:'rgba(210, 34, 45, 0.8)',
 }
 
-export const status = {
+export const StatusColor = {
   accepted:'rgb(35, 136, 35)',
   acceptedLight:'rgba(35, 136, 35, 0.8)',
   pending:'rgb(255, 191, 0)',
@@ -31,7 +30,8 @@ export const status = {
 
 
 const { primary, pink, blue, yellow, lightBlue, navy, grey, greyBlue } = colors
-const { accepted, rejected, pending } = accOrRej
+const { accepted, rejected } = accOrRej
+const { pending } = StatusColor
 
 // import { globalStyles, SubmitText, MyTextInput } from "../styles/globalStyles";
 //globalStyles.addIconButton
@@ -187,6 +187,16 @@ export const globalStyles = StyleSheet.create({
     shadowColor: 'grey',
     shadowOpacity: 0.8,
     elevation: 7,
+  },
+  status:{//almost same as invite.js
+    borderRadius:20,
+    borderWidth:1.5,
+    marginRight:5,
+    fontSize:17,
+    textAlignVertical:'center',
+    textAlign:'center',
+
+    padding:1.5
   },
 });
 
@@ -393,6 +403,19 @@ export const TempButton = ({ onPress, buttonText }) => {
   return (
     <TouchableOpacity onPress={onPress} style={[globalStyles.buttonStyle, globalStyles.yellow, globalStyles.temp]}>
       <Text style={[globalStyles.buttonText,{color:'black'}]}>{buttonText}</Text>
+    </TouchableOpacity>
+  )
+}
+
+export const VoteStat = ({ name, status, text, onPress }) => {
+  // yellow button for expenses
+  // console.log(text);
+  return (
+    <TouchableOpacity style={[{flexDirection:'row', alignItems:'center'}]} onPress={onPress}>
+      <Text style={[{color:StatusColor[status]}]}>{text}</Text>
+      <View style={[globalStyles.status, globalStyles[status], {backgroundColor:0, marginLeft:2}]}> 
+        <MaterialCommunityIcons name={name} size={15} color={StatusColor[status]} />
+      </View>
     </TouchableOpacity>
   )
 }
