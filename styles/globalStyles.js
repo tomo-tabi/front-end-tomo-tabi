@@ -20,7 +20,7 @@ export const accOrRej = {
   rejected:'rgba(210, 34, 45, 0.8)',
 }
 
-export const status = {
+export const StatusColor = {
   accepted:'rgb(35, 136, 35)',
   acceptedLight:'rgba(35, 136, 35, 0.8)',
   pending:'rgb(255, 191, 0)',

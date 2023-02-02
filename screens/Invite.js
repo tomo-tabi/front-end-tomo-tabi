@@ -2,9 +2,9 @@ import React, { useContext, useEffect, useState } from 'react';
 import Dialog from "react-native-dialog";
 import { FlatList, View, Text, TouchableOpacity ,StyleSheet } from 'react-native';
 import { MaterialCommunityIcons } from '@expo/vector-icons';
-import { globalStyles, colors, MyTextInput, BlueButton, Seperator, status } from "../styles/globalStyles";
+import { globalStyles, colors, MyTextInput, BlueButton, Seperator, StatusColor } from "../styles/globalStyles";
 const { primary, lightBlue, grey } = colors;
-const { pending, pendingLight, rejected, rejectedLight } = status
+const { pending, pendingLight, rejected, rejectedLight } = StatusColor
 
 
 import { Formik } from 'formik';
