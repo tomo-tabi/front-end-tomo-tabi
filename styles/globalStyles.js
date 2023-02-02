@@ -15,7 +15,6 @@ export const colors = {
 }
 
 export const accOrRej = {
-  pending:'rgb(255, 191, 0)',
   accepted:'rgba(35, 136, 35, 0.8)',
   rejected:'rgba(210, 34, 45, 0.8)',
 }
@@ -31,7 +30,8 @@ export const StatusColor = {
 
 
 const { primary, pink, blue, yellow, lightBlue, navy, grey, greyBlue } = colors
-const { accepted, rejected, pending } = accOrRej
+const { accepted, rejected } = accOrRej
+const { pending } = StatusColor
 
 // import { globalStyles, SubmitText, MyTextInput } from "../styles/globalStyles";
 //globalStyles.addIconButton
