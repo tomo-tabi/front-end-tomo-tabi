@@ -1,5 +1,7 @@
 import React from 'react';
-import { StyleSheet, View } from 'react-native';
+import { StyleSheet, View, LogBox } from 'react-native';
+LogBox.ignoreAllLogs();//Ignore all log notifications
+
 
 //context and Navigation
 import { AuthProvider } from './context/AuthContext';
