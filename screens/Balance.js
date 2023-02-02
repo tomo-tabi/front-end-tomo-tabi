@@ -243,6 +243,18 @@ export const Balance = () => {
                             <Text style={{ fontSize: 30, fontWeight: 'bold', textAlign: "center" }}> Group balance graph </Text>
                             <Text style={{ fontSize: 20, color: "#a9a9a9", textAlign: "center" }}> Take a look at the graph and see who owes money and who is owed </Text>
                         </View>}
+
+                    <View style={styles.legend}>
+                        <View style={{ flexDirection: 'row', }}>
+                            <View style={[styles.SquareShapeView, { backgroundColor: red }]} />
+                            <Text> You owe money</Text>
+                        </View>
+                        <View style={{ flexDirection: 'row', paddingLeft: 10 }}>
+                            <View style={[styles.SquareShapeView, { backgroundColor: green }]} />
+                            <Text> You payed more money</Text>
+                        </View>
+                    </View>
+
                     {usersInTrip.length > 1 && graphData.length !== 0 &&
                         <VictoryChart
                             padding={{ left: 3, right: 3, }}
