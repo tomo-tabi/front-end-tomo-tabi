@@ -407,15 +407,15 @@ export const TempButton = ({ onPress, buttonText }) => {
   )
 }
 
-export const VoteStat = ({ name, status, text }) => {
+export const VoteStat = ({ name, status, text, onPress }) => {
   // yellow button for expenses
   // console.log(text);
   return (
-    <View style={[{flexDirection:'row', alignItems:'center'}]}>
+    <TouchableOpacity style={[{flexDirection:'row', alignItems:'center'}]} onPress={onPress}>
       <Text style={[{color:StatusColor[status]}]}>{text}</Text>
       <View style={[globalStyles.status, globalStyles[status], {backgroundColor:0, marginLeft:2}]}> 
         <MaterialCommunityIcons name={name} size={15} color={StatusColor[status]} />
       </View>
-    </View>
+    </TouchableOpacity>
   )
 }
