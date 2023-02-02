@@ -16,7 +16,7 @@ import { TripContext } from '../context/TripContext';
 export default function Invite() {
   const { postInvite, getInvitesSent, invitesSent, deleteInviteSent } = useContext(InviteContext);
   // const { tripid } = useContext(EventContext);
-  const { usersInTrip, permission } = useContext(TripContext);
+  const { usersInTrip, permission, owner } = useContext(TripContext);
 
   const [show, setShow] = useState(false);
   const [pendingInvites, setPendingInvites] = useState(null);
