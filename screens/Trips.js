@@ -14,12 +14,14 @@ import Dialog from "react-native-dialog";//New
 import AddTrip from './AddTrip';
 import EditTrip from './EditTrip';
 import { EventContext } from '../context/EventContext';
+import { VoteContext } from '../context/VoteContext';
 
 // import { enableExpoCliLogging } from 'expo/build/logs/Logs';
 
 export default function Trips({ navigation }) {
   const { logout } = useContext(AuthContext);
-  const { trips } = useContext(TripContext);
+  const { trips, getUsersInTrip } = useContext(TripContext);
+  const { getTripVotes } = useContext(VoteContext);
   const { invites, rejectInvites, acceptInvites } = useContext(InviteContext)
   const { getTripEvents } = useContext(EventContext)
 
