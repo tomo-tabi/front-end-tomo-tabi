@@ -14,7 +14,6 @@ export function TripProvider({ children }) {
   const [permission, setPermission] = useState(false)
   const [owner, setOwner] = useState(false)
 
-
   const getTrips = async () => {
     // console.log("authHead", authHeader)
     try {
@@ -159,8 +158,8 @@ export function TripProvider({ children }) {
 
   const lockTrip = async (tripID) => {
     try{
-      console.log(tripID.tripid);
-      const lockTrip = await fetch(`${API_URL}/trip/${tripID.tripid}/lock`, {
+      console.log(tripID);
+      const lockTrip = await fetch(`${API_URL}/trip/${tripID}/lock`, {
       method: 'PUT', 
       headers: authHeader,
     });
@@ -173,8 +172,8 @@ export function TripProvider({ children }) {
 
   const unlockTrip = async (tripID) => {
     try{
-      console.log(tripID.tripid);
-      const unlockTrip = await fetch(`${API_URL}/trip/${tripID.tripid}/unlock`, {
+      console.log(tripID);
+      const unlockTrip = await fetch(`${API_URL}/trip/${tripID}/unlock`, {
       method: 'PUT', 
       headers: authHeader,
     });
@@ -206,7 +205,7 @@ export function TripProvider({ children }) {
         checkOwner,
         owner,
         lockTrip,
-        unlockTrip
+        unlockTrip,
       }}
     >
       {children}

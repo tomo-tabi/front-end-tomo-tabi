@@ -23,6 +23,8 @@ export default function Invite() {
   const [noInvitesSent, setNoInvitesSent] = useState(true);//default: no invites sent
   const [showDialog, setShowDialog] = useState(false);
   const [inviteid, setInviteid] = useState(null);
+  const [lockVisible, setLockVisible] = useState(false);
+  const [unlockVisible, setUnlockVisible] = useState(false);
 
   useEffect(() => {
     getInvitesSent();
@@ -64,15 +66,24 @@ export default function Invite() {
   };
 
   const handleLock = (info) => {
-    // console.log("lock");
-    // console.log(info)
+    console.log("lock");
     lockTrip(info);
+    setLockVisible(true);
   }
 
   const handleUnlock = (info) => {
     console.log("unLock");
     unlockTrip(info);
+    setUnlockVisible(true);
 
+  }
+
+  const hideLockedDialog = () => {
+    setLockVisible(false);
+  }
+
+  const hideUnlockedDialog = () => {
+    setUnlockVisible(false);
   }
   // console.log(owner)
   // console.log(tripid);
@@ -185,18 +196,39 @@ export default function Invite() {
       {owner ?
         <View style={styles.buttonContainer}>
           <BlueButton
-            onPress={ () => {handleLock({tripid: tripid})}}
+            onPress={ () => {handleLock(tripid)}}
             buttonText="Lock your trip"
             style={styles.button}
           />
           <BlueButton
-            onPress={ () => {handleUnlock({tripid: tripid})}}
+            onPress={ () => {handleUnlock(tripid)}}
             buttonText="Unlock your trip"
             style={styles.button}
           /> 
         </View>
         : ''
       }
+
+      <View>
+        <Dialog.Container visible={lockVisible}>
+          <Dialog.Title style={styles.lockDialogTitle}>Locked your trip!</Dialog.Title>
+          <Dialog.Description style={styles.dialogDescription}>
+            Nobody can edit the trip now!
+          </Dialog.Description>
+          <Dialog.Button label="OK" style={styles.dialogButton} onPress={hideLockedDialog}/>
+        </Dialog.Container>
+      </View>
+
+      <View>
+        <Dialog.Container visible={unlockVisible}>
+          <Dialog.Title style={styles.unlockDialogTitle}>Unlocked your trip!</Dialog.Title>
+          <Dialog.Description style={styles.dialogDescription}>
+            everybody can edit the trip now!
+          </Dialog.Description>
+          <Dialog.Button label="OK" style={styles.dialogButton} onPress={hideUnlockedDialog}/>
+        </Dialog.Container>
+      </View>
+      
       
     </View>
   )
@@ -238,5 +270,22 @@ const styles = StyleSheet.create({
   button: {
     width: '45%',
     marginHorizontal: 10,
+  },
+
+  lockDialogTitle: {
+    fontSize: 25,
+    color: "#a52a2a"
+  },
+
+  unlockDialogTitle: {
+    fontSize: 25,
+    color: "darkcyan"
+  },
+  dialogDescription: {
+    fontWeight: 'bold', 
+    color: 'goldenrod'
+  },
+  dialogButton: {
+    fontWeight: 'bold'
   },
 });
