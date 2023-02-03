@@ -183,24 +183,18 @@ export default function Invite() {
       />
 
       {owner ?
-        <Formik
-            initialValues={{ tripid: tripid }}
-        >
-          {(props) => (
-          <View style={styles.buttonContainer}>
-              <BlueButton
-                onPress={ () => {handleLock(props.values)}}
-                buttonText="Lock your trip"
-                style={styles.button}
-              />
-              <BlueButton
-                onPress={ () => {handleUnlock(props.values)}}
-                buttonText="Unlock your trip"
-                style={styles.button}
-              /> 
-          </View>
-          )}
-        </Formik>
+        <View style={styles.buttonContainer}>
+          <BlueButton
+            onPress={ () => {handleLock({tripid: tripid})}}
+            buttonText="Lock your trip"
+            style={styles.button}
+          />
+          <BlueButton
+            onPress={ () => {handleUnlock({tripid: tripid})}}
+            buttonText="Unlock your trip"
+            style={styles.button}
+          /> 
+        </View>
         : ''
       }
       
