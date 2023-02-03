@@ -11,12 +11,12 @@ import { Formik } from 'formik';
 
 import { InviteContext } from '../context/InviteContext';
 import { TripContext } from '../context/TripContext';
-// import { EventContext } from '../context/EventContext';
+import { EventContext } from '../context/EventContext';
 
 export default function Invite() {
   const { postInvite, getInvitesSent, invitesSent, deleteInviteSent } = useContext(InviteContext);
-  // const { tripid } = useContext(EventContext);
-  const { usersInTrip, permission, owner } = useContext(TripContext);
+  const { tripid } = useContext(EventContext);
+  const { usersInTrip, permission, owner, lockTrip, unlockTrip } = useContext(TripContext);
 
   const [show, setShow] = useState(false);
   const [pendingInvites, setPendingInvites] = useState(null);
@@ -63,13 +63,19 @@ export default function Invite() {
     setShowDialog(false);
   };
 
-  const handleLock = () => {
-    console.log("lock");
+  const handleLock = (info) => {
+    // console.log("lock");
+    // console.log(info)
+    lockTrip(info);
   }
 
-  const handleUnlock = () => {
+  const handleUnlock = (info) => {
     console.log("unLock");
+    unlockTrip(info);
+
   }
+  // console.log(owner)
+  // console.log(tripid);
 
   const renderInvite = ({ item }) => {
 
@@ -177,19 +183,24 @@ export default function Invite() {
       />
 
       {owner ?
-
-        <View style={styles.buttonContainer}>
-          <BlueButton
-            onPress={handleLock}
-            buttonText="Lock your trip"
-            style={styles.button}
-          />
-          <BlueButton
-            onPress={handleUnlock}
-            buttonText="Unlock your trip"
-            style={styles.button}
-          />
-        </View>
+        <Formik
+            initialValues={{ tripid: tripid }}
+        >
+          {(props) => (
+          <View style={styles.buttonContainer}>
+              <BlueButton
+                onPress={ () => {handleLock(props.values)}}
+                buttonText="Lock your trip"
+                style={styles.button}
+              />
+              <BlueButton
+                onPress={ () => {handleUnlock(props.values)}}
+                buttonText="Unlock your trip"
+                style={styles.button}
+              /> 
+          </View>
+          )}
+        </Formik>
         : ''
       }
       

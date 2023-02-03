@@ -157,6 +157,34 @@ export function TripProvider({ children }) {
     }
   };
 
+  const lockTrip = async (tripID) => {
+    try{
+      console.log(tripID.tripid);
+      const lockTrip = await fetch(`${API_URL}/trip/${tripID.tripid}/lock`, {
+      method: 'PUT', 
+      headers: authHeader,
+    });
+      sendStatus(lockTrip, getTrips);
+
+    }catch (e) {
+      console.log(`lockTrip Error: ${e}`);
+    }
+  };
+
+  const unlockTrip = async (tripID) => {
+    try{
+      console.log(tripID.tripid);
+      const unlockTrip = await fetch(`${API_URL}/trip/${tripID.tripid}/unlock`, {
+      method: 'PUT', 
+      headers: authHeader,
+    });
+      sendStatus(unlockTrip, getTrips);
+
+    }catch (e) {
+      console.log(`unlockTrip Error: ${e}`);
+    }
+  };
+
   useEffect(() => {
     if (userData) {
       getTrips();
@@ -176,7 +204,9 @@ export function TripProvider({ children }) {
         checkPermission,
         permission,
         checkOwner,
-        owner
+        owner,
+        lockTrip,
+        unlockTrip
       }}
     >
       {children}
