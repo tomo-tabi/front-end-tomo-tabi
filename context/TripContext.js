@@ -14,7 +14,6 @@ export function TripProvider({ children }) {
   const [permission, setPermission] = useState(false)
   const [owner, setOwner] = useState(false)
 
-
   const getTrips = async () => {
     // console.log("authHead", authHeader)
     try {
@@ -157,6 +156,34 @@ export function TripProvider({ children }) {
     }
   };
 
+  const lockTrip = async (tripID) => {
+    try{
+      console.log(tripID);
+      const lockTrip = await fetch(`${API_URL}/trip/${tripID}/lock`, {
+      method: 'PUT', 
+      headers: authHeader,
+    });
+      sendStatus(lockTrip, getTrips);
+
+    }catch (e) {
+      console.log(`lockTrip Error: ${e}`);
+    }
+  };
+
+  const unlockTrip = async (tripID) => {
+    try{
+      console.log(tripID);
+      const unlockTrip = await fetch(`${API_URL}/trip/${tripID}/unlock`, {
+      method: 'PUT', 
+      headers: authHeader,
+    });
+      sendStatus(unlockTrip, getTrips);
+
+    }catch (e) {
+      console.log(`unlockTrip Error: ${e}`);
+    }
+  };
+
   useEffect(() => {
     if (userData) {
       getTrips();
@@ -176,7 +203,9 @@ export function TripProvider({ children }) {
         checkPermission,
         permission,
         checkOwner,
-        owner
+        owner,
+        lockTrip,
+        unlockTrip,
       }}
     >
       {children}
