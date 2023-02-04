@@ -47,8 +47,8 @@ export default function TripTabNav() {
             iconName = 'calendar-blank'
           } else if (route.name === 'Expenses') {
             iconName = 'account-cash'
-          } else if (route.name === 'Invite') {
-            iconName = 'account-plus'
+          } else if (route.name === 'Trip Info') {
+            iconName = 'information-outline'
           }
           return (
             <View style={{ flex: 1 }}>
@@ -77,7 +77,7 @@ export default function TripTabNav() {
         : null
       }
       <Tab.Screen name="Expenses" component={ExpenseTable} />
-      <Tab.Screen name="Invite" component={Invite} />
+      <Tab.Screen name="Trip Info" component={Invite} />
     </Tab.Navigator>
   )
 
