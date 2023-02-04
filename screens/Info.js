@@ -13,7 +13,7 @@ import { InviteContext } from '../context/InviteContext';
 import { TripContext } from '../context/TripContext';
 import { EventContext } from '../context/EventContext';
 
-export default function Invite() {
+export default function Info() {
   const { postInvite, getInvitesSent, invitesSent, deleteInviteSent } = useContext(InviteContext);
   const { tripid } = useContext(EventContext);
   const { usersInTrip, permission, owner, lockTrip, unlockTrip } = useContext(TripContext);

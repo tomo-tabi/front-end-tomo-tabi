@@ -7,7 +7,7 @@ import { colors, TimeLinAddBtn } from "../styles/globalStyles";
 const { primary, blue } = colors;
 
 import Calendar from '../screens/Calendar';
-import Invite from '../screens/Invite';
+import Info from '../screens/Info';
 import TimelineStack from './TimelineStack';
 import { ExpenseTable } from '../screens/Expenses';
 import { View } from 'react-native';
@@ -77,7 +77,7 @@ export default function TripTabNav() {
         : null
       }
       <Tab.Screen name="Expenses" component={ExpenseTable} />
-      <Tab.Screen name="Trip Info" component={Invite} />
+      <Tab.Screen name="Trip Info" component={Info} />
     </Tab.Navigator>
   )
 
