@@ -229,12 +229,14 @@ const styles = StyleSheet.create({
   },
   tripView: {
     flex: 2,
+    marginBottom:10,
     shadowColor: 'grey',
     shadowOpacity: 0.8,
     elevation: 7,
 
-    borderTopLeftRadius: 6,
-    borderTopRightRadius: 6,
+    borderRadius:6,
+    // borderTopLeftRadius: 6,
+    // borderTopRightRadius: 6,
     backgroundColor: primary
   },
   tripInnerView: {//inside each trip file
