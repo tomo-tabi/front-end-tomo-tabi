@@ -172,10 +172,10 @@ export default function CalendarView(params) {
             // console.log("eventArrFormat",eventArrFormat);
 
             setDayViewDate(new Date(day));
-            if (eventArrFormat && eventArrFormat.length !== 0) {
-                setDayViewData(eventArrFormat);
+            if (currentEventArr && currentEventArr.length !== 0) {
+                return setDayViewData(currentEventArr);
             } else {
-                setDayViewData([]);
+                return setDayViewData([]);
             }
         }
     }
