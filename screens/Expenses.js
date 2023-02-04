@@ -201,8 +201,8 @@ export const ExpenseTable = () => {
               </Text>
             </TouchableOpacity>
         </View>
-          {expensesView &&
-          <Table>
+          {expensesView && 
+          <Table style={{borderRadius:7, margin:3, overflow:'hidden' }}>
             <TableWrapper>
               <Row data={tableHead} style={styles.head} textStyle={styles.text} />
               {
@@ -239,12 +239,13 @@ export const ExpenseTable = () => {
       { permission ?
         <View></View>
         :
-        <View style={{ height: 100, backgroundColor: primary, }}>
             <AddButton
                 setModalOpen={setModalOpen}
             />
-        </View>
+
       }
+        <View style={{ height: 90 }}>
+        </View>
     </View>
   );
 };
