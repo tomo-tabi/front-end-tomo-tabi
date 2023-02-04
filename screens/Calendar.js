@@ -26,6 +26,7 @@ export default function CalendarView(params) {
 
     const [dayViewData, setDayViewData] = useState([])
     const [dayViewDate, setDayViewDate] = useState()
+    const [inDateRange, setInDateRange] = useState(true)
     // const [showTimeline, setShowTimeline] = useState(true);
 
     //get trip info(id, name, duration)
@@ -34,6 +35,7 @@ export default function CalendarView(params) {
     }
     const getTripInfo = trips.find(getID);
     const startDate = new Date(getTripInfo.start_date);
+    const endDate = new Date(getTripInfo.end_date);
     // console.log(trips);
 
     const dateFormat = (date) => {
