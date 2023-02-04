@@ -173,6 +173,12 @@ export default function CalendarView(params) {
 
             setDayViewDate(new Date(day));
 
+            if (new Date(day) <= endDate && new Date(day) >= startDate) {
+                setInDateRange(true);
+            } else {
+                setInDateRange(false);
+            }
+
             if (currentEventArr && currentEventArr.length !== 0) {
                 return setDayViewData(currentEventArr);
             } else {
