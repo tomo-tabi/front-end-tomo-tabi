@@ -19,8 +19,8 @@ import { VoteContext } from '../context/VoteContext';
 // import { enableExpoCliLogging } from 'expo/build/logs/Logs';
 
 export default function Trips({ navigation }) {
-  const { logout } = useContext(AuthContext);
-  const { trips, getUsersInTrip, checkPermission, checkOwner } = useContext(TripContext);
+  const { logout, userData } = useContext(AuthContext);
+  const { trips, getUsersInTrip, checkPermission, checkOwner, owner } = useContext(TripContext);
   const { getTripVotes, getUserTripVotes } = useContext(VoteContext);
   const { invites, rejectInvites, acceptInvites } = useContext(InviteContext)
   const { getTripEvents } = useContext(EventContext)
@@ -90,6 +90,15 @@ export default function Trips({ navigation }) {
           return item.start_date <= todayDate;
         }
       })
+      filterArr.map(async (trip) => {
+        if(userData.username === trip.owner_username){
+          trip.owner = true
+        }
+        else {
+          trip.owner = false
+        }
+      });
+
       setFilteredTrip(filterArr);
     }
     // console.log(filterArr);
@@ -188,11 +197,19 @@ export default function Trips({ navigation }) {
               <View style={styles.tripInnerView}>
                 <View style={{ flexDirection:'row', justifyContent:'space-between' }}>
                   <Text style={styles.tripName}>{item.name} </Text>
-                  <EditButton
+                  {item.is_locked ? 
+                    item.owner ? 
+                    <EditButton
                     setModalOpen={setModalEditOpen}
                     setEditData={setTripEditData}
                     editData={item}
                   />
+                  :
+                  null : <EditButton
+                    setModalOpen={setModalEditOpen}
+                    setEditData={setTripEditData}
+                    editData={item}
+                  />}
                 </View>
                 <Text style={styles.tripDate}>{dateFormat(item.start_date, item.end_date)}</Text>
               </View>
