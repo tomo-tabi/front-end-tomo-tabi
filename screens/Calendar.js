@@ -161,14 +161,14 @@ export default function CalendarView(params) {
                 return dateFormat(day) === dateFormat(item.event_date)
             });
 
-            const eventArrFormat = currentEventArr.map((item) => {
-                return {
-                    event_date: item.event_date,
-                    event_name: item.event_name,
-                    description: item.description,
-                    id: item.id
-                }
-            });
+            // const eventArrFormat = currentEventArr.map((item) => {
+            //     return {
+            //         event_date: item.event_date,
+            //         event_name: item.event_name,
+            //         description: item.description,
+            //         id: item.id
+            //     }
+            // });
             // console.log("eventArrFormat",eventArrFormat);
 
             setDayViewDate(new Date(day));
