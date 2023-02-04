@@ -1,7 +1,7 @@
 import React, { useState, useCallback, useContext, useEffect } from "react";
 import { Linking, StyleSheet, View, Text, ScrollView, TouchableOpacity } from "react-native";
 import { Table, TableWrapper, Row, Cell } from "react-native-table-component";
-import { globalStyles, colors, AddButton, StyledModal, TempButton, EditButton } from "../styles/globalStyles";
+import { globalStyles, colors, AddButton, StyledModal, NoItemMessage, EditButton } from "../styles/globalStyles";
 import { MaterialCommunityIcons } from '@expo/vector-icons';
 
 
@@ -201,8 +201,8 @@ export const ExpenseTable = () => {
               </Text>
             </TouchableOpacity>
         </View>
-          {expensesView && 
-          <Table style={{borderRadius:7, margin:3, overflow:'hidden' }}>
+          {expensesView &&
+          <Table style={{borderTopEndRadius:7, borderTopStartRadius:7, margin:3, overflow:'hidden' }}>
             <TableWrapper>
               <Row data={tableHead} style={styles.head} textStyle={styles.text} />
               {
@@ -219,8 +219,19 @@ export const ExpenseTable = () => {
             </TableWrapper>
           </Table>
           }
+          {expensesView && tableData.length === 0 &&
+          <View style={[{ flex:1, marginTop:25 }]}>
+            <NoItemMessage text='No Expenses Yet' style={{ textAlignVertical:'center'}}/>
+          </View> 
+          }
 
           {balanceView && <Balance/>}
+          {balanceView && tableData.length === 0 &&
+          <View style={[{ flex:1, marginTop:25 }]}>
+            <NoItemMessage text='No Balances Yet' style={{ textAlignVertical:'center'}}/>
+          </View> 
+          }
+          
 
           <StyledModal
             modalOpen={modalOpen}
