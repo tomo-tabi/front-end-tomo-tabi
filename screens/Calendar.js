@@ -241,6 +241,11 @@ export default function CalendarView(params) {
                         style={{ height: undefined, margin: 0, padding: 1, backgroundColor: "#d3d3d3" }}
                     /> */}
                 </View>
+                {(dayViewData.length === 0 && !inDateRange) && 
+                    <View style={[{ flex:1, marginTop:5 }]}>
+                        <NoItemMessage text='No Events Yet!' style={{ height:100, textAlignVertical:'center', }}/>
+                    </View>
+                }
                 {dayViewData ?
                     <Timeline
                         style={styles.container}
