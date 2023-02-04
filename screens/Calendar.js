@@ -16,23 +16,23 @@ import EditTimeline from './EditTimeline';
 import Timeline from 'react-native-timeline-flatlist'
 
 export default function CalendarView(params) {
-    const { trips, permission } = useContext(TripContext)
+    const { trips, permission } = useContext(TripContext);
     const { tripid, tripEvents, getTripEvents } = useContext(EventContext);
 
     const [modalOpen, setModalOpen] = useState(false);
 
-    const [modalEditOpen, setModalEditOpen] = useState(false)
-    const [eventEditData, setEventEditData] = useState({}) // Set the event I want to send to Edit Timeline component
+    const [modalEditOpen, setModalEditOpen] = useState(false);
+    const [eventEditData, setEventEditData] = useState({});
 
-    const [dayViewData, setDayViewData] = useState([])
-    const [dayViewDate, setDayViewDate] = useState()
-    const [inDateRange, setInDateRange] = useState(true)
-    // const [showTimeline, setShowTimeline] = useState(true);
+    const [dayViewData, setDayViewData] = useState([]);
+    const [dayViewDate, setDayViewDate] = useState();
+    const [inDateRange, setInDateRange] = useState(true);
 
     //get trip info(id, name, duration)
     function getID(arr) {
         return arr.id === tripid;
     }
+    
     const getTripInfo = trips.find(getID);
     const startDate = new Date(getTripInfo.start_date);
     const endDate = new Date(getTripInfo.end_date);
@@ -154,7 +154,7 @@ export default function CalendarView(params) {
         })
 
         return eventsObject
-    }
+    };
 
     const checkDate = (day) => {
         // console.log("dateSortEvents", dateSortEvents)
@@ -162,17 +162,8 @@ export default function CalendarView(params) {
             const currentEventArr = tripEvents.filter((item) => {
                 return dateFormat(day) === dateFormat(item.event_date)
             });
-
-            // const eventArrFormat = currentEventArr.map((item) => {
-            //     return {
-            //         event_date: item.event_date,
-            //         event_name: item.event_name,
-            //         description: item.description,
-            //         id: item.id
-            //     }
-            // });
-            // console.log("eventArrFormat",eventArrFormat);
-
+            // console.log(currentEventArr);
+            
             setDayViewDate(new Date(day));
 
             if (new Date(day) <= endDate && new Date(day) >= startDate) {
@@ -187,7 +178,7 @@ export default function CalendarView(params) {
                 return setDayViewData([]);
             }
         }
-    }
+    };
 
     // const monthChange = (month) => {
     //     if (month.month !== moment(startDate).format('MM')) {
@@ -243,11 +234,8 @@ export default function CalendarView(params) {
                          inDateRange && <AddButtonSqr
                             setModalOpen={setModalOpen}
                             style={{ height: undefined, margin: 0, padding: 1, backgroundColor: yellow }}
-                        />}
-                    {/* <AddButtonSqr
-                        setModalOpen={setModalOpen}
-                        style={{ height: undefined, margin: 0, padding: 1, backgroundColor: "#d3d3d3" }}
-                    /> */}
+                        />
+                    }
                 </View>
                 {(dayViewData.length === 0 && !inDateRange) && 
                     <View style={[{ flex:1, marginTop:5 }]}>
