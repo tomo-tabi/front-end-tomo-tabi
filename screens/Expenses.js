@@ -144,106 +144,91 @@ export const ExpenseTable = () => {
   }
 
 
-  const PayPayURL = "paypay://";
+  // const PayPayURL = "paypay://";
 
-  const LinePayURL = "linepay://";
+  // const LinePayURL = "linepay://";
 
-  const OpenURLButton = ({ url, children }) => {
-    const handlePress = useCallback(async () => {
-      // Checking if the link is supported for links with custom URL scheme.
-      const supported = await Linking.canOpenURL(url);
+  // const OpenURLButton = ({ url, children }) => {
+  //   const handlePress = useCallback(async () => {
+  //     // Checking if the link is supported for links with custom URL scheme.
+  //     const supported = await Linking.canOpenURL(url);
 
-      if (supported) {
-        // Opening the link with some app, if the URL scheme is "http" the web link should be opened
-        // by some browser in the mobile
-        await Linking.openURL(url);
-      } else {
-        if (url == "paypay://") {
-          await Linking.openURL("https://play.google.com/store/apps/details?id=com.paypay.android%22")
-        }
-        else {
-          await Linking.openURL("https://play.google.com/store/apps/details?id=com.linepaycorp.talaria&hl=en&gl=US")
-        }
-      }
-    }, [url]);
+  //     if (supported) {
+  //       // Opening the link with some app, if the URL scheme is "http" the web link should be opened
+  //       // by some browser in the mobile
+  //       await Linking.openURL(url);
+  //     } else {
+  //       if (url == "paypay://") {
+  //         await Linking.openURL("https://play.google.com/store/apps/details?id=com.paypay.android%22")
+  //       }
+  //       else {
+  //         await Linking.openURL("https://play.google.com/store/apps/details?id=com.linepaycorp.talaria&hl=en&gl=US")
+  //       }
+  //     }
+  //   }, [url]);
 
-    return (
-      <TempButton
-        onPress={handlePress}
-        buttonText={children}
-      />
-    );
-  };
+  //   return (
+  //     <TempButton
+  //       onPress={handlePress}
+  //       buttonText={children}
+  //     />
+  //   );
+  // };
 
 
   // post exp needs: itemName, money, optional purchaserid (if blank defaults to userid)
 
   return (
-    <View style={{ flex: 1, backgroundColor:lightBlue }}>
+    <View style={{ flex: 1, backgroundColor:primary }}>
       <ScrollView style={{ flex: 1 }}>
-      <View style={[styles.buttonsContainer]}>
-          <TouchableOpacity
-            style={[styles.button, {backgroundColor: expensesView ? lightBlue : primary}]}
-            onPress={() => {setBalanceView(false); setExpensesView(true)}}
-          >
-            <MaterialCommunityIcons name='table' size={30} style={{ marginRight: 10, color: yellow }} />
-            <Text style={{ textAlignVertical: 'center', fontSize: 18 }}>
-              Expenses
-            </Text>
-          </TouchableOpacity>
-          <TouchableOpacity
-            style={[styles.button, {backgroundColor: balanceView ? lightBlue : primary}]}
-            onPress={() => {setExpensesView(false); setBalanceView(true)}}
-          >
-            <MaterialCommunityIcons name='scale-balance' size={30} style={{ marginRight: 10, color: blue }} />
-            <Text style={{ textAlignVertical: 'center', fontSize: 18 }}>
-              Balance
-            </Text>
-          </TouchableOpacity>
+        <View style={[styles.buttonsContainer]}>
+            <TouchableOpacity
+              style={[styles.button, {backgroundColor: expensesView ? lightBlue : primary}]}
+              onPress={() => {setBalanceView(false); setExpensesView(true)}}
+            >
+              <MaterialCommunityIcons name='table' size={30} style={{ marginRight: 10, color: yellow }} />
+              <Text style={{ textAlignVertical: 'center', fontSize: 18 }}>
+                Expenses
+              </Text>
+            </TouchableOpacity>
+            <TouchableOpacity
+              style={[styles.button, {backgroundColor: balanceView ? lightBlue : primary}]}
+              onPress={() => {setExpensesView(false); setBalanceView(true)}}
+            >
+              <MaterialCommunityIcons name='scale-balance' size={30} style={{ marginRight: 10, color: blue }} />
+              <Text style={{ textAlignVertical: 'center', fontSize: 18 }}>
+                Balance
+              </Text>
+            </TouchableOpacity>
         </View>
-        {expensesView && <Table>
-          <TableWrapper>
-            <Row data={tableHead} style={styles.head} textStyle={styles.text} />
-            {
-              tableData.map((data, i) => (
-                <TableWrapper style={styles.wrapper} key={i}>
-                  {
-                    data.map((cell, j) => (
-                      <Cell onPress={() => console.log(j)} key={j} data={cell} textStyle={styles.text} borderStyle={styles.cellBorderStyle} />
-                    ))
-                  }
-                </TableWrapper>
-              ))
-            }
-          </TableWrapper>
-          { permission ?
-            <View></View>
-            :
-            <View style={{ height: 100, backgroundColor: primary, }}>
-                <AddButton
-                    setModalOpen={setModalOpen}
-                />
-            </View>}
-          
-        </Table>}
+          {expensesView &&
+          <Table>
+            <TableWrapper>
+              <Row data={tableHead} style={styles.head} textStyle={styles.text} />
+              {
+                tableData.map((data, i) => (
+                  <TableWrapper style={styles.wrapper} key={i}>
+                    {
+                      data.map((cell, j) => (
+                        <Cell onPress={() => console.log(j)} key={j} data={cell} textStyle={styles.text} borderStyle={styles.cellBorderStyle} />
+                      ))
+                    }
+                  </TableWrapper>
+                ))
+              }
+            </TableWrapper>
+          </Table>
+          }
 
-        {balanceView && <Balance/>}
-        
-
-        <View style={globalStyles.container}>
+          {balanceView && <Balance/>}
 
           <StyledModal
             modalOpen={modalOpen}
             setModalOpen={setModalOpen}
             AddComponent={AddExpenses}
           />
-
-
-        </View>
         
       </ScrollView>
-
-      
 
       <StyledModal
         modalOpen={modalEditOpen}
@@ -251,6 +236,15 @@ export const ExpenseTable = () => {
         AddComponent={EditExpenses}
         EditData={expenseEditData}
       />
+      { permission ?
+        <View></View>
+        :
+        <View style={{ height: 100, backgroundColor: primary, }}>
+            <AddButton
+                setModalOpen={setModalOpen}
+            />
+        </View>
+      }
     </View>
   );
 };
