@@ -35,6 +35,8 @@ export function TripProvider({ children }) {
             name: item.name,
             start_date: start_date,
             end_date: end_date,
+            is_locked: item.is_locked,
+            owner_username : item.username
           };
         });
 
@@ -146,9 +148,6 @@ export function TripProvider({ children }) {
       });
 
       const res = await checkOwnerRes.json()
-
-      console.log("res", res)
-
       setOwner(res)
 
     } catch (e) {
