@@ -173,7 +173,7 @@ export default function Trips({ navigation }) {
 
       {ongoingTrips &&
         <View>
-          <Text style={globalStyles.header} > Ongoing trips</Text>
+          <Text style={globalStyles.header} >Ongoing trips</Text>
           <View style={styles.ongoingTripView}>
             <FlatList
               keyExtractor={(item) => item.id}
