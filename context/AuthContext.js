@@ -21,6 +21,12 @@ export function AuthProvider({ children }) {
     }
   };
 
+  const setDataPassword = async userInfo => {
+    await AsyncStorage.setItem('userToken', userInfo.token);
+    setUserData(userInfo);
+    setUserToken(userInfo.token);
+  }
+
   const authHeader = {
     Accept: 'application/json, text/plain, */*',
     'Content-Type': 'application/json',
@@ -115,7 +121,8 @@ export function AuthProvider({ children }) {
         body: JSON.stringify(userInfo),
       });
 
-      checkStatus(editUserInfo, setData);
+
+      checkStatus(editUserInfo, setUserData);
     } catch (e) {
       console.log(`Update Info Error: ${e}`);
     }
@@ -129,7 +136,7 @@ export function AuthProvider({ children }) {
         body: JSON.stringify(PasswordInfo),
       });
 
-      checkStatus(editPassword, setData);
+      checkStatus(editPassword, setDataPassword);
     } catch (e) {
       console.log(`Update Password Error: ${e}`);
     }
