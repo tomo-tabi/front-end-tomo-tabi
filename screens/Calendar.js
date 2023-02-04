@@ -232,7 +232,7 @@ export default function CalendarView(params) {
                     {permission ?
                         null
                         :
-                        <AddButtonSqr
+                         inDateRange && <AddButtonSqr
                             setModalOpen={setModalOpen}
                             style={{ height: undefined, margin: 0, padding: 1, backgroundColor: yellow }}
                         />}
