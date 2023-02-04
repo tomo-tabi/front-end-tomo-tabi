@@ -90,8 +90,9 @@ export const ExpenseTable = () => {
           expObj[userObj.username] = 0
         }
       })
-      setSplitPaymentData(splitPayments(expObj))
+      return setSplitPaymentData(splitPayments(expObj))
     }
+    setTableData([]);
 
 
   }, [expData])
