@@ -198,6 +198,12 @@ export const globalStyles = StyleSheet.create({
 
     padding:1.5
   },
+  noItemMessage:{
+    fontSize:24,
+    textAlign:'center', 
+    color:'#9E9E9E',
+    elevation:0
+  },
 });
 
 
@@ -212,6 +218,14 @@ export const Seperator = () => {
 }
 
 const darkLight = "#9CA3AF";
+
+export const NoItemMessage = ( { text, style }) => {
+  return (
+    <Text style={[globalStyles.card, globalStyles.noItemMessage, style]}>
+      {text}
+    </Text>
+  )
+}
 
 export const MyTextInput = ( { label, icon, ...props }) => {
   

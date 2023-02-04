@@ -93,7 +93,7 @@ export const Balance = () => {
     const splitPayments = (payments) => {
         const result = []
         const someoneOwnsYou = []
-        const oweYou = []
+        // const oweYou = []
         const people = Object.keys(payments);
         const valuesPaid = Object.values(payments);
 
@@ -305,8 +305,7 @@ export const Balance = () => {
                     })
                     }
                 </View>
-            </View> : 
-            <Text style={{ fontSize: 24, fontWeight: 'bold' }}> No expenses yet </Text>}
+            </View> : ''}
         </ScrollView>
     );
 };

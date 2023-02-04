@@ -186,6 +186,11 @@ export default function Trips({ navigation }) {
       
 
       <View style={styles.tripView}>
+        { filteredTrip.length === 0 &&
+          (upcoming ? 
+          <Text style={[styles.tripDate, {fontSize:24, textAlign:'center', marginTop:20}]}>No Upcoming Trips</Text>
+          : <Text style={[styles.tripDate, {fontSize:24, textAlign:'center', marginTop:20}]}>No Past Trips</Text>)
+        }
         <FlatList
           keyExtractor={(item) => item.id}
           data={filteredTrip}
@@ -246,12 +251,14 @@ const styles = StyleSheet.create({
   },
   tripView: {
     flex: 2,
+    marginBottom:10,
     shadowColor: 'grey',
     shadowOpacity: 0.8,
     elevation: 7,
 
-    borderTopLeftRadius: 6,
-    borderTopRightRadius: 6,
+    borderRadius:6,
+    // borderTopLeftRadius: 6,
+    // borderTopRightRadius: 6,
     backgroundColor: primary
   },
   tripInnerView: {//inside each trip file

@@ -1,7 +1,7 @@
 import React, { useState, useEffect, useContext } from 'react';
 import { StyleSheet, Text, View } from 'react-native';
 import { Calendar, CalendarList, Agenda } from 'react-native-calendars';
-import { StyledModal, globalStyles, colors, EditButton, AddButtonSqr } from "../styles/globalStyles";
+import { StyledModal, globalStyles, colors, EditButton, AddButtonSqr, NoItemMessage } from "../styles/globalStyles";
 const { primary, yellow, blue } = colors
 const darkYellow = '#fcc256'
 
@@ -16,24 +16,26 @@ import EditTimeline from './EditTimeline';
 import Timeline from 'react-native-timeline-flatlist'
 
 export default function CalendarView(params) {
-    const { trips, permission } = useContext(TripContext)
+    const { trips, permission } = useContext(TripContext);
     const { tripid, tripEvents, getTripEvents } = useContext(EventContext);
 
     const [modalOpen, setModalOpen] = useState(false);
 
-    const [modalEditOpen, setModalEditOpen] = useState(false)
-    const [eventEditData, setEventEditData] = useState({}) // Set the event I want to send to Edit Timeline component
+    const [modalEditOpen, setModalEditOpen] = useState(false);
+    const [eventEditData, setEventEditData] = useState({});
 
-    const [dayViewData, setDayViewData] = useState([])
-    const [dayViewDate, setDayViewDate] = useState()
-    // const [showTimeline, setShowTimeline] = useState(true);
+    const [dayViewData, setDayViewData] = useState([]);
+    const [dayViewDate, setDayViewDate] = useState();
+    const [inDateRange, setInDateRange] = useState(true);
 
     //get trip info(id, name, duration)
     function getID(arr) {
         return arr.id === tripid;
     }
+    
     const getTripInfo = trips.find(getID);
     const startDate = new Date(getTripInfo.start_date);
+    const endDate = new Date(getTripInfo.end_date);
     // console.log(trips);
 
     const dateFormat = (date) => {
@@ -62,7 +64,7 @@ export default function CalendarView(params) {
     const renderTime = (rowData) => {
         return (
             <View >
-                <Text style={{ borderRadius: 20, backgroundColor: yellow, padding: 5, paddingHorizontal: 5, fontSize: 12 }}>
+                <Text style={{ borderRadius: 20, backgroundColor: primary, padding: 5, paddingHorizontal: 5, fontSize: 12 }}>
                     {moment(rowData.event_date).format("HH:mm A")}
                 </Text>
             </View>
@@ -152,7 +154,7 @@ export default function CalendarView(params) {
         })
 
         return eventsObject
-    }
+    };
 
     const checkDate = (day) => {
         // console.log("dateSortEvents", dateSortEvents)
@@ -160,25 +162,23 @@ export default function CalendarView(params) {
             const currentEventArr = tripEvents.filter((item) => {
                 return dateFormat(day) === dateFormat(item.event_date)
             });
-
-            const eventArrFormat = currentEventArr.map((item) => {
-                return {
-                    event_date: item.event_date,
-                    event_name: item.event_name,
-                    description: item.description,
-                    id: item.id
-                }
-            });
-            // console.log("eventArrFormat",eventArrFormat);
-
+            // console.log(currentEventArr);
+            
             setDayViewDate(new Date(day));
-            if (eventArrFormat && eventArrFormat.length !== 0) {
-                setDayViewData(eventArrFormat);
+
+            if (new Date(day) <= endDate && new Date(day) >= startDate) {
+                setInDateRange(true);
             } else {
-                setDayViewData([]);
+                setInDateRange(false);
+            }
+
+            if (currentEventArr && currentEventArr.length !== 0) {
+                return setDayViewData(currentEventArr);
+            } else {
+                return setDayViewData([]);
             }
         }
-    }
+    };
 
     // const monthChange = (month) => {
     //     if (month.month !== moment(startDate).format('MM')) {
@@ -231,15 +231,17 @@ export default function CalendarView(params) {
                     {permission ?
                         null
                         :
-                        <AddButtonSqr
+                         inDateRange && <AddButtonSqr
                             setModalOpen={setModalOpen}
                             style={{ height: undefined, margin: 0, padding: 1, backgroundColor: yellow }}
-                        />}
-                    {/* <AddButtonSqr
-                        setModalOpen={setModalOpen}
-                        style={{ height: undefined, margin: 0, padding: 1, backgroundColor: "#d3d3d3" }}
-                    /> */}
+                        />
+                    }
                 </View>
+                {(dayViewData.length === 0 && inDateRange) && 
+                    <View style={[{ flex:1, marginTop:5 }]}>
+                        <NoItemMessage text='No Events Yet!' style={{ height:100, textAlignVertical:'center', }}/>
+                    </View>
+                }
                 {dayViewData ?
                     <Timeline
                         style={styles.container}
@@ -283,6 +285,7 @@ const styles = StyleSheet.create({
     dateText: {
         flex: 1,
         padding: 5,
+        paddingVertical:8,
         borderRadius: 6,
         backgroundColor: '#9CCAEC',
         fontWeight: "bold",
