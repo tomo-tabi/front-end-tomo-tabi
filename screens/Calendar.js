@@ -1,7 +1,7 @@
 import React, { useState, useEffect, useContext } from 'react';
 import { StyleSheet, Text, View } from 'react-native';
 import { Calendar, CalendarList, Agenda } from 'react-native-calendars';
-import { StyledModal, globalStyles, colors, EditButton, AddButtonSqr } from "../styles/globalStyles";
+import { StyledModal, globalStyles, colors, EditButton, AddButtonSqr, NoItemMessage } from "../styles/globalStyles";
 const { primary, yellow, blue } = colors
 const darkYellow = '#fcc256'
 
@@ -297,6 +297,7 @@ const styles = StyleSheet.create({
     dateText: {
         flex: 1,
         padding: 5,
+        paddingVertical:8,
         borderRadius: 6,
         backgroundColor: '#9CCAEC',
         fontWeight: "bold",
