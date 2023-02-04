@@ -288,10 +288,10 @@ export const PasswordTextInput = ( { text, hidePassword, setHidePassword, ...pro
   );
 };
 
-export const YesOrNoCard = ({ propmt, yesFunc, noFunc }) => {
+export const YesOrNoCard = ({ propmt, yesFunc, noFunc, style }) => {
   // console.log(propmt);
   return (
-    <View style={globalStyles.card}>
+    <View style={[globalStyles.card, style]}>
       {propmt}
       <View style={{flexDirection:'row'}}>
         <TouchableOpacity style={[globalStyles.button, globalStyles.accepted]}

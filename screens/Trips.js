@@ -1,6 +1,8 @@
-import React, { useState, useContext, useEffect } from 'react'
+import React, { useState, useContext, useEffect, useCallback } from 'react'
+import { useFocusEffect } from '@react-navigation/native';
 import { StyleSheet, Text, FlatList, View, TouchableOpacity, SectionList } from 'react-native';
-import { globalStyles, colors, AddButtonSqr, StyledModal, BlueButton, EditButton, YesOrNoCard, Seperator } from "../styles/globalStyles";
+import { MaterialCommunityIcons } from '@expo/vector-icons';
+import { globalStyles, colors, AddButtonSqr, StyledModal, BlueButton, EditButton, YesOrNoCard, Seperator, StatusColor } from "../styles/globalStyles";
 const { primary, yellow, grey } = colors
 
 import { AuthContext } from '../context/AuthContext';
@@ -22,11 +24,11 @@ export default function Trips({ navigation }) {
   const { logout, userData } = useContext(AuthContext);
   const { trips, getUsersInTrip, checkPermission, checkOwner, owner } = useContext(TripContext);
   const { getTripVotes, getUserTripVotes } = useContext(VoteContext);
-  const { invites, rejectInvites, acceptInvites } = useContext(InviteContext)
+  const { getInvites, invites, rejectInvites, acceptInvites } = useContext(InviteContext)
   const { getTripEvents } = useContext(EventContext)
 
   const [modalOpen, setModalOpen] = useState(false);
-  const [inviteStatus, setInviteStatus] = useState(false);
+  const [inviteOpen, setInviteOpen] = useState(false);
   const [modalEditOpen, setModalEditOpen] = useState(false)
   const [tripEditData, setTripEditData] = useState({}) // Set the trip I want to send to Edit Trip component
   const [visible, setVisible] = useState(true);
@@ -34,7 +36,13 @@ export default function Trips({ navigation }) {
   const [upcoming, setUpcoming] = useState(true); // default to upcoming trips
   const [filteredTrip, setFilteredTrip] = useState(false);
 
-  const [ongoingTrips, setOngoingTrips] = useState(null)
+  const [ongoingTrips, setOngoingTrips] = useState(null);
+
+  useFocusEffect(
+    useCallback(() => {
+      getInvites();
+    }, [])
+  );
 
   // console.log(invites, trips);
 
@@ -66,10 +74,8 @@ export default function Trips({ navigation }) {
 
   useEffect(() => {
     // console.log("in",invites);
-    if (invites) {
-      setInviteStatus(true);
-    } else {
-      setInviteStatus(false);
+    if (!invites) {
+      setInviteOpen(false);
     }
   }, [invites])
 
@@ -132,43 +138,46 @@ export default function Trips({ navigation }) {
         setModalOpen={setModalOpen}
         AddComponent={AddTrip}
       />
-      <View style={{ paddingTop: 15, flexDirection: 'row', justifyContent: 'space-between' }}>
-        <Text style={globalStyles.header}>
-          {inviteStatus ?
-            "Pending Invites"
-            : "No Invites"
-          }
-        </Text>
-        <BlueButton
+      <BlueButton
           onPress={() => logout()}
           buttonText="Logout"
-          style={{ width: 90, padding: 8, marginBottom: 10 }}
-        />
-      </View>
-
-      {inviteStatus !== false ?
-        <View style={styles.inviteView}>
+          style={{ width: 90, padding: 8 }}
+      />
+      {invites &&
+        <TouchableOpacity style={[globalStyles.card, {flexDirection:'row', alignItems:'center', justifyContent:'space-between', marginBottom:5}]} onPress={() => setInviteOpen(!inviteOpen)} >
+          <View style={{flexDirection:'row', alignItems:'center'}}>
+            <Text style={[globalStyles.header, {marginRight:5, paddingVertical:0}]}>
+              Pending Invites
+            </Text>
+            {(!inviteOpen && invites) && 
+              <Text style={[globalStyles.header, {textAlign:'center', textAlignVertical:'center', borderRadius:25, borderWidth:2, paddingVertical:0, paddingHorizontal:8, borderColor:StatusColor.rejected, color:StatusColor.rejected, marginBottom:0}]}>
+                {invites.length}
+              </Text>
+            }
+          </View>
+          <MaterialCommunityIcons name={inviteOpen ? 'chevron-up' : 'chevron-down'} size={30}/>
+        </TouchableOpacity>
+      }
+      {inviteOpen &&
+        <View style={[styles.inviteView, {flex: (invites && invites.length >= 2) ? 1.5 : 0 }]}>
           <FlatList
-            keyExtractor={(item) => {
-              // console.log(item.id);
-              return item.id
-            }}
+            keyExtractor={(item) => item.id}
             data={invites}
+            ItemSeparatorComponent={<Seperator />}
             renderItem={({ item }) => (
               <YesOrNoCard
                 propmt={
-                  <View style={{ paddingHorizontal: 5 }}>
+                  <View style={{ paddingHorizontal: 5, flexDirection:'row', flexWrap:'wrap' }}>
                     <Text style={styles.inviteText}>User '{item.username}' has invited you trip:</Text>
-                    <Text style={styles.inviteTripName}>{item.name}</Text>
-                  </View>
-                }
+                    <Text style={styles.inviteTripName}> {item.name}</Text>
+                </View>}
                 yesFunc={() => acceptInvites(item.id)}
                 noFunc={() => rejectInvites(item.id)}
+                style={{ elevation:0, marginBottom:0, borderRadius:0 }}
               />
-            )}
-          />
+          )}
+        />
         </View>
-        : ""
       }
 
       {ongoingTrips &&
@@ -256,7 +265,7 @@ export default function Trips({ navigation }) {
           // columnWrapperStyle={styles.row}
           ItemSeparatorComponent={<Seperator />}
           renderItem={({ item }) => (
-            <TouchableOpacity onPress={() => pressHandler(item)} style={styles.item}>
+            <TouchableOpacity onPress={() => pressHandler(item)}>
               <View style={styles.tripInnerView}>
                 <View style={{ flexDirection: 'row', justifyContent: 'space-between' }}>
                   <Text style={styles.tripName}>{item.name} </Text>
@@ -345,15 +354,15 @@ const styles = StyleSheet.create({
   },
   inviteText: {
     fontSize: 16,
+    textAlignVertical:'center',
   },
   inviteView: {
-    marginBottom: 10,
+    borderRadius:6,
+    overflow:'hidden',
   },
   inviteTripName: {
-    flex: 1,
     fontWeight: "bold",
     fontSize: 24,
-    textAlign: 'center',
   },
   dialogTitle: {
     fontSize: 25,
