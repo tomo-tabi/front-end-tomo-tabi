@@ -18,7 +18,7 @@ const Tab = createBottomTabNavigator();
 
 export default function TripTabNav() {
   const { setModalOpen } = useContext(EventContext)
-  const { permission } = useContext(TripContext)
+  const { permission, owner } = useContext(TripContext)
 
   const state = useNavigationState(state => state);
 
@@ -66,6 +66,12 @@ export default function TripTabNav() {
       <Tab.Screen name="TimeLine" component={TimelineStack} />
       <Tab.Screen name="Calendar" component={Calendar} />
       {showBtn ?
+        owner ? <Tab.Screen name="Add Event" component={TimelineStack}
+        options={{
+          tabBarButton: () => <TimeLinAddBtn setModalOpen={setModalOpen} />
+        }}
+      />
+      :
         permission ?
           null
           :

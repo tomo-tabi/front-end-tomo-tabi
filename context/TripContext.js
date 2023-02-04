@@ -133,7 +133,8 @@ export function TripProvider({ children }) {
 
       const res = await checkPermissionRes.json()
 
-      setPermission(res)
+
+      setPermission(res.is_locked)
 
     } catch (e) {
       console.log(`Check Permission Error: ${e}`);
