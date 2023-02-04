@@ -2,7 +2,7 @@ import React, { useState, useEffect, useContext, useRef } from 'react';
 import { StyleSheet, Text, FlatList, View, TouchableOpacity, Dimensions } from 'react-native';
 import { SelectList } from 'react-native-dropdown-select-list'
 
-import { globalStyles, colors, StyledModal, EditButton, BlueButton, VoteStat, } from "../styles/globalStyles";
+import { globalStyles, colors, StyledModal, EditButton, BlueButton, VoteStat, NoItemMessage } from "../styles/globalStyles";
 
 const { primary, blue, yellow } = colors
 
@@ -70,7 +70,7 @@ export default function TimeLine({ navigation }) {
         return item[1].focused === true
       });
 
-      setDateSelected(moment(currentDateArr[0]).format('YYYY-MM-DD'));
+      setDateSelected(moment(currentDateArr[0]).format('YYYY-MM-DD'));// should I make this default to first day with event?
 
       // currentEventArr = [{"description": null, "event_date": "2023-01-17T16:12:41.211Z", "event_name": "a", "id": 81, "trip_id": 11}]
       const currentEventArr = tripEvents.filter((item) => {
@@ -86,7 +86,7 @@ export default function TimeLine({ navigation }) {
       });
 
       setDayEvent(eventArrFormat);
-      // console.log(eventArrFormat);
+      // console.log("eventArrFormat",tripEvents);
     }
 
   }, [dayRange, tripEvents]);
@@ -109,6 +109,7 @@ export default function TimeLine({ navigation }) {
     
     if (tripVote && dayEvent) { //maybe return trip id with trip vote?
       if (Number(tripVote.tripid) === tripid) {
+        // console.log(tripVote.tripVoteArray, dayEvent[0]);
         (tripVote.tripVoteArray).forEach((item) => {
           if (eventVote[item.trips_events_id]){
             eventVote[item.trips_events_id][item.vote] ++
@@ -339,7 +340,7 @@ export default function TimeLine({ navigation }) {
         }
         {(!dayEvent || dayEvent.length === 0) && 
           <View style={[{ flex:1, marginTop:5 }]}>
-            <Text style={[globalStyles.card,styles.dateText, {color:'#9E9E9E', textAlignVertical:'center', height:100}]}>No Events Yet!</Text>
+            <NoItemMessage text='No Events Yet!' style={{ height:100, textAlignVertical:'center', }}/>
           </View>
         }
         <StyledModal
@@ -355,7 +356,7 @@ export default function TimeLine({ navigation }) {
           EditData={eventEditData}
         />
 
-        {dayEvent && dayEvent.length !== 0 && !filterEvents && eventVotesNum && eventVotesNum[dayEvent[0].id]?
+        {dayEvent && dayEvent.length !== 0 && !filterEvents && eventVotesNum ?
           <Timeline
             style={styles2.list}
             data={dayEvent}
