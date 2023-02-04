@@ -61,20 +61,22 @@ export const Balance = () => {
 
         for (let key in expObj) {
             let money = Math.trunc(expObj[key] - (sumOfMoneySpend / counter))
+            let abs = Math.abs(money)
             if (key === userData.username) {
                 const expObjGraph = {
                     x: 0,
-                    y: money,
-                    label: [key + " (You)", " ¥ " + money]
+                    y: abs,
+                    label: [key + " (You)", " ¥ " + money],
+                    z: money
                 }
                 expArraGraph.push(expObjGraph)
-
             }
             else {
                 const expObjGraph = {
                     x: 0,
-                    y: money,
-                    label: [key, " ¥ " + money]
+                    y: abs,
+                    label: [key, " ¥ " + money],
+                    z: money
                 }
                 expArraGraph.push(expObjGraph)
             }
@@ -239,7 +241,7 @@ export const Balance = () => {
                                             horizontal
                                             style={{
                                                 data: {
-                                                    fill: ({ datum }) => datum.y > 0 ? green : red,
+                                                    fill: ({ datum }) =>  datum.z > 0 ? green : red,
                                                     fillOpacity: 0.7,
                                                     width: () => 250 / usersInTrip.length,
                                                 },
@@ -271,7 +273,7 @@ export const Balance = () => {
 
                                                         {
                                                             fill: ({ data }) => {
-                                                                if (data[0].y > 0) {
+                                                                if (data[0].z > 0) {
                                                                     return 'green'
                                                                 } else {
                                                                     return '#d12b28'
