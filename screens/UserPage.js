@@ -10,7 +10,7 @@ import EditUserInfo from './EditUserInfo'
 import EditPassword from './EditPassword';
 
 export default function UserPage({ }) {
-    const { userData, editUser } = useContext(AuthContext)
+    const { userData } = useContext(AuthContext)
 
     const [editInfoModal, setEditInfoModal] = useState(false)
     const [editPasswordModal, setEditPasswordModal] = useState(false)

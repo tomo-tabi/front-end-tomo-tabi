@@ -104,7 +104,6 @@ export default function Trips({ navigation }) {
     //console.log('2022-12-21'<'2023-02-01');
     if (trips) {
       const filterArr = trips.filter((item) => {
-        console.log("item", item)
         if (state === 'upcoming') {
           return (item.start_date >= todayDate);
         } else {
