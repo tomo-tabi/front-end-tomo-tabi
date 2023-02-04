@@ -178,7 +178,7 @@ export const ExpenseTable = () => {
   // post exp needs: itemName, money, optional purchaserid (if blank defaults to userid)
 
   return (
-    <View style={{ flex: 1 }}>
+    <View style={{ flex: 1, backgroundColor:lightBlue }}>
       <ScrollView style={{ flex: 1 }}>
       <View style={[styles.buttonsContainer]}>
           <TouchableOpacity
