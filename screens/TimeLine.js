@@ -337,6 +337,11 @@ export default function TimeLine({ navigation }) {
             </Dialog.Container>
           </View>
         }
+        {(!dayEvent || dayEvent.length === 0) && 
+          <View style={[{ flex:1, marginTop:5 }]}>
+            <Text style={[globalStyles.card,styles.dateText, {color:'#9E9E9E', textAlignVertical:'center', height:100}]}>No Events Yet!</Text>
+          </View>
+        }
         <StyledModal
           modalOpen={modalOpen}
           setModalOpen={setModalOpen}
