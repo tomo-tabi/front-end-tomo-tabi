@@ -118,14 +118,7 @@ export default function Invite() {
         <Dialog.Button label="Delete" onPress={handleDelete} />
       </Dialog.Container>
 
-      {
-        noInvitesSent ?
-          <Text style={styles.noInviteText}>
-            You have not sent any invites yet! {'\n'}
-            Start sending invitations to plan the trip together
-          </Text>
-          : ""
-      }
+      
 
       {permission ?
         null
@@ -136,6 +129,14 @@ export default function Invite() {
             <MaterialCommunityIcons name={show ? 'chevron-up' : 'chevron-down'} size={30} />
           </TouchableOpacity>
         </View>}
+      {
+        noInvitesSent ?
+          <Text style={styles.noInviteText}>
+            You have not sent any invites yet! {'\n'}
+            Start sending invitations to plan the trip together
+          </Text>
+          : ""
+      }
 
 
 
