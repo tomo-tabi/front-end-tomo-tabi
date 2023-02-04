@@ -1,4 +1,5 @@
-import React, { useState, useContext, useEffect } from 'react'
+import React, { useState, useContext, useEffect, useCallback } from 'react'
+import { useFocusEffect } from '@react-navigation/native';
 import { StyleSheet, Text, FlatList, View, TouchableOpacity, SectionList } from 'react-native';
 import { MaterialCommunityIcons } from '@expo/vector-icons';
 import { globalStyles, colors, AddButtonSqr, StyledModal, BlueButton, EditButton, YesOrNoCard, Seperator, StatusColor } from "../styles/globalStyles";
@@ -23,7 +24,7 @@ export default function Trips({ navigation }) {
   const { logout, userData } = useContext(AuthContext);
   const { trips, getUsersInTrip, checkPermission, checkOwner, owner } = useContext(TripContext);
   const { getTripVotes, getUserTripVotes } = useContext(VoteContext);
-  const { invites, rejectInvites, acceptInvites } = useContext(InviteContext)
+  const { getInvites, invites, rejectInvites, acceptInvites } = useContext(InviteContext)
   const { getTripEvents } = useContext(EventContext)
 
   const [modalOpen, setModalOpen] = useState(false);
@@ -35,7 +36,13 @@ export default function Trips({ navigation }) {
   const [upcoming, setUpcoming] = useState(true); // default to upcoming trips
   const [filteredTrip, setFilteredTrip] = useState(false);
 
-  const [ongoingTrips, setOngoingTrips] = useState(null)
+  const [ongoingTrips, setOngoingTrips] = useState(null);
+
+  useFocusEffect(
+    useCallback(() => {
+      getInvites();
+    }, [])
+  );
 
   // console.log(invites, trips);
 
