@@ -134,9 +134,8 @@ export default function Trips({ navigation }) {
       />
       <View style={{ paddingTop: 15, flexDirection: 'row', justifyContent: 'space-between' }}>
         <Text style={globalStyles.header}>
-          {inviteStatus ?
+          {inviteStatus &&
             "Pending Invites"
-            : "No Invites"
           }
         </Text>
         <BlueButton
