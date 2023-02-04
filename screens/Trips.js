@@ -177,6 +177,11 @@ export default function Trips({ navigation }) {
       
 
       <View style={styles.tripView}>
+        { filteredTrip.length === 0 &&
+          (upcoming ? 
+          <Text style={[styles.tripDate, {fontSize:24, textAlign:'center', marginTop:20}]}>No Upcoming Trips</Text>
+          : <Text style={[styles.tripDate, {fontSize:24, textAlign:'center', marginTop:20}]}>No Past Trips</Text>)
+        }
         <FlatList
           keyExtractor={(item) => item.id}
           data={filteredTrip}
