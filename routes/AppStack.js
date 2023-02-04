@@ -25,7 +25,9 @@ export default function AppStack() {
         <Stack.Screen name='TripTabNav' component={TripTabNav} 
           options= {({route}) => ({
             // headerTitle: getHeaderTitle(route)
-            headerTitle: route.params.params.name
+            headerTitle: route.params.params.name,
+            headerShadowVisible:false,
+            headerTitleAlign:'center'
           })}
         />
       </Stack.Navigator>
