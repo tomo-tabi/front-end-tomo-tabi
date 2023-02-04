@@ -30,11 +30,9 @@ export default function TimeLine({ navigation }) {
   const [filterEvents, setFilterEvents] = useState(null);
   const [filterSelect, setFilterSelect] = useState('');
 
-  const [dayEvent, setDayEvent] = useState(null); 
+  const [dayEvent, setDayEvent] = useState([]); 
   const [dayRange, setDayRange] = useState([]);
   const [dateSelected, setDateSelected] = useState(null); 
-
-  const [eventVotesNum, setEventVotesNum] = useState(null); 
 
   const dayRangeRef = useRef();
 
@@ -44,9 +42,6 @@ export default function TimeLine({ navigation }) {
   
   useEffect(() => {
     //set up day range
-    if (dayRange.length !== 0 ) {
-      return
-    }
 
     let currentTrip = trips.find((trip) => trip.id === tripid );
     let startDateTrip = new Date(currentTrip.start_date);
@@ -61,65 +56,48 @@ export default function TimeLine({ navigation }) {
     };
 
   }, [tripEvents]);
-
+  
   useEffect(() => {
     //set day event depending on date selected 
     if (Array.isArray(dayRange) && tripEvents !== null ) {
+      if (tripEvents[0].trip_id !== tripid) {
+        return
+      }
       // currentDateArr = [2022-12-21T00:00:00.000Z, {"focused": true, "index": 0}]
-      const currentDateArr = dayRange.find((item) => {
+      const currentDate = dayRange.find((item) => {
         return item[1].focused === true
       });
-
-      setDateSelected(moment(currentDateArr[0]).format('YYYY-MM-DD'));// should I make this default to first day with event?
-
+  
+      setDateSelected(moment(currentDate[0]).format('YYYY-MM-DD'));// should I make this default to first day with event?
+  
       // currentEventArr = [{"description": null, "event_date": "2023-01-17T16:12:41.211Z", "event_name": "a", "id": 81, "trip_id": 11}]
       const currentEventArr = tripEvents.filter((item) => {
-        return dateFormat(currentDateArr[0]) === dateFormat(item.event_date)
+        return dateFormat(currentDate[0]) === dateFormat(item.event_date)
       });
-
+  
       // for each dayEvent make new obj with below format
       const eventArrFormat = currentEventArr.map((item) => {
         if(!item.description){
           item.description = "There is no description yet"
         }
-        return item
+        return {...item, vote:{ true: 0, false:0 }}
       });
 
-      setDayEvent(eventArrFormat);
-      // console.log("eventArrFormat",tripEvents);
-    }
+      if (eventArrFormat.length !== 0 && tripVote && Number(tripVote.tripid) === tripid) {
 
-  }, [dayRange, tripEvents]);
-
-  useEffect(() => {
-    // set vote status for each day event
-    if (!dayEvent || dayEvent.length === 0) { // no events
-      return
-    }
-    
-    const eventVote = {};
-
-    dayEvent.forEach((item) => {
-      return eventVote[item.id] = { true: 0, false:0, pend:0}
-    });
-
-    if (!tripVote) {
-      return setEventVotesNum(eventVote);
-    }
-    
-    if (tripVote && dayEvent) { //maybe return trip id with trip vote?
-      if (Number(tripVote.tripid) === tripid) {
-        // console.log(tripVote.tripVoteArray, dayEvent[0]);
         (tripVote.tripVoteArray).forEach((item) => {
-          if (eventVote[item.trips_events_id]){
-            eventVote[item.trips_events_id][item.vote] ++
+          for (const event of eventArrFormat) {
+            if (event.id === item.trips_events_id) {
+              event.vote[item.vote] ++
+            }
           }
-        })
-        return setEventVotesNum(eventVote);
+        });
       }
+
+      return setDayEvent(eventArrFormat);
     }
 
-  }, [tripVote, dayEvent]);
+  }, [dayRange, tripEvents, tripVote]);
 
   const pressHandler = (eventName, id) => {
     navigation.navigate('Voting',{
@@ -129,31 +107,30 @@ export default function TimeLine({ navigation }) {
   }; 
 
   const renderTime = (rowData) => {
-    // console.log(eventVotesNum[rowData.id]);
+    // console.log("vote",rowData.vote, rowData.id);
     return (
       <View style={{ paddingHorizontal:5, }}>
         <Text style={{ fontWeight:'bold'}}>
           {moment(rowData.event_date).format("HH:mm A")}
         </Text>
 
-        { eventVotesNum[rowData.id] &&
-          <View style={{alignSelf:'flex-end'}}>
-          {eventVotesNum[rowData.id].true !== 0 && 
+        <View style={{alignSelf:'flex-end'}}>
+          {rowData.vote.true !== 0 && 
             <VoteStat 
-              text={eventVotesNum[rowData.id].true} 
+              text={rowData.vote.true} 
               status='accepted' 
               name='check'
               onPress={() => pressHandler(rowData.event_name, rowData.id)}
           />}
-          {eventVotesNum[rowData.id].false !== 0 && 
+          {rowData.vote.false !== 0 && 
             <VoteStat 
-              text={eventVotesNum[rowData.id].false} 
+              text={rowData.vote.false} 
               status='rejected' 
               name='window-close'
               onPress={() => pressHandler(rowData.event_name, rowData.id)}
           />}
-          {/* {eventVotesNum[rowData.id].pend !== 0 &&<VoteStat text={eventVotesNum[rowData.id].pend} status='pending' name='dots-horizontal'/>} */}
-        </View>}
+        </View>
+
       </View>
     )
   };
@@ -196,7 +173,7 @@ export default function TimeLine({ navigation }) {
     )
   };
 
-  const handelDatePress = (date, index) => {
+  const handelDatePress = (index) => {
 
     const sameDate = dayRange.find((item) => {
       return item[1].index === index && item[1].focused === true
@@ -225,7 +202,7 @@ export default function TimeLine({ navigation }) {
     return (
       <View style={{ flex:1, margin:5, padding:5, borderRadius:6, backgroundColor: focused ? blue : primary}}>
       <TouchableOpacity onPress={ () => {
-        handelDatePress(item[0],index); 
+        handelDatePress(index); 
         dayRangeRef.current.scrollToIndex({
           animated: true,
           index,
@@ -338,7 +315,7 @@ export default function TimeLine({ navigation }) {
             </Dialog.Container>
           </View>
         }
-        {(!dayEvent || dayEvent.length === 0) && 
+        {dayEvent.length === 0 && 
           <View style={[{ flex:1, marginTop:5 }]}>
             <NoItemMessage text='No Events Yet!' style={{ height:100, textAlignVertical:'center', }}/>
           </View>
@@ -356,7 +333,7 @@ export default function TimeLine({ navigation }) {
           EditData={eventEditData}
         />
 
-        {dayEvent && dayEvent.length !== 0 && !filterEvents && eventVotesNum ?
+        {dayEvent.length !== 0 && !filterEvents ?
           <Timeline
             style={styles2.list}
             data={dayEvent}
@@ -489,10 +466,8 @@ const styles = StyleSheet.create({
     paddingHorizontal:10,
     textAlign:'center',
     textAlignVertical:'center',
-    // borderWidth:0,
     paddingVertical:5,
     borderColor:'#9E9E9E',
-    // marginVertical:5,
   },
   filterInput:{
     color:'#9E9E9E',
