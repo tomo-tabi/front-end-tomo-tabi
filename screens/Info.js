@@ -3,9 +3,8 @@ import Dialog from "react-native-dialog";
 import { FlatList, View, Text, TouchableOpacity, StyleSheet } from 'react-native';
 import { MaterialCommunityIcons } from '@expo/vector-icons';
 import { globalStyles, colors, MyTextInput, BlueButton, Seperator, StatusColor } from "../styles/globalStyles";
-const { primary, lightBlue, grey } = colors;
+const { primary, lightBlue } = colors;
 const { pendingLight, rejectedLight } = StatusColor
-
 
 import { Formik } from 'formik';
 
@@ -75,7 +74,6 @@ export default function Info() {
     console.log("unLock");
     unlockTrip(info);
     setUnlockVisible(true);
-
   }
 
   const hideLockedDialog = () => {
@@ -264,13 +262,14 @@ const styles = StyleSheet.create({
 
   buttonContainer: {
     flexDirection: 'row',
+    marginBottom:10,
     justifyContent: 'space-between',
-    width: '100%',
+    // width: '100%',
   },
 
   button: {
     width: '45%',
-    marginHorizontal: 10,
+    // marginHorizontal: 10,
   },
 
   lockDialogTitle: {
