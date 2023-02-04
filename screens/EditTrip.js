@@ -8,30 +8,12 @@ import { TripContext } from '../context/TripContext';
 import moment from 'moment';
 
 export default function EditTrip({ setModalOpen, EditData }) {
-    const { editTrip, deleteTrip } = useContext(TripContext)
+    const { editTrip, deleteTrip } = useContext(TripContext);
 
     // for time date picker
     const [showDate, setShowDate] = useState(false);
-    // const [showEndDate, setShowEndDate] = useState(false);
-    // const [showStartDate, setShowStartDate] = useState(false);
     const [startDate, setStartDate] = useState(EditData["start_date"]);
     const [endDate, setEndDate] = useState(EditData["end_date"]);
-
-    // const onChangeStartDate = (event, selectedDate) => {
-    //     const currentDate = selectedDate;
-    //     setShowStartDate(false);
-    //     setStartDate(moment(currentDate).format("YYYY-MM-DD"))
-    // };
-    // const onChangeEndDate = (event, selectedDate) => {
-    //     const currentDate = selectedDate;
-    //     setShowEndDate(false);
-    //     setEndDate(moment(currentDate).format("YYYY-MM-DD"))
-    // };
-
-    // const editTripSubmit = (info) => {
-    //     editTrip(info)
-    //     setModalOpen(false)
-    // }
 
     const deleteTripSubmit = (info) => {
         deleteTrip(info);
@@ -43,17 +25,13 @@ export default function EditTrip({ setModalOpen, EditData }) {
         Keyboard.dismiss();
     };
 
-    // const showEndDatePicker = () => {
-    //     setShowEndDate(true);
-    // };
-
     const onCancel = () => {
         setShowDate(false);
     }
     
     const onConfirm = (output) => {
         setShowDate(false);
-        const { startDate, endDate } = output
+        const { startDate, endDate } = output;
         setStartDate(startDate);
         setEndDate(endDate);
     }
@@ -89,19 +67,7 @@ export default function EditTrip({ setModalOpen, EditData }) {
                             value={`${moment(startDate).format("YYYY-MM-DD")} - ${moment(endDate).format("YYYY-MM-DD")}`}
                             placeholder="YYYY-MM-DD"
                         />
-                        {/* <StyledDTPicker
-                            label="End Date"
-                            onPress={showEndDatePicker}
-                            iconName="calendar-blank-outline"
-                            value={endDate}
-                            placeholder="YYYY-MM-DD"
-                        /> */}
-
-                        {/* <BlueButton
-                            onPress={() => { editTripSubmit(props.values) }}
-                            buttonText="Submit Edit"
-                        /> */}
-
+                        
                         <BlueButton
                             onPress={props.handleSubmit}
                             buttonText="Submit Edit"
@@ -120,32 +86,11 @@ export default function EditTrip({ setModalOpen, EditData }) {
                             onCancel={onCancel}
                             onConfirm={onConfirm}
                             />
-                            // <DateTimePicker
-                            //     value={new Date(endDate)}
-                            //     mode='date'
-                            //     is24Hour={false}
-                            //     onChange={(event, selectedDate) => {
-                            //         onChangeEndDate(undefined, selectedDate);
-                            //         props.setFieldValue('endDate', moment(selectedDate).format("YYYY-MM-DD"))
-                            //     }}
-                            // />
                         )}
-                        {/* {showStartDate && (
-                            <DateTimePicker
-                                value={new Date(startDate)}
-                                mode='date'
-                                is24Hour={false}
-                                onChange={(event, selectedDate) => {
-                                    onChangeStartDate(undefined, selectedDate);
-                                    props.setFieldValue('startDate', moment(selectedDate).format("YYYY-MM-DD"))
-                                }}
-                            />
-                        )} */}
+            
                     </View>
                 )}
             </Formik>
         </View>
-
     );
-
 };
