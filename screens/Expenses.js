@@ -31,8 +31,8 @@ export const ExpenseTable = () => {
   const [modalEditOpen, setModalEditOpen] = useState(false)
   const [expenseEditData, setExpenseEditData] = useState({}) // Set the event I want to send to Edit Timeline component
 
-  const [ expensesView, setExpensesView] = useState(true)
-  const [ balanceView, setBalanceView] = useState(false)
+  const [expensesView, setExpensesView] = useState(true)
+  const [balanceView, setBalanceView] = useState(false)
 
   useEffect(() => {
     getExp();
@@ -48,17 +48,19 @@ export const ExpenseTable = () => {
 
         let edit
         if (obj.email === userData.email) {
-          { permission ?
-            null
-            :
-            edit =
-            <EditButton
-              setModalOpen={setModalEditOpen}
-              setEditData={setExpenseEditData}
-              editData={obj}
-              style={{ alignSelf: 'center' }}
-            />}
-          
+          {
+            permission ?
+              null
+              :
+              edit =
+              <EditButton
+                setModalOpen={setModalEditOpen}
+                setEditData={setExpenseEditData}
+                editData={obj}
+                style={{ alignSelf: 'center' }}
+              />
+          }
+
         } else {
           edit = <View></View>
         }
@@ -179,30 +181,30 @@ export const ExpenseTable = () => {
   // post exp needs: itemName, money, optional purchaserid (if blank defaults to userid)
 
   return (
-    <View style={{ flex: 1, backgroundColor:primary }}>
+    <View style={{ flex: 1, backgroundColor: primary }}>
       <ScrollView style={{ flex: 1 }}>
         <View style={[styles.buttonsContainer]}>
-            <TouchableOpacity
-              style={[styles.button, {backgroundColor: expensesView ? lightBlue : primary}]}
-              onPress={() => {setBalanceView(false); setExpensesView(true)}}
-            >
-              <MaterialCommunityIcons name='table' size={30} style={{ marginRight: 10, color: yellow }} />
-              <Text style={{ textAlignVertical: 'center', fontSize: 18 }}>
-                Expenses
-              </Text>
-            </TouchableOpacity>
-            <TouchableOpacity
-              style={[styles.button, {backgroundColor: balanceView ? lightBlue : primary}]}
-              onPress={() => {setExpensesView(false); setBalanceView(true)}}
-            >
-              <MaterialCommunityIcons name='scale-balance' size={30} style={{ marginRight: 10, color: blue }} />
-              <Text style={{ textAlignVertical: 'center', fontSize: 18 }}>
-                Balance
-              </Text>
-            </TouchableOpacity>
+          <TouchableOpacity
+            style={[styles.button, { backgroundColor: expensesView ? lightBlue : primary }]}
+            onPress={() => { setBalanceView(false); setExpensesView(true) }}
+          >
+            <MaterialCommunityIcons name='table' size={30} style={{ marginRight: 10, color: yellow }} />
+            <Text style={{ textAlignVertical: 'center', fontSize: 18 }}>
+              Expenses
+            </Text>
+          </TouchableOpacity>
+          <TouchableOpacity
+            style={[styles.button, { backgroundColor: balanceView ? lightBlue : primary }]}
+            onPress={() => { setExpensesView(false); setBalanceView(true) }}
+          >
+            <MaterialCommunityIcons name='scale-balance' size={30} style={{ marginRight: 10, color: blue }} />
+            <Text style={{ textAlignVertical: 'center', fontSize: 18 }}>
+              Balance
+            </Text>
+          </TouchableOpacity>
         </View>
-          {expensesView &&
-          <Table style={{borderTopEndRadius:7, borderTopStartRadius:7, margin:3, overflow:'hidden' }}>
+        {expensesView &&
+          <Table style={{ borderTopEndRadius: 7, borderTopStartRadius: 7, margin: 3, overflow: 'hidden' }}>
             <TableWrapper>
               <Row data={tableHead} style={styles.head} textStyle={styles.text} />
               {
@@ -218,27 +220,27 @@ export const ExpenseTable = () => {
               }
             </TableWrapper>
           </Table>
-          }
-          {expensesView && tableData.length === 0 &&
-          <View style={[{ flex:1, marginTop:25 }]}>
-            <NoItemMessage text='No Expenses Yet' style={{ textAlignVertical:'center'}}/>
-          </View> 
-          }
+        }
+        {expensesView && tableData.length === 0 &&
+          <View style={[{ flex: 1, marginTop: 25 }]}>
+            <NoItemMessage text='No Expenses Yet' style={{ textAlignVertical: 'center' }} />
+          </View>
+        }
 
-          {balanceView && <Balance/>}
-          {balanceView && tableData.length === 0 &&
-          <View style={[{ flex:1, marginTop:25 }]}>
-            <NoItemMessage text='No Balances Yet' style={{ textAlignVertical:'center'}}/>
-          </View> 
-          }
-          
+        {balanceView && <Balance />}
+        {balanceView && tableData.length === 0 &&
+          <View style={[{ flex: 1, marginTop: 25 }]}>
+            <NoItemMessage text='No Balances Yet' style={{ textAlignVertical: 'center' }} />
+          </View>
+        }
 
-          <StyledModal
-            modalOpen={modalOpen}
-            setModalOpen={setModalOpen}
-            AddComponent={AddExpenses}
-          />
-        
+
+        <StyledModal
+          modalOpen={modalOpen}
+          setModalOpen={setModalOpen}
+          AddComponent={AddExpenses}
+        />
+
       </ScrollView>
 
       <StyledModal
@@ -247,40 +249,46 @@ export const ExpenseTable = () => {
         AddComponent={EditExpenses}
         EditData={expenseEditData}
       />
-      { permission ?
-        <View></View>
-        :
-            <AddButton
-                setModalOpen={setModalOpen}
-            />
 
-      }
+      {expensesView ?
+        permission ?
+      <View></View>
+      :
+      <>
+        <AddButton
+          setModalOpen={setModalOpen}
+        />
+
+
         <View style={{ height: 90 }}>
         </View>
+      </>
+      : null
+        }
     </View>
   );
 };
 
 const styles = StyleSheet.create({
   buttonsContainer: {
-    backgroundColor:primary,
-    flex:1,
+    backgroundColor: primary,
+    flex: 1,
     flexDirection: 'row',
     // justifyContent: 'space-between',
     // width: "100%",
     alignSelf: "center",
     // height:100,
-    paddingHorizontal:10,
+    paddingHorizontal: 10,
   },
   button: {
     flexDirection: 'row',
     padding: 5,
-    borderRadius:6,
-    width:"50%",
+    borderRadius: 6,
+    width: "50%",
     // alignContent:"center",
     // alignItems:'center',
     // alignSelf: "center",
-    margin:5,
+    margin: 5,
     // borderWidth:1,
     // borderRadius:20,
   },
