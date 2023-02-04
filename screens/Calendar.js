@@ -237,7 +237,7 @@ export default function CalendarView(params) {
                         />
                     }
                 </View>
-                {(dayViewData.length === 0 && !inDateRange) && 
+                {(dayViewData.length === 0 && inDateRange) && 
                     <View style={[{ flex:1, marginTop:5 }]}>
                         <NoItemMessage text='No Events Yet!' style={{ height:100, textAlignVertical:'center', }}/>
                     </View>
