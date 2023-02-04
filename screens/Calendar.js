@@ -64,7 +64,7 @@ export default function CalendarView(params) {
     const renderTime = (rowData) => {
         return (
             <View >
-                <Text style={{ borderRadius: 20, backgroundColor: yellow, padding: 5, paddingHorizontal: 5, fontSize: 12 }}>
+                <Text style={{ borderRadius: 20, backgroundColor: primary, padding: 5, paddingHorizontal: 5, fontSize: 12 }}>
                     {moment(rowData.event_date).format("HH:mm A")}
                 </Text>
             </View>
