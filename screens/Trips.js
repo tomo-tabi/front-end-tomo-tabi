@@ -1,35 +1,32 @@
 import React, { useState, useContext, useEffect, useCallback } from 'react'
 import { useFocusEffect } from '@react-navigation/native';
-import { StyleSheet, Text, FlatList, View, TouchableOpacity, SectionList } from 'react-native';
+import { StyleSheet, Text, FlatList, View, TouchableOpacity, StatusBar } from 'react-native';
 import { MaterialCommunityIcons } from '@expo/vector-icons';
 import { globalStyles, colors, AddButtonSqr, StyledModal, BlueButton, EditButton, YesOrNoCard, Seperator, StatusColor } from "../styles/globalStyles";
-const { primary, yellow, grey } = colors
+const { primary, yellow } = colors
 
 import { AuthContext } from '../context/AuthContext';
 import { TripContext } from '../context/TripContext';
 import { InviteContext } from '../context/InviteContext';
-
-import moment from 'moment';
-
-import Dialog from "react-native-dialog";//New
-
-import AddTrip from './AddTrip';
-import EditTrip from './EditTrip';
 import { EventContext } from '../context/EventContext';
 import { VoteContext } from '../context/VoteContext';
 
-// import { enableExpoCliLogging } from 'expo/build/logs/Logs';
+import moment from 'moment';
+import Dialog from "react-native-dialog";
+
+import AddTrip from './AddTrip';
+import EditTrip from './EditTrip';
 
 export default function Trips({ navigation }) {
-  const { logout, userData } = useContext(AuthContext);
+  const { userData } = useContext(AuthContext);
   const { trips, getUsersInTrip, checkPermission, checkOwner, owner } = useContext(TripContext);
   const { getTripVotes, getUserTripVotes } = useContext(VoteContext);
-  const { getInvites, invites, rejectInvites, acceptInvites } = useContext(InviteContext)
-  const { getTripEvents } = useContext(EventContext)
+  const { getInvites, invites, rejectInvites, acceptInvites } = useContext(InviteContext);
+  const { getTripEvents } = useContext(EventContext);
 
   const [modalOpen, setModalOpen] = useState(false);
-  const [inviteOpen, setInviteOpen] = useState(false);
   const [modalEditOpen, setModalEditOpen] = useState(false)
+  const [inviteOpen, setInviteOpen] = useState(false);
   const [tripEditData, setTripEditData] = useState({}) // Set the trip I want to send to Edit Trip component
   const [visible, setVisible] = useState(true);
 
@@ -138,13 +135,9 @@ export default function Trips({ navigation }) {
         setModalOpen={setModalOpen}
         AddComponent={AddTrip}
       />
-      <BlueButton
-          onPress={() => logout()}
-          buttonText="Logout"
-          style={{ width: 90, padding: 8 }}
-      />
+      
       {invites &&
-        <TouchableOpacity style={[globalStyles.card, {flexDirection:'row', alignItems:'center', justifyContent:'space-between', marginBottom:5}]} onPress={() => setInviteOpen(!inviteOpen)} >
+        <TouchableOpacity style={[globalStyles.card, {flexDirection:'row', alignItems:'center', justifyContent:'space-between', marginTop:StatusBar.currentHeight}]} onPress={() => setInviteOpen(!inviteOpen)} >
           <View style={{flexDirection:'row', alignItems:'center'}}>
             <Text style={[globalStyles.header, {marginRight:5, paddingVertical:0}]}>
               Pending Invites
@@ -182,7 +175,7 @@ export default function Trips({ navigation }) {
 
       {ongoingTrips &&
         <View>
-          <Text style={globalStyles.header} >Ongoing trips</Text>
+          <Text style={[globalStyles.header, {marginTop: invites ? 0 : StatusBar.currentHeight, paddingTop:0}]} >Ongoing trips</Text>
           <View style={styles.ongoingTripView}>
             <FlatList
               keyExtractor={(item) => item.id}
