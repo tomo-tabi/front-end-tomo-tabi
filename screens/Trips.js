@@ -32,7 +32,9 @@ export default function Trips({ navigation }) {
   const [visible, setVisible] = useState(true);
 
   const [upcoming, setUpcoming] = useState(true); // default to upcoming trips
-  const [filteredTrip, setFilteredTrip] = useState(false); 
+  const [filteredTrip, setFilteredTrip] = useState(false);
+
+  const [ongoingTrips, setOngoingTrips] = useState(null)
 
   // console.log(invites, trips);
 
@@ -57,8 +59,8 @@ export default function Trips({ navigation }) {
     return `${moment(startDate).format("Do MMM")} – ${moment(endDate).format("Do MMM YYYY")}`
   }
 
-   // handle pop up message
-   const hideDialog = () => {
+  // handle pop up message
+  const hideDialog = () => {
     setVisible(false);
   };
 
@@ -73,25 +75,44 @@ export default function Trips({ navigation }) {
 
   useEffect(() => {
     if (trips && upcoming) {
-      handelFilter('upcoming',  moment(new Date()).format('YYYY-MM-DD'));
+      handelFilter('upcoming', moment(new Date()).format('YYYY-MM-DD'));
     } else {
-      handelFilter('past',  moment(new Date()).format('YYYY-MM-DD'));
+      handelFilter('past', moment(new Date()).format('YYYY-MM-DD'));
     }
-    
-  },[trips])
+
+  }, [trips])
+
+  useEffect(() => {
+    if (trips) {
+      const filterArr = trips.filter((item) => {
+        return (item.start_date <= moment(new Date()).format('YYYY-MM-DD') && item.end_date >= moment(new Date()).format('YYYY-MM-DD'));
+      })
+      filterArr.map(async (trip) => {
+        if (userData.username === trip.owner_username) {
+          trip.owner = true
+        }
+        else {
+          trip.owner = false
+        }
+      });
+
+      setOngoingTrips(filterArr);
+    }
+  }, [trips])
 
   const handelFilter = (state, todayDate) => {
     //console.log('2022-12-21'<'2023-02-01');
     if (trips) {
       const filterArr = trips.filter((item) => {
+        console.log("item", item)
         if (state === 'upcoming') {
-          return item.start_date >= todayDate;
+          return (item.start_date >= todayDate);
         } else {
-          return item.start_date <= todayDate;
+          return (item.start_date <= todayDate && item.end_date <= todayDate);
         }
       })
       filterArr.map(async (trip) => {
-        if(userData.username === trip.owner_username){
+        if (userData.username === trip.owner_username) {
           trip.owner = true
         }
         else {
@@ -112,7 +133,7 @@ export default function Trips({ navigation }) {
         setModalOpen={setModalOpen}
         AddComponent={AddTrip}
       />
-      <View style={{ paddingTop:15, flexDirection:'row', justifyContent:'space-between'}}>
+      <View style={{ paddingTop: 15, flexDirection: 'row', justifyContent: 'space-between' }}>
         <Text style={globalStyles.header}>
           {inviteStatus ?
             "Pending Invites"
@@ -122,7 +143,7 @@ export default function Trips({ navigation }) {
         <BlueButton
           onPress={() => logout()}
           buttonText="Logout"
-          style={{width: 90, padding:8, marginBottom:10}}
+          style={{ width: 90, padding: 8, marginBottom: 10 }}
         />
       </View>
 
@@ -137,7 +158,7 @@ export default function Trips({ navigation }) {
             renderItem={({ item }) => (
               <YesOrNoCard
                 propmt={
-                  <View style={{paddingHorizontal: 5}}>
+                  <View style={{ paddingHorizontal: 5 }}>
                     <Text style={styles.inviteText}>User '{item.username}' has invited you trip:</Text>
                     <Text style={styles.inviteTripName}>{item.name}</Text>
                   </View>
@@ -151,24 +172,62 @@ export default function Trips({ navigation }) {
         : ""
       }
 
-      <View style={{ paddingTop:15, flexDirection:'row', justifyContent:'space-between'}}>
-        <View style={{flexDirection:'row'}}>
+      {ongoingTrips &&
+        <View>
+          <Text style={globalStyles.header} > Ongoing trips</Text>
+          <View style={styles.ongoingTripView}>
+            <FlatList
+              keyExtractor={(item) => item.id}
+              data={ongoingTrips}
+              // numColumns={2}
+              // columnWrapperStyle={styles.row}
+              ItemSeparatorComponent={<Seperator />}
+              renderItem={({ item }) => (
+                <TouchableOpacity onPress={() => pressHandler(item)} style={styles.item}>
+                  <View style={styles.tripInnerView}>
+                    <View style={{ flexDirection: 'row', justifyContent: 'space-between' }}>
+                      <Text style={styles.tripName}>{item.name} </Text>
+                      {item.is_locked ?
+                        item.owner ?
+                          <EditButton
+                            setModalOpen={setModalEditOpen}
+                            setEditData={setTripEditData}
+                            editData={item}
+                          />
+                          :
+                          null : <EditButton
+                          setModalOpen={setModalEditOpen}
+                          setEditData={setTripEditData}
+                          editData={item}
+                        />}
+                    </View>
+                    <Text style={styles.tripDate}>{dateFormat(item.start_date, item.end_date)}</Text>
+                  </View>
+                </TouchableOpacity>
+              )}
+            />
+          </View>
+        </View>}
+
+
+      <View style={{ paddingTop: 15, flexDirection: 'row', justifyContent: 'space-between' }}>
+        <View style={{ flexDirection: 'row' }}>
           <Text style={globalStyles.header}>Trips </Text>
           <AddButtonSqr
             setModalOpen={setModalOpen}
-            style={{ height:undefined, padding:1, marginBottom:10 }}
+            style={{ height: undefined, padding: 1, marginBottom: 10 }}
           />
         </View>
 
-        <View style={{flexDirection:'row', alignItems:'center'}}>
-          <TouchableOpacity 
+        <View style={{ flexDirection: 'row', alignItems: 'center' }}>
+          <TouchableOpacity
             onPress={() => {
               setUpcoming(true);
               handelFilter('upcoming', moment(new Date()).format('YYYY-MM-DD'))
             }}
-            style={[styles.filterBtn, {borderTopRightRadius:0, borderBottomRightRadius:0, borderRightWidth:0, borderColor: upcoming ? yellow : primary, backgroundColor: upcoming ? yellow : primary}]}
+            style={[styles.filterBtn, { borderTopRightRadius: 0, borderBottomRightRadius: 0, borderRightWidth: 0, borderColor: upcoming ? yellow : primary, backgroundColor: upcoming ? yellow : primary }]}
           >
-            <Text style={[styles.filterInput, {color: upcoming ? primary : '#9E9E9E'}]}>Upcoming</Text>
+            <Text style={[styles.filterInput, { color: upcoming ? primary : '#9E9E9E' }]}>Upcoming</Text>
           </TouchableOpacity>
 
           <TouchableOpacity
@@ -176,45 +235,45 @@ export default function Trips({ navigation }) {
               setUpcoming(false);
               handelFilter('past', moment(new Date()).format('YYYY-MM-DD'))
             }}
-            style={[styles.filterBtn, {borderTopLeftRadius:0, borderBottomLeftRadius:0, borderColor: upcoming ? primary : yellow, backgroundColor: upcoming ? primary : yellow}]}
+            style={[styles.filterBtn, { borderTopLeftRadius: 0, borderBottomLeftRadius: 0, borderColor: upcoming ? primary : yellow, backgroundColor: upcoming ? primary : yellow }]}
           >
-            <Text style={[styles.filterInput, {color: upcoming ? '#9E9E9E' : primary}]}>Past</Text>
+            <Text style={[styles.filterInput, { color: upcoming ? '#9E9E9E' : primary }]}>Past</Text>
           </TouchableOpacity>
         </View>
       </View>
 
-      
+
 
       <View style={styles.tripView}>
-        { filteredTrip.length === 0 &&
-          (upcoming ? 
-          <Text style={[styles.tripDate, {fontSize:24, textAlign:'center', marginTop:20}]}>No Upcoming Trips</Text>
-          : <Text style={[styles.tripDate, {fontSize:24, textAlign:'center', marginTop:20}]}>No Past Trips</Text>)
+        {filteredTrip.length === 0 &&
+          (upcoming ?
+            <Text style={[styles.tripDate, { fontSize: 24, textAlign: 'center', marginTop: 20 }]}>No Upcoming Trips</Text>
+            : <Text style={[styles.tripDate, { fontSize: 24, textAlign: 'center', marginTop: 20 }]}>No Past Trips</Text>)
         }
         <FlatList
           keyExtractor={(item) => item.id}
           data={filteredTrip}
           // numColumns={2}
           // columnWrapperStyle={styles.row}
-          ItemSeparatorComponent={<Seperator/>}
+          ItemSeparatorComponent={<Seperator />}
           renderItem={({ item }) => (
             <TouchableOpacity onPress={() => pressHandler(item)} style={styles.item}>
               <View style={styles.tripInnerView}>
-                <View style={{ flexDirection:'row', justifyContent:'space-between' }}>
+                <View style={{ flexDirection: 'row', justifyContent: 'space-between' }}>
                   <Text style={styles.tripName}>{item.name} </Text>
-                  {item.is_locked ? 
-                    item.owner ? 
-                    <EditButton
-                    setModalOpen={setModalEditOpen}
-                    setEditData={setTripEditData}
-                    editData={item}
-                  />
-                  :
-                  null : <EditButton
-                    setModalOpen={setModalEditOpen}
-                    setEditData={setTripEditData}
-                    editData={item}
-                  />}
+                  {item.is_locked ?
+                    item.owner ?
+                      <EditButton
+                        setModalOpen={setModalEditOpen}
+                        setEditData={setTripEditData}
+                        editData={item}
+                      />
+                      :
+                      null : <EditButton
+                      setModalOpen={setModalEditOpen}
+                      setEditData={setTripEditData}
+                      editData={item}
+                    />}
                 </View>
                 <Text style={styles.tripDate}>{dateFormat(item.start_date, item.end_date)}</Text>
               </View>
@@ -228,7 +287,7 @@ export default function Trips({ navigation }) {
               <Dialog.Description style={styles.dialogDescription}>
                 Plan a new trip and have fun!
               </Dialog.Description>
-              <Dialog.Button label="OK" style={styles.dialogButton} onPress={hideDialog}/>
+              <Dialog.Button label="OK" style={styles.dialogButton} onPress={hideDialog} />
             </Dialog.Container>
           </View>
         }
@@ -249,21 +308,29 @@ const styles = StyleSheet.create({
   row: { //each row of flat list
     justifyContent: 'space-between',
   },
+  ongoingTripView:{
+    marginBottom: 10,
+    shadowColor: 'grey',
+    shadowOpacity: 0.8,
+    elevation: 7,
+    borderRadius: 6,
+    backgroundColor: primary
+  },
   tripView: {
     flex: 2,
-    marginBottom:10,
+    marginBottom: 10,
     shadowColor: 'grey',
     shadowOpacity: 0.8,
     elevation: 7,
 
-    borderRadius:6,
+    borderRadius: 6,
     // borderTopLeftRadius: 6,
     // borderTopRightRadius: 6,
     backgroundColor: primary
   },
   tripInnerView: {//inside each trip file
     flex: 1,
-    padding:10
+    padding: 10
   },
   tripName: {
     alignItems: 'center',
@@ -287,14 +354,14 @@ const styles = StyleSheet.create({
     flex: 1,
     fontWeight: "bold",
     fontSize: 24,
-    textAlign:'center',
+    textAlign: 'center',
   },
   dialogTitle: {
     fontSize: 25,
     color: "darkcyan"
   },
   dialogDescription: {
-    fontWeight: 'bold', 
+    fontWeight: 'bold',
     color: 'goldenrod'
   },
   dialogButton: {
@@ -302,14 +369,14 @@ const styles = StyleSheet.create({
   },
   filterBtn: {
     borderRadius: 20,
-    borderWidth:1,
-    paddingHorizontal:7,
-    paddingVertical:2,
+    borderWidth: 1,
+    paddingHorizontal: 7,
+    paddingVertical: 2,
     // margin:5,
     // textAlignVertical:'center'
   },
-  filterInput:{
-    fontSize:17,
+  filterInput: {
+    fontSize: 17,
     // fontWeight:'bold'
 
   },
