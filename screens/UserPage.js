@@ -1,7 +1,7 @@
-import React, { useContext, useEffect, useState } from 'react'
-import { Image, ImageBackground, Platform, StyleSheet, Text, View, Button, TouchableOpacity } from 'react-native'
+import React, { useContext, useState } from 'react'
+import { Image, ImageBackground, Platform, StyleSheet, Text, View, TouchableOpacity } from 'react-native'
 import { MaterialCommunityIcons } from '@expo/vector-icons';
-import { StyledModal, colors, globalStyles } from "../styles/globalStyles";
+import { StyledModal, colors, globalStyles, BlueButton } from "../styles/globalStyles";
 const { yellow, lightBlue, blue, grey } = colors
 
 import { AuthContext } from '../context/AuthContext'
@@ -10,7 +10,7 @@ import EditUserInfo from './EditUserInfo'
 import EditPassword from './EditPassword';
 
 export default function UserPage({ }) {
-    const { userData } = useContext(AuthContext)
+    const { logout, userData } = useContext(AuthContext)
 
     const [editInfoModal, setEditInfoModal] = useState(false)
     const [editPasswordModal, setEditPasswordModal] = useState(false)
@@ -61,6 +61,11 @@ export default function UserPage({ }) {
                     </Text>
                 </TouchableOpacity>
             </View>
+            <BlueButton
+                onPress={() => logout()}
+                buttonText="Logout"
+                style={{ padding: 8, marginHorizontal:10, marginTop:10 }}
+            />
             <StyledModal
                 modalOpen={editInfoModal}
                 setModalOpen={setEditInfoModal}

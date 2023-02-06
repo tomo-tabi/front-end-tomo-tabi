@@ -7,7 +7,7 @@ import { colors, TimeLinAddBtn } from "../styles/globalStyles";
 const { primary, blue } = colors;
 
 import Calendar from '../screens/Calendar';
-import Invite from '../screens/Invite';
+import Info from '../screens/Info';
 import TimelineStack from './TimelineStack';
 import { ExpenseTable } from '../screens/Expenses';
 import { View } from 'react-native';
@@ -47,8 +47,8 @@ export default function TripTabNav() {
             iconName = 'calendar-blank'
           } else if (route.name === 'Expenses') {
             iconName = 'account-cash'
-          } else if (route.name === 'Invite') {
-            iconName = 'account-plus'
+          } else if (route.name === 'Trip Info') {
+            iconName = 'information-outline'
           }
           return (
             <View style={{ flex: 1 }}>
@@ -83,7 +83,7 @@ export default function TripTabNav() {
         : null
       }
       <Tab.Screen name="Expenses" component={ExpenseTable} />
-      <Tab.Screen name="Invite" component={Invite} />
+      <Tab.Screen name="Trip Info" component={Info} />
     </Tab.Navigator>
   )
 
