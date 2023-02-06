@@ -16,7 +16,7 @@ import EditTimeline from './EditTimeline';
 import Timeline from 'react-native-timeline-flatlist'
 
 export default function CalendarView(params) {
-    const { trips, permission } = useContext(TripContext);
+    const { trips, permission, owner } = useContext(TripContext);
     const { tripid, tripEvents, getTripEvents } = useContext(EventContext);
 
     const [modalOpen, setModalOpen] = useState(false);
@@ -32,7 +32,7 @@ export default function CalendarView(params) {
     function getID(arr) {
         return arr.id === tripid;
     }
-    
+
     const getTripInfo = trips.find(getID);
     const startDate = new Date(getTripInfo.start_date);
     const endDate = new Date(getTripInfo.end_date);
@@ -88,14 +88,21 @@ export default function CalendarView(params) {
                 <Text style={{ textAlignVertical: 'center', fontWeight: 'bold', fontSize: 17 }}>
                     {rowData.event_name}
                 </Text>
-                {permission ?
-                    null
-                    :
+                {owner ?
                     <EditButton
                         setModalOpen={setModalEditOpen}
                         setEditData={setEventEditData}
                         editData={rowData}
-                    />}
+                    />
+                    :
+                    permission ?
+                        null
+                        :
+                        <EditButton
+                            setModalOpen={setModalEditOpen}
+                            setEditData={setEventEditData}
+                            editData={rowData}
+                        />}
             </View>
         )
 
@@ -163,7 +170,7 @@ export default function CalendarView(params) {
                 return dateFormat(day) === dateFormat(item.event_date)
             });
             // console.log(currentEventArr);
-            
+
             setDayViewDate(new Date(day));
 
             if (new Date(day) <= endDate && new Date(day) >= startDate) {
@@ -228,18 +235,24 @@ export default function CalendarView(params) {
             <View style={globalStyles.container}>
                 <View style={styles.date}>
                     <Text style={styles.dateText}>{moment(dayViewDate).format("dddd, MMM DD")}</Text>
-                    {permission ?
-                        null
-                        :
-                         inDateRange && <AddButtonSqr
+                    {owner ?
+                        inDateRange && <AddButtonSqr
                             setModalOpen={setModalOpen}
                             style={{ height: undefined, margin: 0, padding: 1, backgroundColor: yellow }}
                         />
+                        :
+                        permission ?
+                            null
+                            :
+                            inDateRange && <AddButtonSqr
+                                setModalOpen={setModalOpen}
+                                style={{ height: undefined, margin: 0, padding: 1, backgroundColor: yellow }}
+                            />
                     }
                 </View>
-                {(dayViewData.length === 0 && inDateRange) && 
-                    <View style={[{ flex:1, marginTop:5 }]}>
-                        <NoItemMessage text='No Events Yet!' style={{ height:100, textAlignVertical:'center', }}/>
+                {(dayViewData.length === 0 && inDateRange) &&
+                    <View style={[{ flex: 1, marginTop: 5 }]}>
+                        <NoItemMessage text='No Events Yet!' style={{ height: 100, textAlignVertical: 'center', }} />
                     </View>
                 }
                 {dayViewData ?
@@ -285,7 +298,7 @@ const styles = StyleSheet.create({
     dateText: {
         flex: 1,
         padding: 5,
-        paddingVertical:8,
+        paddingVertical: 8,
         borderRadius: 6,
         backgroundColor: '#9CCAEC',
         fontWeight: "bold",

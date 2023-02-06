@@ -19,7 +19,7 @@ import Timeline from 'react-native-timeline-flatlist'
 import Dialog from "react-native-dialog";//New
 
 export default function TimeLine({ navigation }) {
-  const { trips, usersInTrip, permission } = useContext(TripContext)
+  const { trips, permission, owner } = useContext(TripContext)
   const { tripVote, userTripVote } = useContext(VoteContext)
   const { tripEvents, tripid, modalOpen, setModalOpen } = useContext(EventContext)
 
@@ -30,36 +30,36 @@ export default function TimeLine({ navigation }) {
   const [filterEvents, setFilterEvents] = useState(null);
   const [filterSelect, setFilterSelect] = useState('');
 
-  const [dayEvent, setDayEvent] = useState([]); 
+  const [dayEvent, setDayEvent] = useState([]);
   const [dayRange, setDayRange] = useState([]);
-  const [dateSelected, setDateSelected] = useState(null); 
+  const [dateSelected, setDateSelected] = useState(null);
 
   const dayRangeRef = useRef();
 
   const dateFormat = (date) => {
     return moment(date).format("ddd, MMM DD");
   }
-  
+
   useEffect(() => {
     //set up day range
 
-    let currentTrip = trips.find((trip) => trip.id === tripid );
+    let currentTrip = trips.find((trip) => trip.id === tripid);
     let startDateTrip = new Date(currentTrip.start_date);
-    let lastDateTrip = new Date(currentTrip.end_date); 
+    let lastDateTrip = new Date(currentTrip.end_date);
 
     let index = 0;
 
-    for(let day = startDateTrip ; day <= lastDateTrip ; day.setDate(day.getDate() + 1)) {
-      dayRange.push([new Date(day),{focused: index === 0 ? true : false, index: index}]);
+    for (let day = startDateTrip; day <= lastDateTrip; day.setDate(day.getDate() + 1)) {
+      dayRange.push([new Date(day), { focused: index === 0 ? true : false, index: index }]);
       // array of [[2022-12-21T00:00:00.000Z, {"focused": true, "index": 0}], ...]
-      index ++;
+      index++;
     };
 
   }, [tripEvents]);
-  
+
   useEffect(() => {
     //set day event depending on date selected 
-    if (Array.isArray(dayRange) && tripEvents !== null ) {
+    if (Array.isArray(dayRange) && tripEvents !== null) {
       if (tripEvents[0].trip_id !== tripid) {
         return
       }
@@ -67,20 +67,20 @@ export default function TimeLine({ navigation }) {
       const currentDate = dayRange.find((item) => {
         return item[1].focused === true
       });
-  
+
       setDateSelected(moment(currentDate[0]).format('YYYY-MM-DD'));// should I make this default to first day with event?
-  
+
       // currentEventArr = [{"description": null, "event_date": "2023-01-17T16:12:41.211Z", "event_name": "a", "id": 81, "trip_id": 11}]
       const currentEventArr = tripEvents.filter((item) => {
         return dateFormat(currentDate[0]) === dateFormat(item.event_date)
       });
-  
+
       // for each dayEvent make new obj with below format
       const eventArrFormat = currentEventArr.map((item) => {
-        if(!item.description){
+        if (!item.description) {
           item.description = "There is no description yet"
         }
-        return {...item, vote:{ true: 0, false:0 }}
+        return { ...item, vote: { true: 0, false: 0 } }
       });
 
       if (eventArrFormat.length !== 0 && tripVote && Number(tripVote.tripid) === tripid) {
@@ -88,7 +88,7 @@ export default function TimeLine({ navigation }) {
         (tripVote.tripVoteArray).forEach((item) => {
           for (const event of eventArrFormat) {
             if (event.id === item.trips_events_id) {
-              event.vote[item.vote] ++
+              event.vote[item.vote]++
             }
           }
         });
@@ -100,73 +100,79 @@ export default function TimeLine({ navigation }) {
   }, [dayRange, tripEvents, tripVote]);
 
   const pressHandler = (eventName, id) => {
-    navigation.navigate('Voting',{
+    navigation.navigate('Voting', {
       eventName: eventName,
       eventid: id
     })
-  }; 
+  };
 
   const renderTime = (rowData) => {
     // console.log("vote",rowData.vote, rowData.id);
     return (
-      <View style={{ paddingHorizontal:5, }}>
-        <Text style={{ fontWeight:'bold'}}>
+      <View style={{ paddingHorizontal: 5, }}>
+        <Text style={{ fontWeight: 'bold' }}>
           {moment(rowData.event_date).format("HH:mm A")}
         </Text>
 
-        <View style={{alignSelf:'flex-end'}}>
-          {rowData.vote.true !== 0 && 
-            <VoteStat 
-              text={rowData.vote.true} 
-              status='accepted' 
+        <View style={{ alignSelf: 'flex-end' }}>
+          {rowData.vote.true !== 0 &&
+            <VoteStat
+              text={rowData.vote.true}
+              status='accepted'
               name='check'
               onPress={() => pressHandler(rowData.event_name, rowData.id)}
-          />}
-          {rowData.vote.false !== 0 && 
-            <VoteStat 
-              text={rowData.vote.false} 
-              status='rejected' 
+            />}
+          {rowData.vote.false !== 0 &&
+            <VoteStat
+              text={rowData.vote.false}
+              status='rejected'
               name='window-close'
               onPress={() => pressHandler(rowData.event_name, rowData.id)}
-          />}
+            />}
         </View>
 
       </View>
     )
   };
-  
+
   const renderDetail = (rowData) => {
 
     let title = (
-      <View style={{ flex:1, flexDirection: 'row', justifyContent: 'space-between', alignContent:'center'}}>
-        <Text style={{textAlignVertical:'center', fontWeight:'bold', fontSize:20}}>{rowData.event_name} </Text>
-        { permission ?
-          null
-          :
-          <EditButton
+      <View style={{ flex: 1, flexDirection: 'row', justifyContent: 'space-between', alignContent: 'center' }}>
+        <Text style={{ textAlignVertical: 'center', fontWeight: 'bold', fontSize: 20 }}>{rowData.event_name} </Text>
+        {owner ? <EditButton
           setModalOpen={setModalEditOpen}
           setEditData={setEventEditData}
           editData={rowData}
-        />}
+        />
+          :
+          permission ?
+            null
+            :
+            <EditButton
+              setModalOpen={setModalEditOpen}
+              setEditData={setEventEditData}
+              editData={rowData}
+            />}
       </View>
     )
     let desc;
-    if(rowData.description) {
+    if (rowData.description) {
       desc = (
-        <View style={{flex:1 }}>
-          <Text style={{flex:1, color:'#9E9E9E'}}>{rowData.description}</Text>
+        <View style={{ flex: 1 }}>
+          <Text style={{ flex: 1, color: '#9E9E9E' }}>{rowData.description}</Text>
           <BlueButton
             onPress={() => pressHandler(rowData.event_name, rowData.id)}
             buttonText='Vote'
-            style={{ padding:5, marginTop:5, marginBottom:0, alignSelf:'flex-end'}}
-            textStyle={{fontSize:14}}
+            style={{ padding: 5, marginTop: 5, marginBottom: 0, alignSelf: 'flex-end' }}
+            textStyle={{ fontSize: 14 }}
           />
         </View>
       )
     }
 
-    return ( 
-      <View style={{flex:1, marginTop:-10, backgroundColor: primary, borderRadius: 10, padding:5 }}>
+    return (
+      <View style={{ flex: 1, marginTop: -10, backgroundColor: primary, borderRadius: 10, padding: 5 }}>
         {title}
         {desc}
       </View>
@@ -178,7 +184,7 @@ export default function TimeLine({ navigation }) {
     const sameDate = dayRange.find((item) => {
       return item[1].index === index && item[1].focused === true
     })
-    
+
     if (sameDate) {
       return
     };
@@ -200,18 +206,18 @@ export default function TimeLine({ navigation }) {
     let focused = item[1].focused;
 
     return (
-      <View style={{ flex:1, margin:5, padding:5, borderRadius:6, backgroundColor: focused ? blue : primary}}>
-      <TouchableOpacity onPress={ () => {
-        handelDatePress(index); 
-        dayRangeRef.current.scrollToIndex({
-          animated: true,
-          index,
-          viewOffset: Dimensions.get('window').width / 2.7,
-        });
+      <View style={{ flex: 1, margin: 5, padding: 5, borderRadius: 6, backgroundColor: focused ? blue : primary }}>
+        <TouchableOpacity onPress={() => {
+          handelDatePress(index);
+          dayRangeRef.current.scrollToIndex({
+            animated: true,
+            index,
+            viewOffset: Dimensions.get('window').width / 2.7,
+          });
         }} >
-        <Text style={[styles.dateText,{color:focused ? primary :'#9E9E9E'}]} > Day {index + 1}</Text>
-        <Text style={{fontSize:14, color:focused ? primary :'#9E9E9E', marginTop:5}}>{dateFormat(item[0])}</Text>
-      </TouchableOpacity>
+          <Text style={[styles.dateText, { color: focused ? primary : '#9E9E9E' }]} > Day {index + 1}</Text>
+          <Text style={{ fontSize: 14, color: focused ? primary : '#9E9E9E', marginTop: 5 }}>{dateFormat(item[0])}</Text>
+        </TouchableOpacity>
       </View>
     )
   };
@@ -222,13 +228,13 @@ export default function TimeLine({ navigation }) {
   };
 
   const filterOpt = [
-    {key:'1', value:'No Filter'},
-    {key:'2', value:'Pending'},
-    {key:'3', value:'Accepted'},
-    {key:'4', value:'Rejected'},
+    { key: '1', value: 'No Filter' },
+    { key: '2', value: 'Pending' },
+    { key: '3', value: 'Accepted' },
+    { key: '4', value: 'Rejected' },
   ];
 
-    // console.log(tripEvents);
+  // console.log(tripEvents);
   const handelFilterSelect = () => {
     if (filterSelect === 'No Filter') {
       setFilterEvents(dayEvent);
@@ -255,7 +261,7 @@ export default function TimeLine({ navigation }) {
           // console.log(filterState,item.vote);
           return filterObj[item.trips_events_id] = item.vote !== undefined ? item.vote : 0
         })
-  
+
         // console.log(filterSelect, filterObj);
         const filteredEvent = dayEvent.filter((item) => {
           if (filterSelect === "Pending") {
@@ -266,7 +272,7 @@ export default function TimeLine({ navigation }) {
           // console.log(filterObj[item.trips_events_id]);
         })
         // console.log(filteredEvent)
-  
+
         setFilterEvents(filteredEvent);
       };
 
@@ -289,12 +295,12 @@ export default function TimeLine({ navigation }) {
           </View>
         }
 
-        <SelectList 
+        <SelectList
           search={false}
           setSelected={(val) => {
             setFilterSelect(val);
-          }} 
-          data={filterOpt} 
+          }}
+          data={filterOpt}
           save="value"
           placeholder='No Filter'
           boxStyles={styles.filterBtn}
@@ -303,7 +309,7 @@ export default function TimeLine({ navigation }) {
           dropdownTextStyles={styles.filterDropdownText}
           onSelect={handelFilterSelect}
         />
-        
+
         {tripEvents === null &&
           <View>
             <Dialog.Container visible={visible}>
@@ -315,9 +321,9 @@ export default function TimeLine({ navigation }) {
             </Dialog.Container>
           </View>
         }
-        {dayEvent.length === 0 && 
-          <View style={[{ flex:1, marginTop:5 }]}>
-            <NoItemMessage text='No Events Yet!' style={{ height:100, textAlignVertical:'center', }}/>
+        {dayEvent.length === 0 &&
+          <View style={[{ flex: 1, marginTop: 5 }]}>
+            <NoItemMessage text='No Events Yet!' style={{ height: 100, textAlignVertical: 'center', }} />
           </View>
         }
         <StyledModal
@@ -354,7 +360,7 @@ export default function TimeLine({ navigation }) {
           />
           : ''
         }
-        {filterEvents && 
+        {filterEvents &&
           <Timeline
             style={styles2.list}
             data={filterEvents}
@@ -419,7 +425,7 @@ const styles = StyleSheet.create({
   },
   dateText: {
     fontSize: 24,
-    textAlign:'center',
+    textAlign: 'center',
   },
 
   date: {
@@ -459,33 +465,33 @@ const styles = StyleSheet.create({
     fontWeight: 'bold'
   },
 
-  filterBtn:{
-    borderRadius:25,
-    backgroundColor:primary,
-    alignSelf:'flex-end',
-    paddingHorizontal:10,
-    textAlign:'center',
-    textAlignVertical:'center',
-    paddingVertical:5,
-    borderColor:'#9E9E9E',
+  filterBtn: {
+    borderRadius: 25,
+    backgroundColor: primary,
+    alignSelf: 'flex-end',
+    paddingHorizontal: 10,
+    textAlign: 'center',
+    textAlignVertical: 'center',
+    paddingVertical: 5,
+    borderColor: '#9E9E9E',
   },
-  filterInput:{
-    color:'#9E9E9E',
-    fontSize:14,
+  filterInput: {
+    color: '#9E9E9E',
+    fontSize: 14,
 
   },
-  filterDropdown:{
+  filterDropdown: {
     position: 'absolute',
-    zIndex:6,
-    backgroundColor:primary,
-    borderColor:'#9E9E9E',
-    alignSelf:'flex-end',
-    marginTop:40,
-    paddingVertical:0
+    zIndex: 6,
+    backgroundColor: primary,
+    borderColor: '#9E9E9E',
+    alignSelf: 'flex-end',
+    marginTop: 40,
+    paddingVertical: 0
   },
-  filterDropdownText:{
-    color:'#9E9E9E',
-    alignSelf:'flex-end',
-    margin:0,
+  filterDropdownText: {
+    color: '#9E9E9E',
+    alignSelf: 'flex-end',
+    margin: 0,
   },
 });

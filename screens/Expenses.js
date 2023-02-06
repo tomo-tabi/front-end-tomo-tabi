@@ -20,7 +20,7 @@ const { primary, blue, yellow, lightBlue } = colors;
 
 export const ExpenseTable = () => {
   const { userData } = useContext(AuthContext);//to extract username?
-  const { usersInTrip, permission } = useContext(TripContext);
+  const { usersInTrip, permission, owner } = useContext(TripContext);
   const { getExp, expData } = useContext(ExpContext);
   // const { tripid } = useContext(EventContext)
 
@@ -49,9 +49,7 @@ export const ExpenseTable = () => {
         let edit
         if (obj.email === userData.email) {
           {
-            permission ?
-              null
-              :
+            owner ?
               edit =
               <EditButton
                 setModalOpen={setModalEditOpen}
@@ -59,6 +57,17 @@ export const ExpenseTable = () => {
                 editData={obj}
                 style={{ alignSelf: 'center' }}
               />
+              :
+              permission ?
+                null
+                :
+                edit =
+                <EditButton
+                  setModalOpen={setModalEditOpen}
+                  setEditData={setExpenseEditData}
+                  editData={obj}
+                  style={{ alignSelf: 'center' }}
+                />
           }
 
         } else {
@@ -251,20 +260,31 @@ export const ExpenseTable = () => {
       />
 
       {expensesView ?
-        permission ?
-      <View></View>
-      :
-      <>
-        <AddButton
-          setModalOpen={setModalOpen}
-        />
+        owner ?
+          <>
+            <AddButton
+              setModalOpen={setModalOpen}
+            />
 
 
-        <View style={{ height: 90 }}>
-        </View>
-      </>
-      : null
-        }
+            <View style={{ height: 90 }}>
+            </View>
+          </>
+          :
+          permission ?
+            <View></View>
+            :
+            <>
+              <AddButton
+                setModalOpen={setModalOpen}
+              />
+
+
+              <View style={{ height: 90 }}>
+              </View>
+            </>
+        : null
+      }
     </View>
   );
 };
