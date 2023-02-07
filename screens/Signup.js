@@ -32,7 +32,6 @@ export default function Signup() {
         <View style={styles.centerView}>
           <Image source={require('./../assets/travel.png')} style={styles.img} />
           <Text style={styles.title}>Tomo Tabi</Text>
-          {/* <Text style={[globalStyles.header, {marginVertical:5, paddingVertical:0, fontSize:18}]}>Account Signup</Text> */}
         </View>
 
         <Formik
