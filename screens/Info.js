@@ -30,7 +30,6 @@ export default function Info() {
   }, [])
 
   useEffect(() => {
-    // console.log("💄",invitesSent, show, noInvitesSent);
     if (invitesSent) {// user sent invite before
       setShow(false);
       setNoInvitesSent(false);
@@ -59,7 +58,6 @@ export default function Info() {
   };
 
   const handleDelete = () => {
-    // console.log(deleteInviteSent);
     deleteInviteSent(inviteid);
     setShowDialog(false);
   };
@@ -68,23 +66,21 @@ export default function Info() {
     console.log("lock");
     lockTrip(info);
     setLockVisible(true);
-  }
+  };
 
   const handleUnlock = (info) => {
     console.log("unLock");
     unlockTrip(info);
     setUnlockVisible(true);
-  }
+  };
 
   const hideLockedDialog = () => {
     setLockVisible(false);
-  }
+  };
 
   const hideUnlockedDialog = () => {
     setUnlockVisible(false);
-  }
-  // console.log(owner)
-  // console.log(tripid);
+  };
 
   const renderInvite = ({ item }) => {
 
@@ -116,9 +112,8 @@ export default function Info() {
         <Dialog.Button label="Delete" onPress={handleDelete} />
       </Dialog.Container>
 
-      
-
-      {permission ?
+      {
+        permission ?
         null
         :
         <View style={[globalStyles.header, styles.headerExtra, globalStyles.flexRow]}>
@@ -126,7 +121,9 @@ export default function Info() {
           <TouchableOpacity onPress={() => setShow(!show)}>
             <MaterialCommunityIcons name={show ? 'chevron-up' : 'chevron-down'} size={30} />
           </TouchableOpacity>
-        </View>}
+        </View>
+      }
+
       {
         noInvitesSent ?
           <Text style={styles.noInviteText}>
@@ -136,10 +133,7 @@ export default function Info() {
           : ""
       }
 
-
-
       {show ?
-
         <View style={styles.formik}>
           <Formik
             initialValues={{ email: '' }}
@@ -157,7 +151,6 @@ export default function Info() {
                   onChangeText={props.handleChange('email')}
                   value={props.values.email}
                 />
-
                 <BlueButton
                   onPress={props.handleSubmit}
                   buttonText="Send Invite"
@@ -165,10 +158,10 @@ export default function Info() {
               </>
             )}
           </Formik>
-
         </View>
         : ""
       }
+
       {Array.isArray(pendingInvites) && pendingInvites.length !== 0 ?
         <>
           <Text style={[globalStyles.header, styles.headerExtra]}>Invite Status</Text>
@@ -228,7 +221,6 @@ export default function Info() {
         </Dialog.Container>
       </View>
       
-      
     </View>
   )
 };
@@ -264,12 +256,10 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     marginBottom:10,
     justifyContent: 'space-between',
-    // width: '100%',
   },
 
   button: {
     width: '45%',
-    // marginHorizontal: 10,
   },
 
   lockDialogTitle: {

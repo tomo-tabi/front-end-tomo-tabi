@@ -1,6 +1,6 @@
 import React, { useState, useContext } from 'react';
 import { View, Text, TouchableOpacity, StyleSheet, Image, Alert } from "react-native";
-import {Formik} from 'formik';
+import { Formik } from 'formik';
 import { globalStyles, colors, BlueButton, MyTextInput, PasswordTextInput } from "../styles/globalStyles";
 const { primary, greyBlue } = colors
 
@@ -95,7 +95,6 @@ const styles = StyleSheet.create({
     justifyContent: 'space-around',
   },
   centerView:{
-    // alignContent:'center',
     flex:1,
     justifyContent:'center',
     alignItems:'center'

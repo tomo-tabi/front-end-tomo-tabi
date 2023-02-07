@@ -1,15 +1,12 @@
-import React, { useState, useCallback, useContext, useEffect } from "react";
-import { Linking, StyleSheet, View, Text, ScrollView, TouchableOpacity } from "react-native";
+import React, { useState, useContext, useEffect } from "react";
+import { StyleSheet, View, Text, ScrollView, TouchableOpacity } from "react-native";
 import { Table, TableWrapper, Row, Cell } from "react-native-table-component";
 import { globalStyles, colors, AddButton, StyledModal, NoItemMessage, EditButton } from "../styles/globalStyles";
 import { MaterialCommunityIcons } from '@expo/vector-icons';
 
-
-
 import { AuthContext } from "../context/AuthContext";
 import { ExpContext } from "../context/ExpContext";
 import { TripContext } from "../context/TripContext";
-
 
 import { Balance } from "./Balance";
 
@@ -22,7 +19,6 @@ export const ExpenseTable = () => {
   const { userData } = useContext(AuthContext);//to extract username?
   const { usersInTrip, permission, owner } = useContext(TripContext);
   const { getExp, expData } = useContext(ExpContext);
-  // const { tripid } = useContext(EventContext)
 
   const [modalOpen, setModalOpen] = useState(false);
   const [splitPaymentsData, setSplitPaymentData] = useState([[], []]);
@@ -36,7 +32,7 @@ export const ExpenseTable = () => {
 
   useEffect(() => {
     getExp();
-  }, [])
+  }, []);
 
   //format data for table
   useEffect(() => {
@@ -44,8 +40,6 @@ export const ExpenseTable = () => {
 
     if (expData) {
       expData.forEach((obj) => {
-        // console.log(obj.email, userData.email);
-
         let edit
         if (obj.email === userData.email) {
           {
@@ -73,7 +67,7 @@ export const ExpenseTable = () => {
         } else {
           edit = <View></View>
         }
-        //formate name, item name and money?
+        //formate name, item name and money
         expArr.push([
           obj.username,
           obj.item_name,
@@ -104,7 +98,6 @@ export const ExpenseTable = () => {
       return setSplitPaymentData(splitPayments(expObj))
     }
     setTableData([]);
-
 
   }, [expData])
 
@@ -153,39 +146,6 @@ export const ExpenseTable = () => {
 
     return result
   }
-
-
-  // const PayPayURL = "paypay://";
-
-  // const LinePayURL = "linepay://";
-
-  // const OpenURLButton = ({ url, children }) => {
-  //   const handlePress = useCallback(async () => {
-  //     // Checking if the link is supported for links with custom URL scheme.
-  //     const supported = await Linking.canOpenURL(url);
-
-  //     if (supported) {
-  //       // Opening the link with some app, if the URL scheme is "http" the web link should be opened
-  //       // by some browser in the mobile
-  //       await Linking.openURL(url);
-  //     } else {
-  //       if (url == "paypay://") {
-  //         await Linking.openURL("https://play.google.com/store/apps/details?id=com.paypay.android%22")
-  //       }
-  //       else {
-  //         await Linking.openURL("https://play.google.com/store/apps/details?id=com.linepaycorp.talaria&hl=en&gl=US")
-  //       }
-  //     }
-  //   }, [url]);
-
-  //   return (
-  //     <TempButton
-  //       onPress={handlePress}
-  //       buttonText={children}
-  //     />
-  //   );
-  // };
-
 
   // post exp needs: itemName, money, optional purchaserid (if blank defaults to userid)
 
@@ -243,7 +203,6 @@ export const ExpenseTable = () => {
           </View>
         }
 
-
         <StyledModal
           modalOpen={modalOpen}
           setModalOpen={setModalOpen}
@@ -266,7 +225,6 @@ export const ExpenseTable = () => {
               setModalOpen={setModalOpen}
             />
 
-
             <View style={{ height: 90 }}>
             </View>
           </>
@@ -278,7 +236,6 @@ export const ExpenseTable = () => {
               <AddButton
                 setModalOpen={setModalOpen}
               />
-
 
               <View style={{ height: 90 }}>
               </View>
@@ -294,10 +251,7 @@ const styles = StyleSheet.create({
     backgroundColor: primary,
     flex: 1,
     flexDirection: 'row',
-    // justifyContent: 'space-between',
-    // width: "100%",
     alignSelf: "center",
-    // height:100,
     paddingHorizontal: 10,
   },
   button: {
@@ -305,12 +259,7 @@ const styles = StyleSheet.create({
     padding: 5,
     borderRadius: 6,
     width: "50%",
-    // alignContent:"center",
-    // alignItems:'center',
-    // alignSelf: "center",
     margin: 5,
-    // borderWidth:1,
-    // borderRadius:20,
   },
   wrapper: {
     flex: 1,
@@ -327,15 +276,12 @@ const styles = StyleSheet.create({
     backgroundColor: blue,
   },
   buttons: {
-    // flex:1,
     width: 300,
     height: 70,
     flexDirection: 'row',
-    // backgroundColor: pink,
     position: "absolute",
     bottom: 15,
     overflow: 'visible',
-    // padding:5
 
   },
   text: {// table text
@@ -357,7 +303,6 @@ const styles = StyleSheet.create({
   },
   calcView: {
     flex: 1,
-    // borderWidth:1,
     padding: 5,
     marginBottom: 10,
     backgroundColor: blue,

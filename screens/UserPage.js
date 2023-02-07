@@ -2,7 +2,7 @@ import React, { useContext, useState } from 'react'
 import { Image, ImageBackground, Platform, StyleSheet, Text, View, TouchableOpacity } from 'react-native'
 import { MaterialCommunityIcons } from '@expo/vector-icons';
 import { StyledModal, colors, globalStyles, BlueButton } from "../styles/globalStyles";
-const { yellow, lightBlue, blue, grey } = colors
+const { yellow, lightBlue, blue } = colors
 
 import { AuthContext } from '../context/AuthContext'
 
@@ -95,17 +95,10 @@ const styles = StyleSheet.create({
     buttonsContainer: {
         marginTop: 25,
         marginHorizontal:10,
-        // flex:1,
-        // flexDirection: 'row',
-        // justifyContent: 'space-between',
-        // width: "90%",
-        // alignSelf: "center",
     },
     button: {
         flexDirection:'row', 
-        // justifyContent:'center',
         paddingVertical:5,
-        // borderRadius:20,
     },
     headerContainer: {
         marginBottom: 85,
@@ -132,9 +125,7 @@ const styles = StyleSheet.create({
     userNameText: {
         fontSize: 22,
         fontWeight: 'bold',
-        // paddingBottom: 8,
         textAlign: 'center',
-        // marginBottom:15,
     },
     separator: {
         marginVertical: 8,
@@ -146,15 +137,12 @@ const styles = StyleSheet.create({
     titleText: {
         fontSize: 18,
         color:'#737373',
-        // paddingBottom: 8,
         textAlignVertical:'center',
         justifyContent:'center',
 
     },
     userInfo: {
         fontSize: 15,
-        // paddingBottom: 5,
-        // marginLeft: 20,
         fontWeight: 'bold',
         color:'#9E9E9E',
     }

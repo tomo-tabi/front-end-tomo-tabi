@@ -23,7 +23,6 @@ export default function Voting({ route, navigation }) {
     getVotes(eventid);
     getUserVote(eventid);
   },[])
-  // console.log(userVote[0]);
 
   useEffect(() => {
     
@@ -43,8 +42,6 @@ export default function Voting({ route, navigation }) {
 
       let res = [...votes.voteArray, ...noVote];
       setVoteInfo(res);
-      // console.log(res);
-      // console.log(notVote);
       
     } else {//no votes at all
       setVoteInfo(usersInTrip);

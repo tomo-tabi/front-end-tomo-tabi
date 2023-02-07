@@ -224,7 +224,6 @@ export default function TimeLine({ navigation }) {
     )
   };
 
-  // handle pop up message
   const hideDialog = () => {
     setVisible(false);
   };
@@ -345,8 +344,6 @@ export default function TimeLine({ navigation }) {
             circleSize={20}
             circleColor={blue}
             lineColor={blue}
-            // timeContainerStyle={{ minWidth: 52 }}
-            // timeStyle={{ textAlign: 'center', backgroundColor: '#ff9797', color: 'white', padding: 5, borderRadius: 13 }}
             options={{
               style: { marginTop: 5 },
             }}
@@ -375,7 +372,6 @@ export default function TimeLine({ navigation }) {
             isUsingFlatlist={true}
           />
         }
-
       </View>
     </>
   )
