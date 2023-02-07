@@ -56,13 +56,14 @@ export default function TimeLine({ navigation }) {
       index++;
     };
 
-    setDayRange(dayRangeArr)
+    setDayRange(dayRangeArr);
 
   }, [tripEvents]);
 
   useEffect(() => {
     //set day event depending on date selected 
-    if (Array.isArray(dayRange) && tripEvents !== null) {
+    console.log(dayRange);
+    if (Array.isArray(dayRange) && tripEvents !== null && dayRange.length !== 0) {
       if (tripEvents[0].trip_id !== tripid) {
         return
       }
