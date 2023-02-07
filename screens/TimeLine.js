@@ -86,6 +86,11 @@ export default function TimeLine({ navigation }) {
         return { ...item, vote: { true: 0, false: 0 } }
       });
 
+      if (eventArrFormat.length === 0) {
+        console.log("?????",eventArrFormat);
+        return setDayEvent([]);
+      };
+
       if (eventArrFormat.length !== 0 && tripVote && Number(tripVote.tripid) === tripid) {
 
         (tripVote.tripVoteArray).forEach((item) => {
@@ -96,11 +101,18 @@ export default function TimeLine({ navigation }) {
           }
         });
       }
-
+      console.log("dayevent",eventArrFormat);
       return setDayEvent(eventArrFormat);
     }
 
   }, [dayRange, tripEvents, tripVote]);
+
+  useEffect(() => {
+    if (dayEvent.length !== 0 && dateSelected === moment(dayEvent[0].event_date).format('YYYY-MM-DD')) {
+      handelFilterSelect();
+      // console.log(filterSelect, dateSelected, dayEvent);
+    }
+  }, [dateSelected, dayEvent])
 
   const pressHandler = (eventName, id) => {
     navigation.navigate('Voting', {
@@ -236,8 +248,9 @@ export default function TimeLine({ navigation }) {
   ];
 
   const handelFilterSelect = () => {
+    // console.log("de",dayEvent);
     if (filterSelect === 'No Filter') {
-      setFilterEvents(dayEvent);
+      setFilterEvents(null);
     } else {
       let filterState;
 
@@ -260,6 +273,7 @@ export default function TimeLine({ navigation }) {
         (userTripVote.userTripVotesArray).forEach((item) => { //event ids to filter
           return filterObj[item.trips_events_id] = item.vote !== undefined ? item.vote : 0
         })
+        // console.log("fil🧅",filterObj);
 
         const filteredEvent = dayEvent.filter((item) => {
           if (filterSelect === "Pending") {
@@ -268,6 +282,7 @@ export default function TimeLine({ navigation }) {
             return filterObj[item.id] === filterState
           }
         });
+        // console.log("🧅",filteredEvent);
 
         setFilterEvents(filteredEvent);
       };
@@ -354,7 +369,7 @@ export default function TimeLine({ navigation }) {
           />
           : ''
         }
-        {filterEvents &&
+        {dayEvent.length !== 0 && filterEvents &&
           <Timeline
             style={styles2.list}
             data={filterEvents}
