@@ -330,7 +330,7 @@ export default function TimeLine({ navigation }) {
         }
         {dayEvent.length === 0 &&
           <View style={[{ flex: 1, marginTop: 5 }]}>
-            <NoItemMessage text='No Events Yet!' style={{ height: 100, textAlignVertical: 'center', }} />
+            <NoItemMessage text='No Events Today!' style={{ height: 100, textAlignVertical: 'center', }} />
           </View>
         }
         <StyledModal
