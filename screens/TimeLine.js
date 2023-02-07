@@ -48,12 +48,15 @@ export default function TimeLine({ navigation }) {
     let lastDateTrip = new Date(currentTrip.end_date);
 
     let index = 0;
+    let dayRangeArr = [];
 
     for (let day = startDateTrip; day <= lastDateTrip; day.setDate(day.getDate() + 1)) {
-      dayRange.push([new Date(day), { focused: index === 0 ? true : false, index: index }]);
+      dayRangeArr.push([new Date(day), { focused: index === 0 ? true : false, index: index }]);
       // array of [[2022-12-21T00:00:00.000Z, {"focused": true, "index": 0}], ...]
       index++;
     };
+
+    setDayRange(dayRangeArr)
 
   }, [tripEvents]);
 
