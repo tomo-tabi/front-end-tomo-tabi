@@ -147,8 +147,7 @@ export default function Info() {
       {
         noInvitesSent ?
           <Text style={styles.noInviteText}>
-            You have not sent any invites yet! {'\n'}
-            Start sending invitations to plan the trip together
+            You have not sent any invites yet!
           </Text>
           : ""
       }
@@ -209,7 +208,7 @@ export default function Info() {
         lockedTrip ?
           <View style={styles.lockedContainer}>
             <View style={styles.lockedText}>
-              <Text style={{ paddingRight: 10, fontSize: 24, textAlign: "center" }}>This trips is locked</Text>
+              <Text style={{ paddingRight: 10, fontSize: 24, textAlign: "center" }}>This trip is locked</Text>
               <MaterialCommunityIcons name="lock" size={24} color="red" />
             </View>
             <View style={{ alignItems: "center" }}>
@@ -223,7 +222,7 @@ export default function Info() {
           :
           <View style={styles.lockedContainer}>
             <View style={styles.lockedText}>
-              <Text style={{ paddingRight: 10, fontSize: 24, alignSelf: "center" }}>This trips is unlocked</Text>
+              <Text style={{ paddingRight: 10, fontSize: 24, alignSelf: "center" }}>This trip is unlocked</Text>
               <MaterialCommunityIcons name="lock-open" size={24} color="green" />
             </View>
             <View style={{ alignItems: "center" }}>
@@ -289,7 +288,7 @@ const styles = StyleSheet.create({
     textAlign: 'center',
     fontSize: 15,
     marginVertical: 10,
-    marginBottom: 20
+    marginBottom: 10
   },
 
   memberList: {//almost same as voteing.js
