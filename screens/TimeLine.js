@@ -41,6 +41,11 @@ export default function TimeLine({ navigation }) {
   }
 
   useEffect(() => {
+    setFilterEvents(null);
+    setFilterSelect('');
+  },[])
+
+  useEffect(() => {
     //set up day range
 
     let currentTrip = trips.find((trip) => trip.id === tripid);
@@ -86,11 +91,6 @@ export default function TimeLine({ navigation }) {
         return { ...item, vote: { true: 0, false: 0 } }
       });
 
-      if (eventArrFormat.length === 0) {
-        console.log("?????",eventArrFormat);
-        return setDayEvent([]);
-      };
-
       if (eventArrFormat.length !== 0 && tripVote && Number(tripVote.tripid) === tripid) {
 
         (tripVote.tripVoteArray).forEach((item) => {
@@ -101,16 +101,14 @@ export default function TimeLine({ navigation }) {
           }
         });
       }
-      console.log("dayevent",eventArrFormat);
       return setDayEvent(eventArrFormat);
     }
 
   }, [dayRange, tripEvents, tripVote]);
 
   useEffect(() => {
-    if (dayEvent.length !== 0 && dateSelected === moment(dayEvent[0].event_date).format('YYYY-MM-DD')) {
+    if (dayEvent.length !== 0 && dateSelected === moment(dayEvent[0].event_date).format('YYYY-MM-DD') && filterSelect) {
       handelFilterSelect();
-      // console.log(filterSelect, dateSelected, dayEvent);
     }
   }, [dateSelected, dayEvent])
 
@@ -248,7 +246,7 @@ export default function TimeLine({ navigation }) {
   ];
 
   const handelFilterSelect = () => {
-    // console.log("de",dayEvent);
+
     if (filterSelect === 'No Filter') {
       setFilterEvents(null);
     } else {
@@ -273,7 +271,6 @@ export default function TimeLine({ navigation }) {
         (userTripVote.userTripVotesArray).forEach((item) => { //event ids to filter
           return filterObj[item.trips_events_id] = item.vote !== undefined ? item.vote : 0
         })
-        // console.log("fil🧅",filterObj);
 
         const filteredEvent = dayEvent.filter((item) => {
           if (filterSelect === "Pending") {
@@ -282,7 +279,6 @@ export default function TimeLine({ navigation }) {
             return filterObj[item.id] === filterState
           }
         });
-        // console.log("🧅",filteredEvent);
 
         setFilterEvents(filteredEvent);
       };
@@ -369,7 +365,7 @@ export default function TimeLine({ navigation }) {
           />
           : ''
         }
-        {dayEvent.length !== 0 && filterEvents &&
+        {filterEvents && dayEvent.length !== 0  ?
           <Timeline
             style={styles2.list}
             data={filterEvents}
@@ -386,6 +382,7 @@ export default function TimeLine({ navigation }) {
             detailContainerStyle={{ flex: 1, marginBottom: 10, borderRadius: 10 }}
             isUsingFlatlist={true}
           />
+          : ''
         }
       </View>
     </>
