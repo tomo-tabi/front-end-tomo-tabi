@@ -41,6 +41,11 @@ export default function TimeLine({ navigation }) {
   }
 
   useEffect(() => {
+    setFilterEvents(null);
+    setFilterSelect('');
+  },[])
+
+  useEffect(() => {
     //set up day range
 
     let currentTrip = trips.find((trip) => trip.id === tripid);
@@ -96,11 +101,16 @@ export default function TimeLine({ navigation }) {
           }
         });
       }
-
       return setDayEvent(eventArrFormat);
     }
 
   }, [dayRange, tripEvents, tripVote]);
+
+  useEffect(() => {
+    if (dayEvent.length !== 0 && dateSelected === moment(dayEvent[0].event_date).format('YYYY-MM-DD') && filterSelect) {
+      handelFilterSelect();
+    }
+  }, [dateSelected, dayEvent])
 
   const pressHandler = (eventName, id) => {
     navigation.navigate('Voting', {
@@ -224,7 +234,6 @@ export default function TimeLine({ navigation }) {
     )
   };
 
-  // handle pop up message
   const hideDialog = () => {
     setVisible(false);
   };
@@ -237,8 +246,9 @@ export default function TimeLine({ navigation }) {
   ];
 
   const handelFilterSelect = () => {
+
     if (filterSelect === 'No Filter') {
-      setFilterEvents(dayEvent);
+      setFilterEvents(null);
     } else {
       let filterState;
 
@@ -345,8 +355,6 @@ export default function TimeLine({ navigation }) {
             circleSize={20}
             circleColor={blue}
             lineColor={blue}
-            // timeContainerStyle={{ minWidth: 52 }}
-            // timeStyle={{ textAlign: 'center', backgroundColor: '#ff9797', color: 'white', padding: 5, borderRadius: 13 }}
             options={{
               style: { marginTop: 5 },
             }}
@@ -357,7 +365,7 @@ export default function TimeLine({ navigation }) {
           />
           : ''
         }
-        {filterEvents &&
+        {filterEvents && dayEvent.length !== 0  ?
           <Timeline
             style={styles2.list}
             data={filterEvents}
@@ -374,8 +382,8 @@ export default function TimeLine({ navigation }) {
             detailContainerStyle={{ flex: 1, marginBottom: 10, borderRadius: 10 }}
             isUsingFlatlist={true}
           />
+          : ''
         }
-
       </View>
     </>
   )
