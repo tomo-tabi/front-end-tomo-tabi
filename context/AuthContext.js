@@ -98,6 +98,7 @@ export function AuthProvider({ children }) {
 
         if (isLoggedIn.status === 401) {
           await AsyncStorage.removeItem('userToken');
+          setUserData(null);
           setIsLoading(false);
           return;
         }
