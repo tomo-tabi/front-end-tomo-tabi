@@ -69,6 +69,16 @@ export default function Trips({ navigation }) {
     setVisible(false);
   };
 
+  const compare = ( a, b ) =>  {
+    if ( a.start_date < b.start_date ){
+      return 1;
+    }
+    if ( a.start_date > b.start_date ){
+      return -1;
+    }
+    return 0;
+  }
+  
   useEffect(() => {
     // console.log("in",invites);
     if (!invites) {
@@ -90,7 +100,7 @@ export default function Trips({ navigation }) {
       const filterArr = trips.filter((item) => {
         return (item.start_date <= moment(new Date()).format('YYYY-MM-DD') && item.end_date >= moment(new Date()).format('YYYY-MM-DD'));
       })
-      filterArr.map(async (trip) => {
+      filterArr.map((trip) => {
         if (userData.username === trip.owner_username) {
           trip.owner = true
         }
@@ -106,14 +116,14 @@ export default function Trips({ navigation }) {
   const handelFilter = (state, todayDate) => {
     //console.log('2022-12-21'<'2023-02-01');
     if (trips) {
-      const filterArr = trips.filter((item) => {
+      const filterArr = trips.filter((item, i) => {
         if (state === 'upcoming') {
           return (item.start_date >= todayDate);
         } else {
           return (item.start_date <= todayDate && item.end_date <= todayDate);
         }
       })
-      filterArr.map(async (trip) => {
+      filterArr.map((trip) => {
         if (userData.username === trip.owner_username) {
           trip.owner = true
         }
@@ -121,6 +131,11 @@ export default function Trips({ navigation }) {
           trip.owner = false
         }
       });
+
+      if (state !== 'upcoming'){
+        filterArr.sort( compare );
+        console.log("test")
+      }
 
       setFilteredTrip(filterArr);
     }
