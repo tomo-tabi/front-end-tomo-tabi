@@ -62,7 +62,6 @@ export default function TimeLine({ navigation }) {
 
   useEffect(() => {
     //set day event depending on date selected 
-    console.log(dayRange);
     if (Array.isArray(dayRange) && tripEvents !== null && dayRange.length !== 0) {
       if (tripEvents[0].trip_id !== tripid) {
         return
@@ -111,7 +110,6 @@ export default function TimeLine({ navigation }) {
   };
 
   const renderTime = (rowData) => {
-    // console.log("vote",rowData.vote, rowData.id);
     return (
       <View style={{ paddingHorizontal: 5, }}>
         <Text style={{ fontWeight: 'bold' }}>
@@ -238,7 +236,6 @@ export default function TimeLine({ navigation }) {
     { key: '4', value: 'Rejected' },
   ];
 
-  // console.log(tripEvents);
   const handelFilterSelect = () => {
     if (filterSelect === 'No Filter') {
       setFilterEvents(dayEvent);
@@ -262,20 +259,16 @@ export default function TimeLine({ navigation }) {
       if (userTripVote) {
 
         (userTripVote.userTripVotesArray).forEach((item) => { //event ids to filter
-          // console.log(filterState,item.vote);
           return filterObj[item.trips_events_id] = item.vote !== undefined ? item.vote : 0
         })
 
-        // console.log(filterSelect, filterObj);
         const filteredEvent = dayEvent.filter((item) => {
           if (filterSelect === "Pending") {
             return filterObj[item.id] === undefined
           } else {
             return filterObj[item.id] === filterState
           }
-          // console.log(filterObj[item.trips_events_id]);
-        })
-        // console.log(filteredEvent)
+        });
 
         setFilterEvents(filteredEvent);
       };
