@@ -25,8 +25,18 @@ export default function Info() {
   const [lockVisible, setLockVisible] = useState(false);
   const [unlockVisible, setUnlockVisible] = useState(false);
 
+
+  const [lockedTrip, setLockedTrip] = useState(false)
+
   useEffect(() => {
     getInvitesSent();
+  }, [])
+
+
+  useEffect(() => {
+    if (permission) {
+      setLockedTrip(true)
+    }
   }, [])
 
   useEffect(() => {
@@ -66,13 +76,15 @@ export default function Info() {
     console.log("lock");
     lockTrip(info);
     setLockVisible(true);
-  };
+    setLockedTrip(true)
+  }
 
   const handleUnlock = (info) => {
     console.log("unLock");
     unlockTrip(info);
     setUnlockVisible(true);
-  };
+    setLockedTrip(false)
+  }
 
   const hideLockedDialog = () => {
     setLockVisible(false);
@@ -112,18 +124,26 @@ export default function Info() {
         <Dialog.Button label="Delete" onPress={handleDelete} />
       </Dialog.Container>
 
-      {
-        permission ?
-        null
-        :
-        <View style={[globalStyles.header, styles.headerExtra, globalStyles.flexRow]}>
-          <Text style={[globalStyles.header, { paddingVertical: 0 }]}>Send Invite</Text>
-          <TouchableOpacity onPress={() => setShow(!show)}>
-            <MaterialCommunityIcons name={show ? 'chevron-up' : 'chevron-down'} size={30} />
-          </TouchableOpacity>
-        </View>
-      }
+      
 
+      {
+        owner ?
+          <View style={[globalStyles.header, styles.headerExtra, globalStyles.flexRow]}>
+            <Text style={[globalStyles.header, { paddingVertical: 0 }]}>Send Invite</Text>
+            <TouchableOpacity onPress={() => setShow(!show)}>
+              <MaterialCommunityIcons name={show ? 'chevron-up' : 'chevron-down'} size={30} />
+            </TouchableOpacity>
+          </View>
+          :
+          permission ?
+            null
+            :
+            <View style={[globalStyles.header, styles.headerExtra, globalStyles.flexRow]}>
+              <Text style={[globalStyles.header, { paddingVertical: 0 }]}>Send Invite</Text>
+              <TouchableOpacity onPress={() => setShow(!show)}>
+                <MaterialCommunityIcons name={show ? 'chevron-up' : 'chevron-down'} size={30} />
+              </TouchableOpacity>
+            </View>}
       {
         noInvitesSent ?
           <Text style={styles.noInviteText}>
@@ -185,25 +205,55 @@ export default function Info() {
         ItemSeparatorComponent={<Seperator />}
       />
 
-      {owner ?
-        <View style={styles.buttonContainer}>
-          <BlueButton
-            onPress={ () => {handleLock(tripid)}}
-            buttonText="Lock your trip"
-            style={styles.button}
-          />
-          <BlueButton
-            onPress={ () => {handleUnlock(tripid)}}
-            buttonText="Unlock your trip"
-            style={styles.button}
-          /> 
-        </View>
-        : ''
+{owner ?
+        lockedTrip ?
+          <View style={styles.lockedContainer}>
+            <View style={styles.lockedText}>
+              <Text style={{ paddingRight: 10, fontSize: 24, textAlign: "center" }}>This trips is locked</Text>
+              <MaterialCommunityIcons name="lock" size={24} color="red" />
+            </View>
+            <View style={{ alignItems: "center" }}>
+              <BlueButton
+                onPress={() => { handleUnlock(tripid) }}
+                buttonText="Unlock your trip"
+                style={styles.button}
+              />
+            </View>
+          </View>
+          :
+          <View style={styles.lockedContainer}>
+            <View style={styles.lockedText}>
+              <Text style={{ paddingRight: 10, fontSize: 24, alignSelf: "center" }}>This trips is unlocked</Text>
+              <MaterialCommunityIcons name="lock-open" size={24} color="green" />
+            </View>
+            <View style={{ alignItems: "center" }}>
+              <BlueButton
+                onPress={() => { handleLock(tripid) }}
+                buttonText="Lock your trip"
+                style={styles.button}
+              />
+            </View>
+          </View>
+        :
+        lockedTrip ?
+          <View style={styles.lockedContainer}>
+            <View style={styles.lockedText}>
+              <Text style={{ paddingRight: 10, fontSize: 24, textAlign: "center" }}>This trips is locked</Text>
+              <MaterialCommunityIcons name="lock" size={24} color="red" />
+            </View>
+          </View>
+          :
+          <View style={styles.lockedContainer}>
+            <View style={styles.lockedText}>
+              <Text style={{ paddingRight: 10, fontSize: 24, alignSelf: "center" }}>This trips is unlocked</Text>
+              <MaterialCommunityIcons name="lock-open" size={24} color="green" />
+            </View>
+          </View>
       }
 
       <View>
         <Dialog.Container visible={lockVisible}>
-          <Dialog.Title style={styles.lockDialogTitle}>Locked your trip!</Dialog.Title>
+          <Dialog.Title style={styles.lockDialogTitle}>You locked your trip!</Dialog.Title>
           <Dialog.Description style={styles.dialogDescription}>
             Nobody can edit the trip now!
           </Dialog.Description>
@@ -213,9 +263,9 @@ export default function Info() {
 
       <View>
         <Dialog.Container visible={unlockVisible}>
-          <Dialog.Title style={styles.unlockDialogTitle}>Unlocked your trip!</Dialog.Title>
+          <Dialog.Title style={styles.unlockDialogTitle}>You unlocked your trip!</Dialog.Title>
           <Dialog.Description style={styles.dialogDescription}>
-            everybody can edit the trip now!
+            Everybody can edit the trip now!
           </Dialog.Description>
           <Dialog.Button label="OK" style={styles.dialogButton} onPress={hideUnlockedDialog}/>
         </Dialog.Container>
@@ -260,6 +310,9 @@ const styles = StyleSheet.create({
 
   button: {
     width: '45%',
+    // marginHorizontal: 10,
+    marginBottom: 10,
+    marginTop: 10,
   },
 
   lockDialogTitle: {
@@ -278,4 +331,15 @@ const styles = StyleSheet.create({
   dialogButton: {
     fontWeight: 'bold'
   },
+  lockedText: {
+    flexDirection: 'row',
+    justifyContent: "center",
+    alignItems: "center",
+  },
+  lockedContainer: {
+    marginBottom: 10,
+    backgroundColor: lightBlue,
+    borderRadius: 6,
+    padding: 5,
+  }
 });
