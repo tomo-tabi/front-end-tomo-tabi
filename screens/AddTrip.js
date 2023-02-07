@@ -62,7 +62,7 @@ export default function AddTrip({setModalOpen}) {
               onPress={showDatePicker}
               iconName="calendar-blank-outline"
               value={startDate && endDate ? `${startDate.toDateString()} - ${endDate.toDateString()}` : ''}
-              placeholder="YYYY MM DD - YYYY MMDD"
+              placeholder="YYYY MM DD - YYYY MM DD"
               onChangeText={props.handleChange('startDate')}
             />
             <BlueButton
