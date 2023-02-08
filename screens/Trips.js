@@ -21,7 +21,7 @@ export default function Trips({ navigation }) {
   const { userData } = useContext(AuthContext);
   const { trips, getUsersInTrip, checkPermission, checkOwner, owner } = useContext(TripContext);
   const { getTripVotes, getUserTripVotes } = useContext(VoteContext);
-  const { getInvites, invites, rejectInvites, acceptInvites } = useContext(InviteContext);
+  const { getInvites, getInvitesSent, invites, rejectInvites, acceptInvites } = useContext(InviteContext);
   const { getTripEvents } = useContext(EventContext);
 
   const [modalOpen, setModalOpen] = useState(false);
@@ -49,7 +49,8 @@ export default function Trips({ navigation }) {
     getTripVotes(item.id);
     getUserTripVotes(item.id);
     checkPermission(item.id);
-    checkOwner(item.id)
+    checkOwner(item.id);
+    getInvitesSent(item.id);
 
     navigation.navigate('TripTabNav', {
       screen: 'TimeLine',

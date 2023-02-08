@@ -35,7 +35,7 @@ export function InviteProvider({ children }) {
     }
   };
 
-  const getInvitesSent = async () => {
+  const getInvitesSent = async (tripid) => {
     try {
       const getInvitesSent = await fetch(`${API_URL}/invite/sent/${tripid}`, {
         method: 'GET',
@@ -43,7 +43,6 @@ export function InviteProvider({ children }) {
       });
 
       if (getInvitesSent.status === 404) {
-        //need?
         return setInvitesSent(null);
       }
 

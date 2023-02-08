@@ -29,11 +29,6 @@ export default function Info() {
   const [lockedTrip, setLockedTrip] = useState(false)
 
   useEffect(() => {
-    getInvitesSent();
-  }, [])
-
-
-  useEffect(() => {
     if (permission) {
       setLockedTrip(true)
     }
@@ -51,6 +46,7 @@ export default function Info() {
 
     if (Array.isArray(invitesSent)) {
       let pending = invitesSent.filter((invite) => invite.status !== 'accepted');
+      console.log(pending);
       setPendingInvites(pending);
     }
   }, [invitesSent])
