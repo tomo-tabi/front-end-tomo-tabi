@@ -144,16 +144,16 @@ export default function Info() {
                 <MaterialCommunityIcons name={show ? 'chevron-up' : 'chevron-down'} size={30} />
               </TouchableOpacity>
             </View>}
-      {
-        noInvitesSent ?
-          <Text style={styles.noInviteText}>
-            You have not sent any invites yet!
-          </Text>
-          : ""
-      }
 
       {show ?
         <View style={styles.formik}>
+          {
+            noInvitesSent ?
+              <Text style={styles.noInviteText}>
+                You have not sent any invites yet!
+              </Text>
+              : ""
+          }
           <Formik
             initialValues={{ email: '' }}
             onSubmit={(values, actions) => {
