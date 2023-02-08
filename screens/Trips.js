@@ -2,7 +2,7 @@ import React, { useState, useContext, useEffect, useCallback } from 'react'
 import { useFocusEffect } from '@react-navigation/native';
 import { StyleSheet, Text, FlatList, View, TouchableOpacity, StatusBar } from 'react-native';
 import { MaterialCommunityIcons } from '@expo/vector-icons';
-import { globalStyles, colors, AddButtonSqr, StyledModal, BlueButton, EditButton, YesOrNoCard, Seperator, StatusColor } from "../styles/globalStyles";
+import { globalStyles, colors, AddButtonSqr, StyledModal, EditButton, YesOrNoCard, Seperator, StatusColor } from "../styles/globalStyles";
 const { primary, yellow } = colors
 
 import { AuthContext } from '../context/AuthContext';
@@ -27,21 +27,18 @@ export default function Trips({ navigation }) {
   const [modalOpen, setModalOpen] = useState(false);
   const [modalEditOpen, setModalEditOpen] = useState(false)
   const [inviteOpen, setInviteOpen] = useState(false);
-  const [tripEditData, setTripEditData] = useState({}) // Set the trip I want to send to Edit Trip component
+  const [tripEditData, setTripEditData] = useState({}); // Set the trip I want to send to Edit Trip component
   const [visible, setVisible] = useState(true);
 
   const [upcoming, setUpcoming] = useState(true); // default to upcoming trips
   const [filteredTrip, setFilteredTrip] = useState(false);
-
   const [ongoingTrips, setOngoingTrips] = useState(null);
 
   useFocusEffect(
     useCallback(() => {
       getInvites();
     }, [])
-  );
-
-  // console.log(invites, trips);
+  )
 
   const pressHandler = (item) => {
     getTripEvents(item.id);
@@ -59,16 +56,15 @@ export default function Trips({ navigation }) {
     })
   }
 
-  // console.log(trips);
 
   const dateFormat = (startDate, endDate) => {
-    return `${moment(startDate).format("Do MMM")} – ${moment(endDate).format("Do MMM YYYY")}`
+    return `${moment(startDate).format("Do MMM")} – ${moment(endDate).format("Do MMM YYYY")}`;
   }
 
   // handle pop up message
   const hideDialog = () => {
     setVisible(false);
-  };
+  }
 
   const compare = ( a, b ) =>  {
     if ( a.start_date < b.start_date ){
@@ -103,10 +99,10 @@ export default function Trips({ navigation }) {
       })
       filterArr.map((trip) => {
         if (userData.username === trip.owner_username) {
-          trip.owner = true
+          trip.owner = true;
         }
         else {
-          trip.owner = false
+          trip.owner = false;
         }
       });
 
@@ -115,7 +111,6 @@ export default function Trips({ navigation }) {
   }, [trips])
 
   const handelFilter = (state, todayDate) => {
-    //console.log('2022-12-21'<'2023-02-01');
     if (trips) {
       const filterArr = trips.filter((item, i) => {
         if (state === 'upcoming') {
@@ -124,24 +119,23 @@ export default function Trips({ navigation }) {
           return (item.start_date <= todayDate && item.end_date <= todayDate);
         }
       })
+
       filterArr.map((trip) => {
         if (userData.username === trip.owner_username) {
-          trip.owner = true
+          trip.owner = true;
         }
         else {
-          trip.owner = false
+          trip.owner = false;
         }
-      });
+      })
 
       if (state !== 'upcoming'){
         filterArr.sort( compare );
-        console.log("test")
       }
 
       setFilteredTrip(filterArr);
     }
-    // console.log(filterArr);
-    // console.log(state, todayDate);
+
   }
 
   return (
@@ -196,8 +190,6 @@ export default function Trips({ navigation }) {
             <FlatList
               keyExtractor={(item) => item.id}
               data={ongoingTrips}
-              // numColumns={2}
-              // columnWrapperStyle={styles.row}
               ItemSeparatorComponent={<Seperator />}
               renderItem={({ item }) => (
                 <TouchableOpacity onPress={() => pressHandler(item)} style={styles.item}>
@@ -259,8 +251,6 @@ export default function Trips({ navigation }) {
         </View>
       </View>
 
-
-
       <View style={styles.tripView}>
         {filteredTrip.length === 0 &&
           (upcoming ?
@@ -270,8 +260,6 @@ export default function Trips({ navigation }) {
         <FlatList
           keyExtractor={(item) => item.id}
           data={filteredTrip}
-          // numColumns={2}
-          // columnWrapperStyle={styles.row}
           ItemSeparatorComponent={<Seperator />}
           renderItem={({ item }) => (
             <TouchableOpacity onPress={() => pressHandler(item)}>
@@ -341,8 +329,6 @@ const styles = StyleSheet.create({
     elevation: 7,
 
     borderRadius: 6,
-    // borderTopLeftRadius: 6,
-    // borderTopRightRadius: 6,
     backgroundColor: primary
   },
   tripInnerView: {//inside each trip file
@@ -389,12 +375,8 @@ const styles = StyleSheet.create({
     borderWidth: 1,
     paddingHorizontal: 7,
     paddingVertical: 2,
-    // margin:5,
-    // textAlignVertical:'center'
   },
   filterInput: {
     fontSize: 17,
-    // fontWeight:'bold'
-
   },
 })
