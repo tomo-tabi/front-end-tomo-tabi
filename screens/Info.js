@@ -167,6 +167,7 @@ export default function Info() {
                   label="User Email"
                   icon="account-plus-outline"
                   placeholder="abc@gmail.com"
+                  autoCapitalize="none"
                   onChangeText={props.handleChange('email')}
                   value={props.values.email}
                 />
