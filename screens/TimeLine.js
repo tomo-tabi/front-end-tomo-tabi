@@ -20,10 +20,10 @@ import Timeline from 'react-native-timeline-flatlist'
 import Dialog from "react-native-dialog";//New
 
 export default function TimeLine({ navigation }) {
-  const { setHeader } = useContext(AuthContext)
-  const { trips, permission, owner } = useContext(TripContext)
-  const { tripVote, userTripVote } = useContext(VoteContext)
-  const { tripEvents, tripid, modalOpen, setModalOpen } = useContext(EventContext)
+  const { setHeader } = useContext(AuthContext);
+  const { trips, permission, owner } = useContext(TripContext);
+  const { tripVote, userTripVote } = useContext(VoteContext);
+  const { tripEvents, tripid, modalOpen, setModalOpen } = useContext(EventContext);
 
   const [modalEditOpen, setModalEditOpen] = useState(false);
   const [eventEditData, setEventEditData] = useState({}); // Set the event I want to send to Edit Timeline component
