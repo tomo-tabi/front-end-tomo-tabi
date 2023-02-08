@@ -84,11 +84,11 @@ export function EventProvider({ children }) {
       value={{
         tripEvents,
         tripid,
+        modalOpen,
         getTripEvents,
         postTripEvents,
         editTripEvents,
         deleteTripEvents,
-        modalOpen,
         setModalOpen,
       }}
     >

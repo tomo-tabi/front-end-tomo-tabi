@@ -10,6 +10,8 @@ export function AuthProvider({ children }) {
   const [userToken, setUserToken] = useState(null);
   const [userData, setUserData] = useState(null);
 
+  const [header, setHeader] = useState(true);
+
   const setData = async userInfo => {
     // console.log("object");
     if (userInfo) {
@@ -157,6 +159,8 @@ export function AuthProvider({ children }) {
         signup,
         editUser,
         editPassword,
+        setHeader,
+        header,
         authHeader,
         userToken,
         userData,

@@ -4,16 +4,20 @@ import Compose from '../utils/Compose';
 import TripTabNav from './TripTabNav';
 import TripStack from './TripsStack';
 
+import { useContext } from 'react';
 import { EventProvider } from "../context/EventContext";
 import { ExpProvider } from "../context/ExpContext";
 import { InviteProvider } from "../context/InviteContext";
 import { TripProvider } from '../context/TripContext';
 import { VoteProvider } from '../context/VoteContext';
+import { AuthContext } from '../context/AuthContext';
 
 // import getHeaderTitle from '../utils/getHeaderTitle';
 const Stack = createNativeStackNavigator();
 
 export default function AppStack() {
+  const { header } = useContext(AuthContext);
+
   return (
     <Compose components={[TripProvider, EventProvider, InviteProvider, ExpProvider, VoteProvider]}>
       <Stack.Navigator>
@@ -27,7 +31,8 @@ export default function AppStack() {
             // headerTitle: getHeaderTitle(route)
             headerTitle: route.params.params.name,
             headerShadowVisible:false,
-            headerTitleAlign:'center'
+            headerTitleAlign:'center',
+            headerShown:header,
           })}
         />
       </Stack.Navigator>

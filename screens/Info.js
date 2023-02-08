@@ -29,11 +29,6 @@ export default function Info() {
   const [lockedTrip, setLockedTrip] = useState(false)
 
   useEffect(() => {
-    getInvitesSent();
-  }, [])
-
-
-  useEffect(() => {
     if (permission) {
       setLockedTrip(true)
     }
@@ -51,6 +46,7 @@ export default function Info() {
 
     if (Array.isArray(invitesSent)) {
       let pending = invitesSent.filter((invite) => invite.status !== 'accepted');
+      console.log(pending);
       setPendingInvites(pending);
     }
   }, [invitesSent])
@@ -144,16 +140,16 @@ export default function Info() {
                 <MaterialCommunityIcons name={show ? 'chevron-up' : 'chevron-down'} size={30} />
               </TouchableOpacity>
             </View>}
-      {
-        noInvitesSent ?
-          <Text style={styles.noInviteText}>
-            You have not sent any invites yet!
-          </Text>
-          : ""
-      }
 
       {show ?
         <View style={styles.formik}>
+          {
+            noInvitesSent ?
+              <Text style={styles.noInviteText}>
+                You have not sent any invites yet!
+              </Text>
+              : ""
+          }
           <Formik
             initialValues={{ email: '' }}
             onSubmit={(values, actions) => {
@@ -167,6 +163,7 @@ export default function Info() {
                   label="User Email"
                   icon="account-plus-outline"
                   placeholder="abc@gmail.com"
+                  autoCapitalize="none"
                   onChangeText={props.handleChange('email')}
                   value={props.values.email}
                 />

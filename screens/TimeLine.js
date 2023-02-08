@@ -9,6 +9,7 @@ const { primary, blue, yellow } = colors
 import { EventContext } from '../context/EventContext';
 import { TripContext } from '../context/TripContext';
 import { VoteContext } from '../context/VoteContext';
+import { AuthContext } from '../context/AuthContext';
 
 import moment from 'moment';
 
@@ -19,9 +20,10 @@ import Timeline from 'react-native-timeline-flatlist'
 import Dialog from "react-native-dialog";//New
 
 export default function TimeLine({ navigation }) {
-  const { trips, permission, owner } = useContext(TripContext)
-  const { tripVote, userTripVote } = useContext(VoteContext)
-  const { tripEvents, tripid, modalOpen, setModalOpen } = useContext(EventContext)
+  const { setHeader } = useContext(AuthContext);
+  const { trips, permission, owner } = useContext(TripContext);
+  const { tripVote, userTripVote } = useContext(VoteContext);
+  const { tripEvents, tripid, modalOpen, setModalOpen } = useContext(EventContext);
 
   const [modalEditOpen, setModalEditOpen] = useState(false);
   const [eventEditData, setEventEditData] = useState({}); // Set the event I want to send to Edit Timeline component
@@ -116,7 +118,8 @@ export default function TimeLine({ navigation }) {
     navigation.navigate('Voting', {
       eventName: eventName,
       eventid: id
-    })
+    });
+    setHeader(false);
   };
 
   const renderTime = (rowData) => {
