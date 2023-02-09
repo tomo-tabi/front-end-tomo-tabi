@@ -21,7 +21,7 @@ export default function TimelineStack() {
   }, [state.routes[0]])
 
   return (
-    <Stack.Navigator>
+    <Stack.Navigator screenOptions={{ animation: 'none' }}>
       <Stack.Screen name='Timeline' component={TimeLine} 
         options={({route}) => ({
           headerShown:false,
