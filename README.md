@@ -1,7 +1,8 @@
 <div align="center">
 <h1>TomoTabi</h1>
 <p>
-  <img src="https://user-images.githubusercontent.com/92072255/202832595-d6e2f2b4-c70d-4f8d-9964-660931ad9b20.svg" width="100" alt="Internet Logs logo by Yoon Ju Kim"/>
+  <img src="https://user-images.githubusercontent.com/92072255/221075109-f2383e44-a6a0-40a8-9ae7-5918b48e57ab.png" width="200" alt="TomoTabi logo by Yoon Ju Kim"/>
+
 </p>
 <a href="https://play.google.com/store/apps/details?id=com.tomotabi.TomoTabi">TomoTabi</a>, is a multiuser trip planning app for Android.
 x
@@ -15,9 +16,10 @@ x
     - [How to set up knexfile](#how-to-set-up-knexfile)
     
 # Introduction  
-[Internet Logs](https://internet-logs.onrender.com), allows users to write journal entrys for inidivual days, upload images with the journal entry, and create events for the day. On login, they can see all of their events for the month in a monthly calendar view. Users can navigate to day views by clicking the dates on the calendar to view their journal and images, along side the day's events. 
-<br/>
-[Internet Logs](https://internet-logs.onrender.com) uses JavaScript with React, [React-Calendar](https://www.npmjs.com/package/react-calendar), and [React-Color](https://www.npmjs.com/package/react-color) to render UI/UX components. The backend uses Express.js, Node.js, and Knex.js to create a REST API server. The database is built with PostgreSQL. Images are hosted on [Cloudinary](https://cloudinary.com/).
+[TomoTabi](https://play.google.com/store/apps/details?id=com.tomotabi.TomoTabi), allows multiple users to plan a trip together. For each trip planned it has a day timeline tab, calendar tab, expenses tab, and trip management tab. 
+* On login, users can view current, past, and future trips. 
+* For each trip event users can vote their attendance status and filter events based on their vote status
+* Expenses tabs enable users to record individual expenses and calculates money owed for each user
 
 # Features
 
