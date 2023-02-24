@@ -102,12 +102,9 @@ export function AuthProvider({ children }) {
           logout();
           return;
         }
-        
 
         checkStatus(isLoggedIn, setUserData);
-        // console.log("???", isLoggedInReq);
-        // const isLoggedInRes = await isLoggedInReq.json();
-        // userCheckStatus(isLoggedInRes, isLoggedInReq, setUserData)
+
         setIsLoading(false);
       }
     } catch (e) {
@@ -146,8 +143,6 @@ export function AuthProvider({ children }) {
 
   useEffect(() => {
     isLoggedIn();
-    // if(userToken){
-    // }
   }, []);
 
   return (
