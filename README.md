@@ -60,11 +60,6 @@
 * Install [Android Studio](https://developer.android.com/studio?gclid=Cj0KCQiAutyfBhCMARIsAMgcRJSuW_PhqH74Pp3PwT7UkJ1YFgJbEnxRYS4PLQdmqmW-gcaBjrnejPIaAmDTEALw_wcB&gclsrc=aw.ds)
 * Create an android virtual device
 
-# Setup
-Run the following command in the root folder to install dependencies  
-```js
-npm install
-```  
 Then run the following code:
 ```
 npm run android
