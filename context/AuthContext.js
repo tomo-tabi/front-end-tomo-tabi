@@ -97,18 +97,14 @@ export function AuthProvider({ children }) {
             Authorization: `Bearer ${userTokenStored}`,
           },
         });
-
-        if (isLoggedIn.status === 401) {
-          await AsyncStorage.removeItem('userToken');
-          setUserData(null);
-          setIsLoading(false);
+        
+        if (isLoggedIn.status === 401 || isLoggedIn.status === 500) {
+          logout();
           return;
         }
 
         checkStatus(isLoggedIn, setUserData);
-        // console.log("???", isLoggedInReq);
-        // const isLoggedInRes = await isLoggedInReq.json();
-        // userCheckStatus(isLoggedInRes, isLoggedInReq, setUserData)
+
         setIsLoading(false);
       }
     } catch (e) {
@@ -147,8 +143,6 @@ export function AuthProvider({ children }) {
 
   useEffect(() => {
     isLoggedIn();
-    // if(userToken){
-    // }
   }, []);
 
   return (
