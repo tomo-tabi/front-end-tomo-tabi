@@ -141,6 +141,22 @@ export function AuthProvider({ children }) {
     }
   };
 
+  const deleteUser = async password => {
+
+    try {
+      const deleteUser = await fetch(`${API_URL}/user/delete`, {
+        method: 'DELETE',
+        headers: authHeader,
+        body: JSON.stringify(password),
+      });
+
+      checkStatus(deleteUser, logout)
+
+    } catch (e) {
+      console.log(`Delete user Error: ${e}`);
+    }
+  }
+
   useEffect(() => {
     isLoggedIn();
   }, []);
@@ -154,6 +170,7 @@ export function AuthProvider({ children }) {
         editUser,
         editPassword,
         setHeader,
+        deleteUser,
         header,
         authHeader,
         userToken,
