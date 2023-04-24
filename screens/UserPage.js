@@ -8,12 +8,14 @@ import { AuthContext } from '../context/AuthContext'
 
 import EditUserInfo from './EditUserInfo'
 import EditPassword from './EditPassword';
+import DeleteUser from './DeleteUser';
 
 export default function UserPage({ }) {
     const { logout, userData } = useContext(AuthContext)
 
     const [editInfoModal, setEditInfoModal] = useState(false)
     const [editPasswordModal, setEditPasswordModal] = useState(false)
+    const [deleteUserModal, setDeleteUserModal] = useState(false)
 
 
     const Separator = () => <View style={styles.separator} />;
@@ -39,24 +41,24 @@ export default function UserPage({ }) {
                     </View>
                 </ImageBackground>
             </View>
- 
+
             <View style={[globalStyles.card, styles.buttonsContainer]}>
-                <TouchableOpacity 
+                <TouchableOpacity
                     style={styles.button}
                     onPress={() => setEditInfoModal(true)}
                 >
-                    <MaterialCommunityIcons name='pencil' size={30} style={{ marginRight:10, color:yellow }}/>
-                    <Text style={{ textAlignVertical:'center',fontSize: 18}}>
+                    <MaterialCommunityIcons name='pencil' size={30} style={{ marginRight: 10, color: yellow }} />
+                    <Text style={{ textAlignVertical: 'center', fontSize: 18 }}>
                         Edit Profile
                     </Text>
                 </TouchableOpacity>
-                <Separator/>
-                <TouchableOpacity 
+                <Separator />
+                <TouchableOpacity
                     style={styles.button}
                     onPress={() => setEditPasswordModal(true)}
                 >
-                    <MaterialCommunityIcons name='lock' size={30} style={{ marginRight:10, color:blue }}/>
-                    <Text style={{ textAlignVertical:'center',fontSize: 18}}>
+                    <MaterialCommunityIcons name='lock' size={30} style={{ marginRight: 10, color: blue }} />
+                    <Text style={{ textAlignVertical: 'center', fontSize: 18 }}>
                         Edit Password
                     </Text>
                 </TouchableOpacity>
@@ -64,7 +66,13 @@ export default function UserPage({ }) {
             <BlueButton
                 onPress={() => logout()}
                 buttonText="Logout"
-                style={{ padding: 8, marginHorizontal:10, marginTop:10 }}
+                style={{ padding: 8, marginHorizontal: 10, marginTop: 10 }}
+            />
+
+            <BlueButton
+                onPress={() => setDeleteUserModal(true)}
+                buttonText="Delete user"
+                style={{ padding: 8, marginHorizontal: 10, marginTop: 10 }}
             />
             <StyledModal
                 modalOpen={editInfoModal}
@@ -76,6 +84,12 @@ export default function UserPage({ }) {
                 modalOpen={editPasswordModal}
                 setModalOpen={setEditPasswordModal}
                 AddComponent={EditPassword}
+                EditData={userData}
+            />
+            <StyledModal
+                modalOpen={deleteUserModal}
+                setModalOpen={setDeleteUserModal}
+                AddComponent={DeleteUser}
                 EditData={userData}
             />
         </View>
@@ -94,18 +108,18 @@ const styles = StyleSheet.create({
     },
     buttonsContainer: {
         marginTop: 25,
-        marginHorizontal:10,
+        marginHorizontal: 10,
     },
     button: {
-        flexDirection:'row', 
-        paddingVertical:5,
+        flexDirection: 'row',
+        paddingVertical: 5,
     },
     headerContainer: {
         marginBottom: 85,
     },
     headerColumn: {
         backgroundColor: 'transparent',
-        marginBottom:-120,
+        marginBottom: -120,
         ...Platform.select({
             ios: {
                 alignItems: 'center',
@@ -136,14 +150,14 @@ const styles = StyleSheet.create({
     },
     titleText: {
         fontSize: 18,
-        color:'#737373',
-        textAlignVertical:'center',
-        justifyContent:'center',
+        color: '#737373',
+        textAlignVertical: 'center',
+        justifyContent: 'center',
 
     },
     userInfo: {
         fontSize: 15,
         fontWeight: 'bold',
-        color:'#9E9E9E',
+        color: '#9E9E9E',
     }
 })
